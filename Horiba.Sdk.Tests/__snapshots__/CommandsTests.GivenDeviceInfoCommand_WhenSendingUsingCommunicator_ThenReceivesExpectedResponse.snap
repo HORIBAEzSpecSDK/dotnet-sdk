@@ -1,0 +1,13 @@
+﻿{
+  "id": 1,
+  "command": "icl_info",
+  "results": {
+    "nodeAlias": "ICL",
+    "nodeApiVersion": 300,
+    "nodeBuilt": "Mar  1 2024-09:33:43",
+    "nodeDescription": "Instrument Control Library",
+    "nodeId": 1,
+    "nodeVersion": "2.0.0.119.46581d06"
+  },
+  "errors": []
+}
