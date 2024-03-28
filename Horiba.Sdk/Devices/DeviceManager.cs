@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using System.Xml;
+using Horiba.Sdk.Commands;
 using Horiba.Sdk.Communication;
 
 namespace Horiba.Sdk.Devices;
@@ -19,22 +19,37 @@ public sealed class DeviceManager : IDeviceManager, IDisposable
         IclProcess.Exited += IclProcessOnExited;
     }
 
-    public async Task StartAsync(bool startIcl = true)
+    public async Task StartAsync(bool startIcl = true, bool enableBinaryMessages = true)
     {
         if (startIcl)
         {
             IclProcess.Start();
             _isIclRunning = true;
         }
-        
-        // TODO get ICL info
+
+        await Communicator.OpenConnectionAsync();
+        var info = await Communicator.SendWithResponseAsync(new IclInfoCommand());
+
+        if (enableBinaryMessages)
+        {
+            await Communicator.SendWithResponseAsync(new IclBinaryModeAllCommand());
+        }
 
         //await DiscoverDevicesAsync();
     }
 
     public async Task StopAsync()
     {
-        // TODO stop procedure: open communicator, send icl_info, send icl_shutdown, close communicator, stop external process,
+        if (!Communicator.IsConnectionOpened)
+        {
+            await Communicator.OpenConnectionAsync();
+        }
+
+        // TODO should we log these responses? Why do we need them?
+        var info = await Communicator.SendWithResponseAsync(new IclInfoCommand());
+
+        await Communicator.SendAsync(new IclShutdownCommand());
+        
         if (_isIclRunning)
         {
             IclProcess.Kill();

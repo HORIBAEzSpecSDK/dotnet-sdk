@@ -2,7 +2,7 @@ using System.ComponentModel;
 
 namespace Horiba.Sdk.Tests;
 
-public class UnitTest1
+public class DeviceManagerTests
 {
     [Fact]
     public async Task GivenNewDeviceManager_WhenGettingDevices_ThenReturnsAvailableDevices()
@@ -38,7 +38,7 @@ public class UnitTest1
         using var manager = new DeviceManager();
 
         // Act
-        await manager.StartAsync(true);
+        await manager.StartAsync(true, false);
         await manager.StopAsync();
 
         // Assert

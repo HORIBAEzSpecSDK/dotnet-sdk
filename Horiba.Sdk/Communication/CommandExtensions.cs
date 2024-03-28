@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace Horiba.Sdk.Communication;
 
@@ -8,19 +7,25 @@ internal static class CommandExtensions
 {
     public static byte[] ToByteArray(this Command command)
     {
-        return Encoding.UTF8.GetBytes(SerializeCommand(command));
+        return Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(command));
     }
     
     public static string ToJson(this Command command)
     {
-        return SerializeCommand(command);
+        return JsonConvert.SerializeObject(command);
     }
+    
+    public static async Task<TResult> TimeoutAfter<TResult>(this Task<TResult> task, TimeSpan timeout) {
 
-    private static string SerializeCommand(Command command)
-    {
-        return JsonConvert.SerializeObject(command, new JsonSerializerSettings
-        {
-            ContractResolver = new CamelCasePropertyNamesContractResolver()
-        });
+        using (var timeoutCancellationTokenSource = new CancellationTokenSource()) {
+
+            var completedTask = await Task.WhenAny(task, Task.Delay(timeout, timeoutCancellationTokenSource.Token));
+            if (completedTask == task) {
+                timeoutCancellationTokenSource.Cancel();
+                return await task;  // Very important in order to propagate exceptions
+            } else {
+                throw new TimeoutException("The operation has timed out.");
+            }
+        }
     }
 }

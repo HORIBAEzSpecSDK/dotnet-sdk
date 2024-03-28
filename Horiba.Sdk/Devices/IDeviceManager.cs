@@ -4,7 +4,7 @@ namespace Horiba.Sdk.Devices;
 
 public interface IDeviceManager
 {
-    Task StartAsync(bool startIcl);
+    Task StartAsync(bool startIcl, bool enableBinaryMessages);
     Task StopAsync();
     Task DiscoverDevicesAsync(CancellationToken cancellationToken);
     WebSocketCommunicator Communicator { get; }

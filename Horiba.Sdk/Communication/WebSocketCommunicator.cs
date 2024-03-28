@@ -26,17 +26,10 @@ public sealed class WebSocketCommunicator
         return _wsClient.CloseAsync(WebSocketCloseStatus.NormalClosure, "", cancellationToken);
     }
 
-    public async Task<Response> SendAsync(Command command, CancellationToken cancellationToken = default)
+    public async Task<Response> SendWithResponseAsync(Command command, CancellationToken cancellationToken = default)
     {
-        if (!IsConnectionOpened)
-        {
-            throw new WebSocketException("Connection is not established. Try connecting before sending command");
-        }
+        await SendAsync(command, cancellationToken);
 
-        // TODO maybe we need another SEND method when we start sending commands with multiple segments of data. Check if this scenario even exists!
-        await _wsClient.SendAsync(new ArraySegment<byte>(command.ToByteArray()), WebSocketMessageType.Text, true,
-            cancellationToken);
-        
         // TODO this is hard limit! Check what is the maximum info that can be sent and its configuration options
         var responseBuffer = new byte[1024]; //2048*512 // we need to wait for at least 300ms - 500ms for a flag to be set
         var wsResponse = await _wsClient.ReceiveAsync(new ArraySegment<byte>(responseBuffer), cancellationToken);
@@ -50,6 +43,17 @@ public sealed class WebSocketCommunicator
         }
 
         return parsedResult;
+    }
+
+    public Task SendAsync(Command command, CancellationToken cancellationToken = default)
+    {
+        if (!IsConnectionOpened)
+        {
+            throw new WebSocketException("Connection is not established. Try connecting before sending command");
+        }
+
+        return _wsClient.SendAsync(new ArraySegment<byte>(command.ToByteArray()), WebSocketMessageType.Text, true,
+            cancellationToken);
     }
 
     public bool IsConnectionOpened => _wsClient.State == WebSocketState.Open;

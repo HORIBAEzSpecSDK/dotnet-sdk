@@ -12,21 +12,20 @@ public class CommandsTests
         var jsonCommand = iclInfoCommand.ToJson();
         
         // Assert
-        jsonCommand.MatchSnapshot();
+        jsonCommand.MatchSnapshot(options => options.IgnoreField("id"));
     }
     
     [Fact]
     public async Task GivenDeviceInfoCommand_WhenSendingUsingCommunicator_ThenReceivesExpectedResponse()
     {
         // Arrange
-        var communicator = new WebSocketCommunicator();
-        await communicator.OpenConnectionAsync();
-        var command = new IclInfoCommand();
+        using var manager = new DeviceManager();
+        await manager.StartAsync(true, false);
 
         // Act
-        var response = await communicator.SendAsync(command);
+        var response = await manager.Communicator.SendWithResponseAsync(new IclInfoCommand());
 
         // Assert
-        response.MatchSnapshot();
+        response.MatchSnapshot(options => options.IgnoreField("id"));
     }
 }
