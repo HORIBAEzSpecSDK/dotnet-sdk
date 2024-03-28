@@ -4,11 +4,10 @@ using Newtonsoft.Json.Serialization;
 
 namespace Horiba.Sdk.Communication;
 
-public static class CommandExtensions
+internal static class CommandExtensions
 {
     public static byte[] ToByteArray(this Command command)
     {
-        // TODO is this encoding the correct one?
         return Encoding.UTF8.GetBytes(SerializeCommand(command));
     }
     

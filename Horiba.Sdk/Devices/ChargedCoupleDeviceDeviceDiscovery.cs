@@ -2,10 +2,10 @@
 
 namespace Horiba.Sdk.Devices;
 
-public class ChargedCoupleDeviceDeviceDiscoveryStrategy(ICommunicator communicator)
-    : DeviceDiscoveryStrategy<ChargedCoupledDevice>
+public class ChargedCoupleDeviceDeviceDiscovery(WebSocketCommunicator communicator)
+    : DeviceDiscovery<ChargedCoupledDevice>
 {
-    private readonly ICommunicator _communicator = communicator;
+    private readonly WebSocketCommunicator _communicator = communicator;
 
     public override Task<List<ChargedCoupledDevice>> DiscoverDevicesAsync()
     {

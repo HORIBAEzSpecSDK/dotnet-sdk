@@ -4,7 +4,7 @@ using System.Text;
 using Newtonsoft.Json;
 
 namespace Horiba.Sdk.Communication;
-public class WebSocketCommunicator : ICommunicator
+public sealed class WebSocketCommunicator
 {
     private const int Port = 25010;
     private readonly IPAddress _ip = IPAddress.Loopback;
@@ -38,7 +38,7 @@ public class WebSocketCommunicator : ICommunicator
             cancellationToken);
         
         // TODO this is hard limit! Check what is the maximum info that can be sent and its configuration options
-        var responseBuffer = new byte[1024];
+        var responseBuffer = new byte[1024]; //2048*512 // we need to wait for at least 300ms - 500ms for a flag to be set
         var wsResponse = await _wsClient.ReceiveAsync(new ArraySegment<byte>(responseBuffer), cancellationToken);
         
         var res = Encoding.UTF8.GetString(responseBuffer, 0, wsResponse.Count);

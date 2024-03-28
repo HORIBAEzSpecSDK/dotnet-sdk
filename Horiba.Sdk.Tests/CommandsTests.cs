@@ -18,4 +18,19 @@ public class CommandsTests
         // Assert
         jsonCommand.MatchSnapshot();
     }
+    
+    [Fact]
+    public async Task GivenDeviceInfoCommand_WhenSendingUsingCommunicator_ThenReceivesExpectedResponse()
+    {
+        // Arrange
+        var communicator = new WebSocketCommunicator();
+        await communicator.OpenConnectionAsync();
+        var command = new IclInfoCommand();
+
+        // Act
+        var response = await communicator.SendAsync(command);
+
+        // Assert
+        response.MatchSnapshot();
+    }
 }

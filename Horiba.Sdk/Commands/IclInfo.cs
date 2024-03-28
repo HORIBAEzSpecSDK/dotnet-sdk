@@ -2,4 +2,4 @@
 
 namespace Horiba.Sdk.Commands;
 
-public record IclInfoCommand() : Command("icl_info");
+internal record IclInfoCommand() : Command("icl_info");

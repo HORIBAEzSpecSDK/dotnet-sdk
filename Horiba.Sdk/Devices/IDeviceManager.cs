@@ -7,7 +7,7 @@ public interface IDeviceManager
     Task StartAsync(bool startIcl);
     Task StopAsync();
     Task DiscoverDevicesAsync(CancellationToken cancellationToken);
-    ICommunicator Communicator { get; }
-    List<Monochromator> Monochromators { get; }
+    WebSocketCommunicator Communicator { get; }
+    List<MonochromatorDevice> Monochromators { get; }
     List<ChargedCoupledDevice> ChargedCoupledDevices { get; }
 }

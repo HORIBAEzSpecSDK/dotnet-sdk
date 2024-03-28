@@ -5,15 +5,9 @@ namespace Horiba.Sdk.Devices;
 
 public sealed class DeviceManager : IDeviceManager
 {
-    public ICommunicator Communicator { get; private set; }
-    public List<Monochromator> Monochromators { get; private set; }
+    public WebSocketCommunicator Communicator { get; private set; }
+    public List<MonochromatorDevice> Monochromators { get; private set; }
     public List<ChargedCoupledDevice> ChargedCoupledDevices { get; private set; }
-    
-    // TODO is this needed? Are clients allowed to provide custom implementations?
-    public DeviceManager(ICommunicator communicator)
-    {
-        Communicator = communicator;
-    }
 
     public DeviceManager()
     {
@@ -42,8 +36,10 @@ public sealed class DeviceManager : IDeviceManager
         try
         {
             await Communicator.OpenConnectionAsync(cancellationToken);
-            Monochromators = await new MonochromatorDeviceDiscoveryStrategy(Communicator).DiscoverDevicesAsync();
-            ChargedCoupledDevices = await new ChargedCoupleDeviceDeviceDiscoveryStrategy(Communicator).DiscoverDevicesAsync();
+
+            await Communicator.SendAsync(new IclInfoCommand());
+            Monochromators = await new MonochromatorDeviceDiscovery(Communicator).DiscoverDevicesAsync();
+            ChargedCoupledDevices = await new ChargedCoupleDeviceDeviceDiscovery(Communicator).DiscoverDevicesAsync();
             
         }
         catch (Exception e)
