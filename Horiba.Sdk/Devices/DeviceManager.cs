@@ -28,6 +28,8 @@ public sealed class DeviceManager : IDeviceManager, IDisposable
         }
 
         await Communicator.OpenConnectionAsync();
+        
+        // TODO should we log these responses? Why do we need them?
         var info = await Communicator.SendWithResponseAsync(new IclInfoCommand());
 
         if (enableBinaryMessages)
@@ -49,6 +51,7 @@ public sealed class DeviceManager : IDeviceManager, IDisposable
         var info = await Communicator.SendWithResponseAsync(new IclInfoCommand());
 
         await Communicator.SendAsync(new IclShutdownCommand());
+        await Communicator.CloseConnectionAsync();
         
         if (_isIclRunning)
         {
@@ -61,17 +64,11 @@ public sealed class DeviceManager : IDeviceManager, IDisposable
     {
         try
         {
-            await Communicator.OpenConnectionAsync(cancellationToken);
             Monochromators = await new MonochromatorDeviceDiscovery(Communicator).DiscoverDevicesAsync();
             ChargedCoupledDevices = await new ChargedCoupleDeviceDeviceDiscovery(Communicator).DiscoverDevicesAsync();
-
         }
         catch (Exception e)
         {
-        }
-        finally
-        {
-            await Communicator.CloseConnectionAsync(cancellationToken);
         }
     }
 
@@ -83,6 +80,7 @@ public sealed class DeviceManager : IDeviceManager, IDisposable
         }
         IclProcess.Exited -= IclProcessOnExited;
         IclProcess.Dispose();
+        Communicator.CloseConnectionAsync();
     }
 
     private void IclProcessOnExited(object sender, EventArgs e)

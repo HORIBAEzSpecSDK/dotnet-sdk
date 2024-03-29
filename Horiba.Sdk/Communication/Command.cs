@@ -27,9 +27,16 @@ public abstract record Command
 
 public abstract record ChargedCoupleDeviceCommand : Command
 {
-    protected ChargedCoupleDeviceCommand(string commandName, Dictionary<string, object> parameters) : base(commandName, parameters)
+    protected ChargedCoupleDeviceCommand(int deviceId, string commandName) : 
+        base(commandName, new Dictionary<string, object> { { "index", deviceId } })
     {
+        
     }
+    // protected ChargedCoupleDeviceCommand(int deviceId, string commandName, params ) : 
+    //     base(commandName, new Dictionary<string, object> { { "index", deviceId } })
+    // {
+    //     
+    // }
 }
 
 public abstract record MonochromatorDeviceCommand : Command
