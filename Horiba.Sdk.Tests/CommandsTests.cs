@@ -28,4 +28,17 @@ public class CommandsTests
         // Assert
         response.MatchSnapshot(options => options.IgnoreField("id"));
     }
+
+    [Fact]
+    public async Task GivenCommand_WhenSerializing_ThenHasCorrectParameter()
+    {
+        // Arrange
+        var command = new IclBinaryModeAllCommand();
+
+        // Act
+        var json = command.ToJson();
+
+        // Assert
+        json.MatchSnapshot(options => options.IgnoreField("id"));
+    }
 }

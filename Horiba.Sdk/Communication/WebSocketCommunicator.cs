@@ -11,6 +11,8 @@ public sealed class WebSocketCommunicator
     private readonly ClientWebSocket _wsClient = new();
     private readonly Uri _wsUri;
     
+    public bool IsConnectionOpened => _wsClient.State == WebSocketState.Open;
+    
     public WebSocketCommunicator()
     {
         _wsUri = new Uri("ws://" + _ip + ":" + Port);
@@ -19,11 +21,15 @@ public sealed class WebSocketCommunicator
     public Task OpenConnectionAsync(CancellationToken cancellationToken = default)
     {
         return _wsClient.ConnectAsync(_wsUri, cancellationToken);
+        
+        // TODO decide if we truly need to support asynchronous communication from the ICL
+        // Start listening for messages from the server in a separate task
+        // _ = Task.Run(() => ReceiveMessage(_wsClient, cancellationToken));
     }
 
     public Task CloseConnectionAsync(CancellationToken cancellationToken = default)
     {
-        return _wsClient.CloseAsync(WebSocketCloseStatus.NormalClosure, "", cancellationToken);
+        return _wsClient.CloseAsync(WebSocketCloseStatus.NormalClosure, "CloseConnectionAsync() method was invoked", cancellationToken);
     }
 
     public async Task<Response> SendWithResponseAsync(Command command, CancellationToken cancellationToken = default)
@@ -49,12 +55,21 @@ public sealed class WebSocketCommunicator
     {
         if (!IsConnectionOpened)
         {
-            throw new WebSocketException("Connection is not established. Try connecting before sending command");
+            throw new CommunicationException("Connection is not established. Try opening connection before sending command");
         }
 
         return _wsClient.SendAsync(new ArraySegment<byte>(command.ToByteArray()), WebSocketMessageType.Text, true,
             cancellationToken);
     }
 
-    public bool IsConnectionOpened => _wsClient.State == WebSocketState.Open;
+    private async Task ReceiveMessage(WebSocket webSocket, CancellationToken cancellationToken)
+    {
+        var buffer = new ArraySegment<byte>(new byte[1024]);
+        while (webSocket.State == WebSocketState.Open)
+        {
+            var result = await webSocket.ReceiveAsync(buffer, cancellationToken);
+            // add result to threadSafe Queue
+            // maybe add polling delay 
+        }
+    }
 }

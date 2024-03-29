@@ -9,8 +9,8 @@ public sealed class DeviceManager : IDeviceManager, IDisposable
     private bool _isIclRunning;
     internal readonly Process IclProcess = new();
     public WebSocketCommunicator Communicator { get; }
-    public List<MonochromatorDevice> Monochromators { get; private set; }
-    public List<ChargedCoupledDevice> ChargedCoupledDevices { get; private set; }
+    public List<MonochromatorDevice> Monochromators { get; private set; } = [];
+    public List<ChargedCoupledDevice> ChargedCoupledDevices { get; private set; } = [];
 
     public DeviceManager(string iclExePath = @"C:\Program Files\HORIBA Scientific\SDK\icl.exe")
     {
@@ -81,6 +81,7 @@ public sealed class DeviceManager : IDeviceManager, IDisposable
         {
             IclProcess.Kill();
         }
+        IclProcess.Exited -= IclProcessOnExited;
         IclProcess.Dispose();
     }
 
