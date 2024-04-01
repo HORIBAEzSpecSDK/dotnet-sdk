@@ -2,6 +2,7 @@
 using System.Net.WebSockets;
 using System.Text;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace Horiba.Sdk.Communication;
 public sealed class WebSocketCommunicator
@@ -20,6 +21,7 @@ public sealed class WebSocketCommunicator
     
     public Task OpenConnectionAsync(CancellationToken cancellationToken = default)
     {
+        Log.Debug("Opening WebSocket connection to: {@WsUri}", _wsUri);
         return _wsClient.ConnectAsync(_wsUri, cancellationToken);
         
         // TODO decide if we truly need to support asynchronous communication from the ICL
@@ -29,6 +31,7 @@ public sealed class WebSocketCommunicator
 
     public Task CloseConnectionAsync(CancellationToken cancellationToken = default)
     {
+        Log.Debug("Closing WebSocket connection");
         return _wsClient.CloseAsync(WebSocketCloseStatus.NormalClosure, "CloseConnectionAsync() method was invoked", cancellationToken);
     }
 
@@ -42,6 +45,7 @@ public sealed class WebSocketCommunicator
         
         var res = Encoding.UTF8.GetString(responseBuffer, 0, wsResponse.Count);
         var parsedResult = JsonConvert.DeserializeObject<Response>(res);
+        Log.Debug("Receiving response: {@Response}", parsedResult);
 
         if (parsedResult is null)
         {
@@ -58,6 +62,7 @@ public sealed class WebSocketCommunicator
             throw new CommunicationException("Connection is not established. Try opening connection before sending command");
         }
 
+        Log.Debug("Sending command: {@Command}", command);
         return _wsClient.SendAsync(new ArraySegment<byte>(command.ToByteArray()), WebSocketMessageType.Text, true,
             cancellationToken);
     }

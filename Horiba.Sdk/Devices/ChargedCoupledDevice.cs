@@ -12,20 +12,21 @@ public record ChargedCoupledDevice(int DeviceId, WebSocketCommunicator Communica
 
         if (result.Results.TryGetValue("open", out var bR))
         {
-            return bool.Parse(bR.ToString()); // ?? ToString() ??
+            // TODO figure out if .ToString() is enough
+            return bool.Parse(bR.ToString());
         }
 
         return false;
     }
 
-    public override async Task<Response> OpenConnectionAsync(CancellationToken cancellationToken = default)
+    public override Task OpenConnectionAsync(CancellationToken cancellationToken = default)
     {
-        return await Communicator.SendWithResponseAsync(new CcdOpenCommand(DeviceId), cancellationToken);
+        return Communicator.SendWithResponseAsync(new CcdOpenCommand(DeviceId), cancellationToken);
     }
 
-    public override async Task<Response> CloseConnectionAsync(CancellationToken cancellationToken = default)
+    public override Task CloseConnectionAsync(CancellationToken cancellationToken = default)
     {
-        return await Communicator.SendWithResponseAsync(new CcdCloseCommand(DeviceId), cancellationToken);
+        return Communicator.SendAsync(new CcdCloseCommand(DeviceId), cancellationToken);
     }
 
     public async Task<int> GetChipTemperatureAsync(CancellationToken cancellationToken = default)
@@ -56,7 +57,7 @@ public record ChargedCoupledDevice(int DeviceId, WebSocketCommunicator Communica
 
     public async Task SetExposureTimeAsync(int exposureTimeInMs, CancellationToken cancellationToken = default)
     {
-        await Communicator.SendWithResponseAsync(new CcdSetExposureTimeCommand(DeviceId, exposureTimeInMs),
+        await Communicator.SendAsync(new CcdSetExposureTimeCommand(DeviceId, exposureTimeInMs),
             cancellationToken);
     }
 
@@ -69,24 +70,22 @@ public record ChargedCoupledDevice(int DeviceId, WebSocketCommunicator Communica
 
     public async Task SetAcquisitionStartAsync(bool isShutterOpened, CancellationToken cancellationToken = default)
     {
-        var result =
-            await Communicator.SendWithResponseAsync(new CcdSetAcquisitionStartCommand(DeviceId, isShutterOpened),
+            await Communicator.SendAsync(new CcdSetAcquisitionStartCommand(DeviceId, isShutterOpened),
                 cancellationToken);
     }
 
     public async Task SetRegionOfInterestAsync(RegionOfInterest regionOfInterest,
         CancellationToken cancellationToken = default)
     {
-        var result =
-            await Communicator.SendWithResponseAsync(new CcdSetRegionOfInterestCommand(DeviceId, regionOfInterest),
+            await Communicator.SendAsync(new CcdSetRegionOfInterestCommand(DeviceId, regionOfInterest),
                 cancellationToken);
     }
 
-    public async Task<Response> GetAcquisitionDataAsync(CancellationToken cancellationToken = default)
+    public async Task<Dictionary<string, object>> GetAcquisitionDataAsync(CancellationToken cancellationToken = default)
     {
         var result =
             await Communicator.SendWithResponseAsync(new CcdGetAcquisitionDataCommand(DeviceId), cancellationToken);
-        return result;
+        return result.Results;
     }
 
     public async Task<bool> GetAcquisitionBusyAsync(CancellationToken cancellationToken = default)
@@ -99,8 +98,7 @@ public record ChargedCoupledDevice(int DeviceId, WebSocketCommunicator Communica
     public async Task SetXAxisConversionTypeAsync(ConversionType conversionType,
         CancellationToken cancellationToken = default)
     {
-        var result =
-            await Communicator.SendWithResponseAsync(new CcdSetXAxisConversionTypeCommand(DeviceId, conversionType),
+            await Communicator.SendAsync(new CcdSetXAxisConversionTypeCommand(DeviceId, conversionType),
                 cancellationToken);
     }
 
@@ -108,6 +106,6 @@ public record ChargedCoupledDevice(int DeviceId, WebSocketCommunicator Communica
     {
         var result =
             await Communicator.SendWithResponseAsync(new CcdGetXAxisConversionTypeCommand(DeviceId), cancellationToken);
-        return (ConversionType)result.Results["type"];
+        return Enum.Parse<ConversionType>(result.Results["type"].ToString());
     }
 }

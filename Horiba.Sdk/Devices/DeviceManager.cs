@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using Horiba.Sdk.Commands;
 using Horiba.Sdk.Communication;
+using Serilog;
 
 namespace Horiba.Sdk.Devices;
 
@@ -14,6 +15,11 @@ public sealed class DeviceManager : IDeviceManager, IDisposable
 
     public DeviceManager(string iclExePath = @"C:\Program Files\HORIBA Scientific\SDK\icl.exe")
     {
+        Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Verbose()
+            .WriteTo.Console()
+            .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
+            .CreateLogger();
         Communicator = new WebSocketCommunicator();
         IclProcess.StartInfo.FileName = iclExePath;
         IclProcess.Exited += IclProcessOnExited;
@@ -23,6 +29,7 @@ public sealed class DeviceManager : IDeviceManager, IDisposable
     {
         if (startIcl)
         {
+            Log.Debug("Starting ICL...");
             IclProcess.Start();
             _isIclRunning = true;
         }
@@ -42,16 +49,10 @@ public sealed class DeviceManager : IDeviceManager, IDisposable
 
     public async Task StopAsync()
     {
-        if (!Communicator.IsConnectionOpened)
-        {
-            await Communicator.OpenConnectionAsync();
-        }
-
         // TODO should we log these responses? Why do we need them?
         var info = await Communicator.SendWithResponseAsync(new IclInfoCommand());
 
         await Communicator.SendAsync(new IclShutdownCommand());
-        await Communicator.CloseConnectionAsync();
         
         if (_isIclRunning)
         {
@@ -76,15 +77,20 @@ public sealed class DeviceManager : IDeviceManager, IDisposable
     {
         if (_isIclRunning)
         {
+            Log.Debug("Killing ICL process...");
             IclProcess.Kill();
         }
         IclProcess.Exited -= IclProcessOnExited;
         IclProcess.Dispose();
-        Communicator.CloseConnectionAsync();
+        if (Communicator.IsConnectionOpened)
+        {
+            Communicator.CloseConnectionAsync();
+        }
     }
 
     private void IclProcessOnExited(object sender, EventArgs e)
     {
+        Log.Debug("ICL process terminated");
         _isIclRunning = false;
     }
 }

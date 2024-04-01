@@ -46,7 +46,7 @@ public class DeviceManagerTests
     }
 
     [Fact]
-    public async Task GivenDeviceManagerWithNonExistingIclInstallation_WhenStartingIclProcess_ThenExceptionIsThrown()
+    public async Task GivenDeviceManagerWithNonExistingIclInstallation_WhenStartingDeviceManager_ThenExceptionIsThrown()
     {
         // Arrange
         using var manager = new DeviceManager("c:/notExistingIclPath/icl.exe");

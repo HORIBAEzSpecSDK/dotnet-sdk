@@ -9,12 +9,12 @@ public record MonochromatorDevice(int DeviceId, WebSocketCommunicator Communicat
         throw new NotImplementedException();
     }
 
-    public override Task<Response> OpenConnectionAsync(CancellationToken cancellationToken = default)
+    public override Task OpenConnectionAsync(CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }
 
-    public override Task<Response> CloseConnectionAsync(CancellationToken cancellationToken = default)
+    public override Task CloseConnectionAsync(CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }
