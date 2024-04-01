@@ -7,8 +7,9 @@ public record ChargedCoupledDevice(int DeviceId, WebSocketCommunicator Communica
 {
     public override async Task<bool> IsConnectionOpenedAsync(CancellationToken cancellationToken = default)
     {
-        var result = await Communicator.SendWithResponseAsync(new CcdIsConnectionOpenedCommand(DeviceId), cancellationToken);
-        
+        var result =
+            await Communicator.SendWithResponseAsync(new CcdIsConnectionOpenedCommand(DeviceId), cancellationToken);
+
         if (result.Results.TryGetValue("open", out var bR))
         {
             return bool.Parse(bR.ToString()); // ?? ToString() ??
@@ -29,7 +30,8 @@ public record ChargedCoupledDevice(int DeviceId, WebSocketCommunicator Communica
 
     public async Task<int> GetChipTemperatureAsync(CancellationToken cancellationToken = default)
     {
-        var result = await Communicator.SendWithResponseAsync(new CcdGetTemperatureCommand(DeviceId), cancellationToken);
+        var result =
+            await Communicator.SendWithResponseAsync(new CcdGetTemperatureCommand(DeviceId), cancellationToken);
         return (int)result.Results["temperature"];
     }
 
@@ -47,12 +49,65 @@ public record ChargedCoupledDevice(int DeviceId, WebSocketCommunicator Communica
 
     public async Task<int> GetExposureTimeAsync(CancellationToken cancellationToken = default)
     {
-        var result = await Communicator.SendWithResponseAsync(new CcdGetExposureTimeCommand(DeviceId), cancellationToken);
+        var result =
+            await Communicator.SendWithResponseAsync(new CcdGetExposureTimeCommand(DeviceId), cancellationToken);
         return (int)result.Results["time"];
     }
 
     public async Task SetExposureTimeAsync(int exposureTimeInMs, CancellationToken cancellationToken = default)
     {
-        await Communicator.SendWithResponseAsync(new CcdSetExposureTimeCommand(DeviceId, exposureTimeInMs), cancellationToken);
+        await Communicator.SendWithResponseAsync(new CcdSetExposureTimeCommand(DeviceId, exposureTimeInMs),
+            cancellationToken);
+    }
+
+    public async Task<bool> GetAcquisitionReadyAsync(CancellationToken cancellationToken = default)
+    {
+        var result =
+            await Communicator.SendWithResponseAsync(new CcdGetAcquisitionReadyCommand(DeviceId), cancellationToken);
+        return (bool)result.Results["ready"];
+    }
+
+    public async Task SetAcquisitionStartAsync(bool isShutterOpened, CancellationToken cancellationToken = default)
+    {
+        var result =
+            await Communicator.SendWithResponseAsync(new CcdSetAcquisitionStartCommand(DeviceId, isShutterOpened),
+                cancellationToken);
+    }
+
+    public async Task SetRegionOfInterestAsync(RegionOfInterest regionOfInterest,
+        CancellationToken cancellationToken = default)
+    {
+        var result =
+            await Communicator.SendWithResponseAsync(new CcdSetRegionOfInterestCommand(DeviceId, regionOfInterest),
+                cancellationToken);
+    }
+
+    public async Task<Response> GetAcquisitionDataAsync(CancellationToken cancellationToken = default)
+    {
+        var result =
+            await Communicator.SendWithResponseAsync(new CcdGetAcquisitionDataCommand(DeviceId), cancellationToken);
+        return result;
+    }
+
+    public async Task<bool> GetAcquisitionBusyAsync(CancellationToken cancellationToken = default)
+    {
+        var result =
+            await Communicator.SendWithResponseAsync(new CcdGetAcquisitionBusyCommand(DeviceId), cancellationToken);
+        return (bool)result.Results["isBusy"];
+    }
+
+    public async Task SetXAxisConversionTypeAsync(ConversionType conversionType,
+        CancellationToken cancellationToken = default)
+    {
+        var result =
+            await Communicator.SendWithResponseAsync(new CcdSetXAxisConversionTypeCommand(DeviceId, conversionType),
+                cancellationToken);
+    }
+
+    public async Task<ConversionType> GetXAxisConversionTypeAsync(CancellationToken cancellationToken = default)
+    {
+        var result =
+            await Communicator.SendWithResponseAsync(new CcdGetXAxisConversionTypeCommand(DeviceId), cancellationToken);
+        return (ConversionType)result.Results["type"];
     }
 }
