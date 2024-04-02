@@ -1,5 +1,6 @@
 ﻿using Horiba.Sdk.Commands;
 using Horiba.Sdk.Communication;
+using Horiba.Sdk.Enums;
 
 namespace Horiba.Sdk.Devices;
 
@@ -98,7 +99,7 @@ public record ChargedCoupledDevice(int DeviceId, WebSocketCommunicator Communica
     public async Task SetXAxisConversionTypeAsync(ConversionType conversionType,
         CancellationToken cancellationToken = default)
     {
-            await Communicator.SendAsync(new CcdSetXAxisConversionTypeCommand(DeviceId, conversionType),
+        await Communicator.SendAsync(new CcdSetXAxisConversionTypeCommand(DeviceId, conversionType),
                 cancellationToken);
     }
 
@@ -107,5 +108,99 @@ public record ChargedCoupledDevice(int DeviceId, WebSocketCommunicator Communica
         var result =
             await Communicator.SendWithResponseAsync(new CcdGetXAxisConversionTypeCommand(DeviceId), cancellationToken);
         return Enum.Parse<ConversionType>(result.Results["type"].ToString());
+    }
+
+    public async Task RestartDeviceAsync(CancellationToken cancellationToken = default)
+    {
+        await Communicator.SendAsync(new CcdRestartCommand(DeviceId), cancellationToken);
+    }
+
+    public async Task<Dictionary<string, object>> GetDeviceConfigurationAsync(CancellationToken cancellationToken = default)
+    {
+        var result = await Communicator.SendWithResponseAsync(new CcdGetConfigCommand(DeviceId), cancellationToken);
+        return result.Results;
+    }
+
+    public async Task<int> GetNumberOfAveragesAsync(CancellationToken cancellationToken = default)
+    {
+        var result = await Communicator.SendWithResponseAsync(new CcdGetNumberOfAveragesCommand(DeviceId), cancellationToken);
+        return (int)result.Results["count"];
+    }
+
+    public async Task SetNumberOfAveragesAsync(int numberOfAverages, CancellationToken cancellationToken = default)
+    {
+        await Communicator.SendAsync(new CcdSetNumberOfAveragesCommand(DeviceId, numberOfAverages), cancellationToken);
+    }
+
+    public async Task<Gain> GetGainAsync(CancellationToken cancellationToken = default)
+    {
+        var result = await Communicator.SendWithResponseAsync(new CcdGetGainCommand(DeviceId), cancellationToken);
+        return Enum.Parse<Gain>(result.Results["info"].ToString());
+    }
+
+    public async Task SetGainAsync(Gain gain, CancellationToken cancellationToken = default)
+    {
+        await Communicator.SendAsync(new CcdSetGainCommand(DeviceId, gain), cancellationToken);
+    }
+
+    public async Task<string> GetFitParametersAsync(CancellationToken cancellationToken = default)
+    {
+        var result = await Communicator.SendWithResponseAsync(new CcdGetFitParametersCommand(DeviceId), cancellationToken);
+        // TODO verify this .ToString() will work properly
+        return result.Results["params"].ToString();
+    }
+
+    public async Task SetFitParametersAsync(string parameters, CancellationToken cancellationToken = default)
+    {
+        await Communicator.SendAsync(new CcdSetFitParametersCommand(DeviceId, parameters), cancellationToken);
+    }
+
+    public async Task<int> GetTimerResolutionAsync(CancellationToken cancellationToken = default)
+    {
+        var result = await Communicator.SendWithResponseAsync(new CcdGetTimerResolutionCommand(DeviceId), cancellationToken);
+        return (int)result.Results["resolution"];
+    }
+
+    public async Task SetTimerResolutionAsync(int resolution, CancellationToken cancellationToken = default)
+    {
+        await Communicator.SendAsync(new CcdSetTimerResolutionCommand(DeviceId, resolution), cancellationToken);
+    }
+
+    public async Task SetAcquisitionFormatAsync(AcquisitionFormat format, int numberOfRois, CancellationToken cancellationToken = default)
+    {
+        await Communicator.SendAsync(new CcdSetAcquisitionFormatCommand(DeviceId, format, numberOfRois), cancellationToken);
+    }
+
+    public async Task SetAcquisitionCountAsync(int count, CancellationToken cancellationToken = default)
+    {
+        await Communicator.SendAsync(new CcdSetAcquisitionCountCommand(DeviceId, count), cancellationToken);
+    }
+
+    public async Task<int> GetAcquisitionCountAsync(CancellationToken cancellationToken = default)
+    {
+        var result = await Communicator.SendWithResponseAsync(new CcdGetTimerResolutionCommand(DeviceId), cancellationToken);
+        return (int)result.Results["count"];
+    }
+
+    public async Task SetCleanCountAsync(int count, CleanCountMode mode, CancellationToken cancellationToken = default)
+    {
+        await Communicator.SendAsync(new CcdSetCleanCountCommand(DeviceId, count, mode), cancellationToken);
+    }
+
+    public async Task SetAcquisitionAbortAsync(CancellationToken cancellationToken = default)
+    {
+        await Communicator.SendAsync(new CcdSetAcquisitionAbortCommand(DeviceId), cancellationToken);
+    }
+
+    public async Task<string> GetCleanCountAsync(CancellationToken cancellationToken = default)
+    {
+        var result = await Communicator.SendWithResponseAsync(new CcdGetCleanCountCommand(DeviceId), cancellationToken);
+        return $"count: {result.Results["count"]} mode: {result.Results["mode"]}";
+    }
+
+    public async Task<int> GetDataSizeAsync(CancellationToken cancellationToken = default)
+    {
+        var result = await Communicator.SendWithResponseAsync(new CcdGetDataSizeCommand(DeviceId), cancellationToken);
+        return (int)result.Results["size"];
     }
 }

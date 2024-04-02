@@ -1,4 +1,4 @@
-﻿namespace Horiba.Sdk.Commands;
+﻿namespace Horiba.Sdk.Enums;
 
 public static class RegionOfInterestExtensions
 {
