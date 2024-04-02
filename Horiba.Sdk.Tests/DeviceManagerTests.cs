@@ -9,10 +9,10 @@ public class DeviceManagerTests
     {
         // Arrange
         using var deviceManager = new DeviceManager();
-        
+
         // Act
         await deviceManager.DiscoverDevicesAsync();
-        
+
         // Assert
         deviceManager.Monochromators.Should().NotBeNullOrEmpty();
         deviceManager.ChargedCoupledDevices.Should().NotBeNullOrEmpty();
@@ -25,7 +25,7 @@ public class DeviceManagerTests
         using var manager = new DeviceManager();
 
         // Act
-        await manager.StartAsync(true);
+        await manager.StartAsync();
 
         // Assert
         manager.IclProcess.StartTime.Should().BeWithin(TimeSpan.FromMilliseconds(200));
@@ -55,7 +55,7 @@ public class DeviceManagerTests
         // Act
         try
         {
-            await manager.StartAsync(true);
+            await manager.StartAsync();
         }
         catch (Win32Exception? e)
         {

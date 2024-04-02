@@ -4,7 +4,7 @@ public static class RegionOfInterestExtensions
 {
     public static Dictionary<string, object> ToDeviceParameters(this RegionOfInterest region, int deviceId)
     {
-        return new Dictionary<string, object>()
+        return new Dictionary<string, object>
         {
             { "index", deviceId },
             { "roiIndex", region.RoiIndex },
@@ -13,7 +13,7 @@ public static class RegionOfInterestExtensions
             { "xSize", region.Size.Width },
             { "ySize", region.Size.Height },
             { "xBin", region.Bin.X },
-            { "yBin", region.Bin.Y },
+            { "yBin", region.Bin.Y }
         };
     }
 }

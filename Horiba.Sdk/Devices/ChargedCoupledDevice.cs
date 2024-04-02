@@ -12,10 +12,8 @@ public record ChargedCoupledDevice(int DeviceId, WebSocketCommunicator Communica
             await Communicator.SendWithResponseAsync(new CcdIsConnectionOpenedCommand(DeviceId), cancellationToken);
 
         if (result.Results.TryGetValue("open", out var bR))
-        {
             // TODO figure out if .ToString() is enough
             return bool.Parse(bR.ToString());
-        }
 
         return false;
     }
@@ -71,15 +69,15 @@ public record ChargedCoupledDevice(int DeviceId, WebSocketCommunicator Communica
 
     public async Task SetAcquisitionStartAsync(bool isShutterOpened, CancellationToken cancellationToken = default)
     {
-            await Communicator.SendAsync(new CcdSetAcquisitionStartCommand(DeviceId, isShutterOpened),
-                cancellationToken);
+        await Communicator.SendAsync(new CcdSetAcquisitionStartCommand(DeviceId, isShutterOpened),
+            cancellationToken);
     }
 
     public async Task SetRegionOfInterestAsync(RegionOfInterest regionOfInterest,
         CancellationToken cancellationToken = default)
     {
-            await Communicator.SendAsync(new CcdSetRegionOfInterestCommand(DeviceId, regionOfInterest),
-                cancellationToken);
+        await Communicator.SendAsync(new CcdSetRegionOfInterestCommand(DeviceId, regionOfInterest),
+            cancellationToken);
     }
 
     public async Task<Dictionary<string, object>> GetAcquisitionDataAsync(CancellationToken cancellationToken = default)
@@ -100,7 +98,7 @@ public record ChargedCoupledDevice(int DeviceId, WebSocketCommunicator Communica
         CancellationToken cancellationToken = default)
     {
         await Communicator.SendAsync(new CcdSetXAxisConversionTypeCommand(DeviceId, conversionType),
-                cancellationToken);
+            cancellationToken);
     }
 
     public async Task<ConversionType> GetXAxisConversionTypeAsync(CancellationToken cancellationToken = default)
@@ -115,7 +113,8 @@ public record ChargedCoupledDevice(int DeviceId, WebSocketCommunicator Communica
         await Communicator.SendAsync(new CcdRestartCommand(DeviceId), cancellationToken);
     }
 
-    public async Task<Dictionary<string, object>> GetDeviceConfigurationAsync(CancellationToken cancellationToken = default)
+    public async Task<Dictionary<string, object>> GetDeviceConfigurationAsync(
+        CancellationToken cancellationToken = default)
     {
         var result = await Communicator.SendWithResponseAsync(new CcdGetConfigCommand(DeviceId), cancellationToken);
         return result.Results;
@@ -123,7 +122,8 @@ public record ChargedCoupledDevice(int DeviceId, WebSocketCommunicator Communica
 
     public async Task<int> GetNumberOfAveragesAsync(CancellationToken cancellationToken = default)
     {
-        var result = await Communicator.SendWithResponseAsync(new CcdGetNumberOfAveragesCommand(DeviceId), cancellationToken);
+        var result =
+            await Communicator.SendWithResponseAsync(new CcdGetNumberOfAveragesCommand(DeviceId), cancellationToken);
         return (int)result.Results["count"];
     }
 
@@ -145,7 +145,8 @@ public record ChargedCoupledDevice(int DeviceId, WebSocketCommunicator Communica
 
     public async Task<string> GetFitParametersAsync(CancellationToken cancellationToken = default)
     {
-        var result = await Communicator.SendWithResponseAsync(new CcdGetFitParametersCommand(DeviceId), cancellationToken);
+        var result =
+            await Communicator.SendWithResponseAsync(new CcdGetFitParametersCommand(DeviceId), cancellationToken);
         // TODO verify this .ToString() will work properly
         return result.Results["params"].ToString();
     }
@@ -157,7 +158,8 @@ public record ChargedCoupledDevice(int DeviceId, WebSocketCommunicator Communica
 
     public async Task<int> GetTimerResolutionAsync(CancellationToken cancellationToken = default)
     {
-        var result = await Communicator.SendWithResponseAsync(new CcdGetTimerResolutionCommand(DeviceId), cancellationToken);
+        var result =
+            await Communicator.SendWithResponseAsync(new CcdGetTimerResolutionCommand(DeviceId), cancellationToken);
         return (int)result.Results["resolution"];
     }
 
@@ -166,9 +168,11 @@ public record ChargedCoupledDevice(int DeviceId, WebSocketCommunicator Communica
         await Communicator.SendAsync(new CcdSetTimerResolutionCommand(DeviceId, resolution), cancellationToken);
     }
 
-    public async Task SetAcquisitionFormatAsync(AcquisitionFormat format, int numberOfRois, CancellationToken cancellationToken = default)
+    public async Task SetAcquisitionFormatAsync(AcquisitionFormat format, int numberOfRois,
+        CancellationToken cancellationToken = default)
     {
-        await Communicator.SendAsync(new CcdSetAcquisitionFormatCommand(DeviceId, format, numberOfRois), cancellationToken);
+        await Communicator.SendAsync(new CcdSetAcquisitionFormatCommand(DeviceId, format, numberOfRois),
+            cancellationToken);
     }
 
     public async Task SetAcquisitionCountAsync(int count, CancellationToken cancellationToken = default)
@@ -178,7 +182,8 @@ public record ChargedCoupledDevice(int DeviceId, WebSocketCommunicator Communica
 
     public async Task<int> GetAcquisitionCountAsync(CancellationToken cancellationToken = default)
     {
-        var result = await Communicator.SendWithResponseAsync(new CcdGetTimerResolutionCommand(DeviceId), cancellationToken);
+        var result =
+            await Communicator.SendWithResponseAsync(new CcdGetTimerResolutionCommand(DeviceId), cancellationToken);
         return (int)result.Results["count"];
     }
 

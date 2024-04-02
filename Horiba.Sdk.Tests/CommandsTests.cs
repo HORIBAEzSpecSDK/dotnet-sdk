@@ -7,14 +7,14 @@ public class CommandsTests
     {
         // Arrange
         var iclInfoCommand = new IclInfoCommand();
-        
+
         // Act
         var jsonCommand = iclInfoCommand.ToJson();
-        
+
         // Assert
         jsonCommand.MatchSnapshot(options => options.IgnoreField("id"));
     }
-    
+
     [Fact]
     public async Task GivenDeviceInfoCommand_WhenSendingUsingCommunicator_ThenReceivesExpectedResponse()
     {

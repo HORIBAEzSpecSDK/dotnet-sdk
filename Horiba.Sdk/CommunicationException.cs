@@ -2,5 +2,4 @@
 
 public class CommunicationException(string message) : Exception(message)
 {
-    
 }
