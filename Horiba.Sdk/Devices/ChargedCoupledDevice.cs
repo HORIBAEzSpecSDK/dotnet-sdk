@@ -7,7 +7,7 @@ namespace Horiba.Sdk.Devices;
 
 public class ChargedCoupledDeviceDescription
 {
-    [JsonProperty("productId")] public string ProductId { get; set; }
+    [JsonProperty("productId")] public int ProductId { get; set; }
     [JsonProperty("deviceType")] public string DeviceType { get; set; }
     [JsonProperty("serialNumber")] public string SerialNumber { get; set; }
 }

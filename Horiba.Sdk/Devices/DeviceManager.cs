@@ -63,8 +63,8 @@ public sealed class DeviceManager : IDeviceManager, IDisposable
     {
         try
         {
-            Monochromators = await new MonochromatorDeviceDiscovery(Communicator).DiscoverDevicesAsync();
-            ChargedCoupledDevices = await new ChargedCoupleDeviceDeviceDiscovery(Communicator).DiscoverDevicesAsync();
+            Monochromators = await new MonochromatorDeviceDiscovery(Communicator).DiscoverDevicesAsync(cancellationToken);
+            ChargedCoupledDevices = await new ChargedCoupleDeviceDeviceDiscovery(Communicator).DiscoverDevicesAsync(cancellationToken);
         }
         catch (Exception e)
         {
