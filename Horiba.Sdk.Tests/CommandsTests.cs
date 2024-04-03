@@ -26,7 +26,9 @@ public class CommandsTests
         var response = await manager.Communicator.SendWithResponseAsync(new IclInfoCommand());
 
         // Assert
-        response.MatchSnapshot(options => options.IgnoreField("id"));
+        response.MatchSnapshot(options => options.IgnoreField("id")
+            .IgnoreField("**.nodeBuilt")
+            .IgnoreField("**.nodeVersion"));
     }
 
     [Fact]
