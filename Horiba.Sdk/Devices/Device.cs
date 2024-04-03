@@ -2,8 +2,10 @@
 
 namespace Horiba.Sdk.Devices;
 
-public abstract record Device(int DeviceId, WebSocketCommunicator Communicator)
+public abstract record Device(int DeviceId, string DeviceType, string SerialNumber, WebSocketCommunicator Communicator)
 {
+    public string DeviceType { get; } = DeviceType;
+    public string SerialNumber { get; } = SerialNumber;
     public int DeviceId { get; } = DeviceId;
     public WebSocketCommunicator Communicator { get; } = Communicator;
     public bool IsConnectionOpened { get; protected set; }

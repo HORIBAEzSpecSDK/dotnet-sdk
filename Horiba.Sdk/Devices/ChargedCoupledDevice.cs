@@ -1,10 +1,17 @@
 ﻿using Horiba.Sdk.Commands;
 using Horiba.Sdk.Communication;
 using Horiba.Sdk.Enums;
+using Newtonsoft.Json;
 
 namespace Horiba.Sdk.Devices;
 
-public record ChargedCoupledDevice(int DeviceId, WebSocketCommunicator Communicator) : Device(DeviceId, Communicator)
+public class ChargedCoupledDeviceDescription
+{
+    [JsonProperty("productId")] public string ProductId { get; set; }
+    [JsonProperty("deviceType")] public string DeviceType { get; set; }
+    [JsonProperty("serialNumber")] public string SerialNumber { get; set; }
+}
+public record ChargedCoupledDevice(int DeviceId, string DeviceType, string SerialNumber, WebSocketCommunicator Communicator) : Device(DeviceId, DeviceType, SerialNumber, Communicator)
 {
     public override async Task<bool> IsConnectionOpenedAsync(CancellationToken cancellationToken = default)
     {
