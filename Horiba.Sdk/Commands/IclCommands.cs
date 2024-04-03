@@ -10,3 +10,5 @@ internal record IclBinaryModeAllCommand()
     : Command("icl_binMode", new Dictionary<string, object> { { "mode", "all" } });
 
 internal record IclDiscoverCcdCommand(): Command("ccd_list");
+
+internal record IclDiscoverMonochromatorDevicesCommand(): Command("mono_list");

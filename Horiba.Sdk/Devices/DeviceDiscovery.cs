@@ -44,7 +44,7 @@ public class MonochromatorDeviceDiscovery(WebSocketCommunicator communicator) : 
 {
     public override async Task<List<MonochromatorDevice>> DiscoverDevicesAsync(CancellationToken cancellationToken)
     {
-        var response = await communicator.SendWithResponseAsync(new IclDiscoverCcdCommand(), cancellationToken);
+        var response = await communicator.SendWithResponseAsync(new IclDiscoverMonochromatorDevicesCommand(), cancellationToken);
         var result = new List<MonochromatorDevice>();
         foreach (var rawDescription in response.Results)
         {
@@ -60,7 +60,7 @@ public class MonochromatorDeviceDiscovery(WebSocketCommunicator communicator) : 
     {
         var splitDescription = rawDescription.Split(";");
 
-        var id = splitDescription[0];
+        var id = splitDescription[0].Replace("[\r\n  \"","").Trim();
         var ccdType = splitDescription[1];
         var serialNumber = splitDescription[2];
         

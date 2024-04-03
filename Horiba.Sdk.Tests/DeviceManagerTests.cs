@@ -11,7 +11,7 @@ public class DeviceManagerTests
         using var deviceManager = new DeviceManager();
 
         // Act
-        await deviceManager.DiscoverDevicesAsync();
+        await deviceManager.StartAsync();
 
         // Assert
         deviceManager.Monochromators.Should().NotBeNullOrEmpty();
@@ -86,8 +86,7 @@ public class DeviceManagerTests
     {
         // Arrange
         var discovery = new MonochromatorDeviceDiscovery(null);
-        var rawInput =
-            "{\n\t\"command\": \"mono_list\",\n\t\"errors\": [],\n\t\"id\": 0,\n\t\"results\": {\n\t\t\"list\": [\n\t\t\t\"0;HORIBA Scientific iHR;1745B-2017-iHR320       \"\n\t\t]\n\t}\n}";
+        var rawInput = "[\r\n  \"0;HORIBA Scientific iHR;1745B-2017-iHR320]";
         
         // Act
         var description = discovery.ExtractDescription(rawInput);

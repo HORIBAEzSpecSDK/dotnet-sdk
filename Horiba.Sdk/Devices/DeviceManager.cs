@@ -42,7 +42,7 @@ public sealed class DeviceManager : IDeviceManager, IDisposable
 
         if (enableBinaryMessages) await Communicator.SendWithResponseAsync(new IclBinaryModeAllCommand());
 
-        //await DiscoverDevicesAsync();
+        await DiscoverDevicesAsync();
     }
 
     public async Task StopAsync()
