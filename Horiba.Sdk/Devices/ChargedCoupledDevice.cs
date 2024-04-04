@@ -113,7 +113,7 @@ public record ChargedCoupledDevice(int DeviceId, string DeviceType, string Seria
     {
         var result =
             await Communicator.SendWithResponseAsync(new CcdGetXAxisConversionTypeCommand(DeviceId), cancellationToken);
-        return Enum.Parse<ConversionType>(result.Results["type"].ToString());
+        return (ConversionType)int.Parse(result.Results["type"].ToString());
     }
 
     public async Task RestartDeviceAsync(CancellationToken cancellationToken = default)

@@ -1,4 +1,6 @@
-﻿namespace Horiba.Sdk.Tests;
+﻿using Horiba.Sdk.Enums;
+
+namespace Horiba.Sdk.Tests;
 
 public class ChargedCoupleDeviceTests
 {
@@ -34,5 +36,24 @@ public class ChargedCoupleDeviceTests
         
         // Assert
         list.MatchSnapshot();
+    }
+
+    [Theory]
+    [InlineData(Gain.HighLight)]
+    [InlineData(Gain.BestDynamicRange)]
+    [InlineData(Gain.HighSensitivity)]
+    public async Task GivenCcd_WhenTriggeringSetGainMethod_ThenGainIsSet(Gain expectedSetting)
+    {
+        // Arrange
+        var dm = new DeviceManager();
+        await dm.StartAsync();
+        var ccd = dm.ChargedCoupledDevices.First();
+        
+        // Act
+        await ccd.SetGainAsync(expectedSetting);
+        var actualSetting = await ccd.GetGainAsync();
+        
+        // Assert
+        actualSetting.Should().HaveSameValueAs(expectedSetting);
     }
 }
