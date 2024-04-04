@@ -42,15 +42,18 @@ public sealed class WebSocketCommunicator
         await SendAsync(command, cancellationToken);
 
         // TODO this is hard limit! Check what is the maximum info that can be sent and its configuration options
-        var responseBuffer =
-            new byte[1024]; //2048*512 // we need to wait for at least 300ms - 500ms for a flag to be set
-        var wsResponse = await _wsClient.ReceiveAsync(new ArraySegment<byte>(responseBuffer), cancellationToken);
+        var singleResponseBuffer = new byte[1024*4];
+        await _wsClient.ReceiveAsync(new ArraySegment<byte>(singleResponseBuffer), cancellationToken);
 
-        var res = Encoding.UTF8.GetString(responseBuffer, 0, wsResponse.Count);
+        var res = Encoding.UTF8.GetString(singleResponseBuffer, 0, singleResponseBuffer.Length);
         var parsedResult = JsonConvert.DeserializeObject<Response>(res);
         Log.Debug("Receiving response: {@Response}", parsedResult);
 
         if (parsedResult is null) throw new NullReferenceException("Deserialization of the response failed");
+        if (parsedResult.Errors.Count != 0)
+        {
+            throw new CommunicationException(parsedResult.Errors.First());
+        }
 
         return parsedResult;
     }

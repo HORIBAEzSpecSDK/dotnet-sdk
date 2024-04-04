@@ -1,4 +1,5 @@
-﻿using Horiba.Sdk.Commands;
+﻿using System.Text;
+using Horiba.Sdk.Commands;
 using Horiba.Sdk.Communication;
 using Horiba.Sdk.Enums;
 using Newtonsoft.Json;
@@ -35,30 +36,30 @@ public record ChargedCoupledDevice(int DeviceId, string DeviceType, string Seria
         return Communicator.SendAsync(new CcdCloseCommand(DeviceId), cancellationToken);
     }
 
-    public async Task<int> GetChipTemperatureAsync(CancellationToken cancellationToken = default)
+    public async Task<double> GetChipTemperatureAsync(CancellationToken cancellationToken = default)
     {
         var result =
             await Communicator.SendWithResponseAsync(new CcdGetTemperatureCommand(DeviceId), cancellationToken);
-        return (int)result.Results["temperature"];
+        return double.Parse(result.Results["temperature"].ToString());
     }
 
     public async Task<(int Width, int Height)> GetChipSizeAsync(CancellationToken cancellationToken = default)
     {
         var result = await Communicator.SendWithResponseAsync(new CcdGetChipSizeCommand(DeviceId), cancellationToken);
-        return ((int)result.Results["x"], (int)result.Results["y"]);
+        return (int.Parse(result.Results["x"].ToString()), int.Parse(result.Results["y"].ToString()));
     }
 
-    public async Task<int> GetSpeedAsync(CancellationToken cancellationToken = default)
+    public async Task<Speed> GetSpeedAsync(CancellationToken cancellationToken = default)
     {
         var result = await Communicator.SendWithResponseAsync(new CcdGetSpeedCommand(DeviceId), cancellationToken);
-        return (int)result.Results["info"];
+        return (Speed)int.Parse(result.Results["token"].ToString());
     }
 
     public async Task<int> GetExposureTimeAsync(CancellationToken cancellationToken = default)
     {
         var result =
             await Communicator.SendWithResponseAsync(new CcdGetExposureTimeCommand(DeviceId), cancellationToken);
-        return (int)result.Results["time"];
+        return int.Parse(result.Results["time"].ToString());
     }
 
     public async Task SetExposureTimeAsync(int exposureTimeInMs, CancellationToken cancellationToken = default)
@@ -131,7 +132,7 @@ public record ChargedCoupledDevice(int DeviceId, string DeviceType, string Seria
     {
         var result =
             await Communicator.SendWithResponseAsync(new CcdGetNumberOfAveragesCommand(DeviceId), cancellationToken);
-        return (int)result.Results["count"];
+        return int.Parse(result.Results["count"].ToString());
     }
 
     public async Task SetNumberOfAveragesAsync(int numberOfAverages, CancellationToken cancellationToken = default)
@@ -142,7 +143,7 @@ public record ChargedCoupledDevice(int DeviceId, string DeviceType, string Seria
     public async Task<Gain> GetGainAsync(CancellationToken cancellationToken = default)
     {
         var result = await Communicator.SendWithResponseAsync(new CcdGetGainCommand(DeviceId), cancellationToken);
-        return Enum.Parse<Gain>(result.Results["info"].ToString());
+        return (Gain)int.Parse(result.Results["token"].ToString());
     }
 
     public async Task SetGainAsync(Gain gain, CancellationToken cancellationToken = default)
@@ -154,7 +155,6 @@ public record ChargedCoupledDevice(int DeviceId, string DeviceType, string Seria
     {
         var result =
             await Communicator.SendWithResponseAsync(new CcdGetFitParametersCommand(DeviceId), cancellationToken);
-        // TODO verify this .ToString() will work properly
         return result.Results["params"].ToString();
     }
 
@@ -167,7 +167,7 @@ public record ChargedCoupledDevice(int DeviceId, string DeviceType, string Seria
     {
         var result =
             await Communicator.SendWithResponseAsync(new CcdGetTimerResolutionCommand(DeviceId), cancellationToken);
-        return (int)result.Results["resolution"];
+        return int.Parse(result.Results["resolution"].ToString());
     }
 
     public async Task SetTimerResolutionAsync(int resolution, CancellationToken cancellationToken = default)
@@ -191,7 +191,7 @@ public record ChargedCoupledDevice(int DeviceId, string DeviceType, string Seria
     {
         var result =
             await Communicator.SendWithResponseAsync(new CcdGetTimerResolutionCommand(DeviceId), cancellationToken);
-        return (int)result.Results["count"];
+        return int.Parse(result.Results["resolution"].ToString());
     }
 
     public async Task SetCleanCountAsync(int count, CleanCountMode mode, CancellationToken cancellationToken = default)
@@ -213,6 +213,6 @@ public record ChargedCoupledDevice(int DeviceId, string DeviceType, string Seria
     public async Task<int> GetDataSizeAsync(CancellationToken cancellationToken = default)
     {
         var result = await Communicator.SendWithResponseAsync(new CcdGetDataSizeCommand(DeviceId), cancellationToken);
-        return (int)result.Results["size"];
+        return int.Parse(result.Results["size"].ToString());
     }
 }
