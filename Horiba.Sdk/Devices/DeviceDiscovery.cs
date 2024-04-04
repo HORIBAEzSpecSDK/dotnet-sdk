@@ -25,7 +25,7 @@ public class ChargedCoupleDeviceDeviceDiscovery(WebSocketCommunicator communicat
             await communicator.SendWithResponseAsync(new IclListCcdCommand(), cancellationToken);
         foreach (var rawDescription in response.Results)
         {
-            var deviceDescription = ExtractDescription(rawDescription.Value.ToString());
+            var deviceDescription = ExtractDescription(rawDescription);
             result.Add(new ChargedCoupledDevice(deviceDescription.ProductId, deviceDescription.DeviceType,
                 deviceDescription.SerialNumber, communicator));
         }
@@ -33,11 +33,11 @@ public class ChargedCoupleDeviceDeviceDiscovery(WebSocketCommunicator communicat
         return result;
     }
 
-    internal ChargedCoupledDeviceDescription ExtractDescription(string rawDescription)
+    internal ChargedCoupledDeviceDescription ExtractDescription(KeyValuePair<string, object> pair)
     {
-        var ccdTypeMatch = Regex.Match(rawDescription, @"deviceType: (.*?),");
-        var ccdIdMatch = Regex.Match(rawDescription, @"productId: (.*?),");
-        var ccdSerialNumberMatch = Regex.Match(rawDescription, @"serialNumber: (.*?)}");
+        var ccdTypeMatch = Regex.Match(pair.Value.ToString(), @"deviceType: (.*?),");
+        var ccdIdMatch = Regex.Match(pair.Key, @"index(.*?):");
+        var ccdSerialNumberMatch = Regex.Match(pair.Value.ToString(), @"serialNumber: (.*?)}");
 
         var id = ccdIdMatch.Groups[1].Value.Trim();
         var ccdType = ccdTypeMatch.Groups[1].Value.Trim();
