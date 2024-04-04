@@ -48,6 +48,7 @@ public class ChargedCoupleDeviceTests
         var dm = new DeviceManager();
         await dm.StartAsync();
         var ccd = dm.ChargedCoupledDevices.First();
+        await ccd.OpenConnectionAsync();
         
         // Act
         await ccd.SetGainAsync(expectedSetting);
@@ -55,5 +56,23 @@ public class ChargedCoupleDeviceTests
         
         // Assert
         actualSetting.Should().HaveSameValueAs(expectedSetting);
+    }
+
+    [Fact]
+    public async Task GivenCcd_WhenTriggeringSetFitParameters_ThenFitParametersAreSet()
+    {
+        // Arrange
+        var dm = new DeviceManager();
+        await dm.StartAsync();
+        var ccd = dm.ChargedCoupledDevices.First();
+        await ccd.OpenConnectionAsync();
+        var expectedParams = "1,1,1,1";
+        
+        // Act
+        await ccd.SetFitParametersAsync(expectedParams);
+        var actual = await ccd.GetFitParametersAsync();
+        
+        // Assert
+        actual.Should().BeSameAs(expectedParams);
     }
 }

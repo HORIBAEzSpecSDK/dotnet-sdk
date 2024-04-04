@@ -10,7 +10,7 @@ public sealed class DeviceManager : IDeviceManager, IDisposable
     internal readonly Process IclProcess = new();
     private bool _isIclRunning;
 
-    public DeviceManager(string iclExePath = @"C:\Program Files\HORIBA Scientific\SDK\icl.exe")
+    public DeviceManager(string? iclExePath = null)
     {
         Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Verbose()
@@ -18,7 +18,8 @@ public sealed class DeviceManager : IDeviceManager, IDisposable
             .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
             .CreateLogger();
         Communicator = new WebSocketCommunicator();
-        IclProcess.StartInfo.FileName = iclExePath;
+        IclProcess.StartInfo.FileName = iclExePath ?? 
+                                        $@"{Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles)}\HORIBA Scientific\SDK\icl.exe";
         IclProcess.Exited += IclProcessOnExited;
     }
 
@@ -36,6 +37,8 @@ public sealed class DeviceManager : IDeviceManager, IDisposable
         }
 
         await Communicator.OpenConnectionAsync();
+
+        var test = await Communicator.SendWithResponseAsync(new IclInfoCommand());
 
         if (enableBinaryMessages) await Communicator.SendWithResponseAsync(new IclBinaryModeAllCommand());
 
@@ -60,7 +63,7 @@ public sealed class DeviceManager : IDeviceManager, IDisposable
     {
         try
         {
-            Monochromators = await new MonochromatorDeviceDiscovery(Communicator).DiscoverDevicesAsync(cancellationToken);
+            //Monochromators = await new MonochromatorDeviceDiscovery(Communicator).DiscoverDevicesAsync(cancellationToken);
             ChargedCoupledDevices = await new ChargedCoupleDeviceDeviceDiscovery(Communicator).DiscoverDevicesAsync(cancellationToken);
         }
         catch (Exception e)

@@ -39,14 +39,10 @@ public sealed class WebSocketCommunicator
 
     public async Task<Response> SendWithResponseAsync(Command command, CancellationToken cancellationToken = default)
     {
-        await SendAsync(command, cancellationToken);
+        await SendInternalAsync(command, cancellationToken);
 
         // TODO this is hard limit! Check what is the maximum info that can be sent and its configuration options
-        var singleResponseBuffer = new byte[1024*4];
-        await _wsClient.ReceiveAsync(new ArraySegment<byte>(singleResponseBuffer), cancellationToken);
-
-        var res = Encoding.UTF8.GetString(singleResponseBuffer, 0, singleResponseBuffer.Length);
-        var parsedResult = JsonConvert.DeserializeObject<Response>(res);
+        var parsedResult = await ReceiveResponseAsync(cancellationToken);
         Log.Debug("Receiving response: {@Response}", parsedResult);
 
         if (parsedResult is null) throw new NullReferenceException("Deserialization of the response failed");
@@ -58,15 +54,32 @@ public sealed class WebSocketCommunicator
         return parsedResult;
     }
 
-    public Task SendAsync(Command command, CancellationToken cancellationToken = default)
+    public async Task SendAsync(Command command, CancellationToken cancellationToken = default)
+    {
+        await SendInternalAsync(command, cancellationToken);
+        var echo = await ReceiveResponseAsync(cancellationToken);
+        Log.Debug("ECHO set command: {@Response}", echo);
+    }
+
+    private async Task SendInternalAsync(Command command, CancellationToken cancellationToken)
     {
         if (!IsConnectionOpened)
             throw new CommunicationException(
                 "Connection is not established. Try opening connection before sending command");
 
         Log.Debug("Sending command: {@Command}", command);
-        return _wsClient.SendAsync(new ArraySegment<byte>(command.ToByteArray()), WebSocketMessageType.Text, true,
+        await _wsClient.SendAsync(new ArraySegment<byte>(command.ToByteArray()), WebSocketMessageType.Text, true,
             cancellationToken);
+    }
+
+    private async Task<Response?> ReceiveResponseAsync(CancellationToken cancellationToken)
+    {
+        var singleResponseBuffer = new byte[1024*4];
+        await _wsClient.ReceiveAsync(new ArraySegment<byte>(singleResponseBuffer), cancellationToken);
+
+        var res = Encoding.UTF8.GetString(singleResponseBuffer, 0, singleResponseBuffer.Length);
+        var parsedResult = JsonConvert.DeserializeObject<Response>(res);
+        return parsedResult;
     }
 
     private async Task ReceiveMessage(WebSocket webSocket, CancellationToken cancellationToken)
