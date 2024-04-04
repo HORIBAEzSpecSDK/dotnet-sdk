@@ -1,0 +1,38 @@
+﻿namespace Horiba.Sdk.Tests;
+
+public class ChargedCoupleDeviceTests
+{
+    [Fact]
+    public async Task GivenCcd_WhenTriggeringAllGetOperations_ThenReturnsConsistentResults()
+    {
+        // Arrange
+        var dm = new DeviceManager();
+        await dm.StartAsync();
+        var ccd = dm.ChargedCoupledDevices[0];
+        await ccd.OpenConnectionAsync();
+        
+        // Act
+        var list = new List<object>()
+        {
+            await ccd.GetChipSizeAsync(),
+            await ccd.GetGainAsync(),
+            await ccd.GetSpeedAsync(),
+            await ccd.GetChipTemperatureAsync(),
+            await ccd.GetCleanCountAsync(),
+            await ccd.GetDeviceConfigurationAsync(),
+            await ccd.GetExposureTimeAsync(),
+            await ccd.GetFitParametersAsync(),
+            await ccd.GetTimerResolutionAsync(),
+            await ccd.GetAcquisitionBusyAsync(),
+            await ccd.GetAcquisitionCountAsync(),
+            // await ccd.GetAcquisitionDataAsync(), // currently no data
+            await ccd.GetAcquisitionReadyAsync(),
+            await ccd.GetDataSizeAsync(),
+            // await ccd.GetNumberOfAveragesAsync(), // maybe device does not support this?
+            await ccd.GetXAxisConversionTypeAsync()
+        };
+        
+        // Assert
+        list.MatchSnapshot();
+    }
+}

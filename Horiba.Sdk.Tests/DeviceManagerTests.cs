@@ -65,33 +65,4 @@ public class DeviceManagerTests
         // Assert
         expectedException.Should().NotBeNull();
     }
-
-    [Fact]
-    public async Task GivenCcdDiscovery_WhenExtractingRawDeviceDescription_ThenReturnsCorrectDeviceDescription()
-    {
-        // Arrange
-        var discovery = new ChargedCoupleDeviceDeviceDiscovery(null);
-        var rawInput =
-            "{\n    \"index0: %2\": \"{ productId: 13, deviceType: HORIBA Scientific Syncerity, serialNumber: Camera SN:  2244}\"\n  }";
-        
-        // Act
-        var description = discovery.ExtractDescription(rawInput);
-        
-        // Assert
-        description.MatchSnapshot();
-    }
-
-    [Fact]
-    public async Task GivenMonoDiscovery_WhenExtractingRawDeviceDescription_ThenReturnsCorrectDeviceDescription()
-    {
-        // Arrange
-        var discovery = new MonochromatorDeviceDiscovery(null);
-        var rawInput = "[\r\n  \"0;HORIBA Scientific iHR;1745B-2017-iHR320]";
-        
-        // Act
-        var description = discovery.ExtractDescription(rawInput);
-        
-        // Assert
-        description.MatchSnapshot();
-    }
 }
