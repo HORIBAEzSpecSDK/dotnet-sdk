@@ -26,7 +26,7 @@ public sealed class DeviceManager : IDeviceManager, IDisposable
     public List<MonochromatorDevice> Monochromators { get; private set; } = [];
     public List<ChargedCoupledDevice> ChargedCoupledDevices { get; private set; } = [];
 
-    public async Task StartAsync(bool startIcl = true, bool enableBinaryMessages = true)
+    public async Task StartAsync(bool startIcl = true, bool enableBinaryMessages = false)
     {
         if (startIcl)
         {
@@ -36,9 +36,6 @@ public sealed class DeviceManager : IDeviceManager, IDisposable
         }
 
         await Communicator.OpenConnectionAsync();
-
-        // TODO should we log these responses? Why do we need them?
-        var info = await Communicator.SendWithResponseAsync(new IclInfoCommand());
 
         if (enableBinaryMessages) await Communicator.SendWithResponseAsync(new IclBinaryModeAllCommand());
 

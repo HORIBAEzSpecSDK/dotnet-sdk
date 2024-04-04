@@ -13,9 +13,16 @@ public class ChargedCoupleDeviceDeviceDiscovery(WebSocketCommunicator communicat
     : DeviceDiscovery<ChargedCoupledDevice>
 {
     public override async Task<List<ChargedCoupledDevice>> DiscoverDevicesAsync(CancellationToken cancellationToken)
-    {
-        var response = await communicator.SendWithResponseAsync(new IclDiscoverCcdCommand(), cancellationToken);
+    {        
+        var countResponse = await communicator.SendWithResponseAsync(new IclDiscoverCcdCommand(), cancellationToken);
+        var devicesCount = (long)countResponse.Results["count"];
+        if (devicesCount < 0)
+        {
+            return new List<ChargedCoupledDevice>();
+        }
         var result = new List<ChargedCoupledDevice>();
+        var response =
+            await communicator.SendWithResponseAsync(new IclListCcdCommand(), cancellationToken);
         foreach (var rawDescription in response.Results)
         {
             var deviceDescription = ExtractDescription(rawDescription.Value.ToString());
@@ -44,8 +51,15 @@ public class MonochromatorDeviceDiscovery(WebSocketCommunicator communicator) : 
 {
     public override async Task<List<MonochromatorDevice>> DiscoverDevicesAsync(CancellationToken cancellationToken)
     {
-        var response = await communicator.SendWithResponseAsync(new IclDiscoverMonochromatorDevicesCommand(), cancellationToken);
+        var countResponse = await communicator.SendWithResponseAsync(new IclDiscoverMonochromatorDevicesCommand(), cancellationToken);
+        var devicesCount = (long)countResponse.Results["count"];
+        if (devicesCount < 0)
+        {
+            return new List<MonochromatorDevice>();
+        }
         var result = new List<MonochromatorDevice>();
+        var response =
+            await communicator.SendWithResponseAsync(new IclListMonochromatorDevicesCommand(), cancellationToken);
         foreach (var rawDescription in response.Results)
         {
             var deviceDescription = ExtractDescription(rawDescription.Value.ToString());
