@@ -22,6 +22,5 @@ internal static class CommandExtensions
         if (completedTask != task) throw new TimeoutException("The operation has timed out.");
         timeoutCancellationTokenSource.Cancel();
         return await task; // Very important in order to propagate exceptions
-
     }
 }

@@ -38,7 +38,7 @@ public class DeviceManagerTests
         using var manager = new DeviceManager();
 
         // Act
-        await manager.StartAsync(true, false);
+        await manager.StartAsync();
         await manager.StopAsync();
 
         // Assert

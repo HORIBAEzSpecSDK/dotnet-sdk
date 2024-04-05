@@ -2,7 +2,11 @@
 
 namespace Horiba.Sdk.Devices;
 
-public record SingleChannelDetectorDevice(int DeviceId, string DeviceType, string SerialNumber, WebSocketCommunicator Communicator)
+public record SingleChannelDetectorDevice(
+    int DeviceId,
+    string DeviceType,
+    string SerialNumber,
+    WebSocketCommunicator Communicator)
     : Device(DeviceId, DeviceType, SerialNumber, Communicator)
 {
     public override Task<bool> IsConnectionOpenedAsync(CancellationToken cancellationToken = default)

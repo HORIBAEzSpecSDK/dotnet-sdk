@@ -20,7 +20,7 @@ public class CommandsTests
     {
         // Arrange
         using var manager = new DeviceManager();
-        await manager.StartAsync(true, false);
+        await manager.StartAsync();
 
         // Act
         var response = await manager.Communicator.SendWithResponseAsync(new IclInfoCommand());

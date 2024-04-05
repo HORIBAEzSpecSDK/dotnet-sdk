@@ -41,15 +41,12 @@ public sealed class WebSocketCommunicator
     {
         await SendInternalAsync(command, cancellationToken);
 
-        
+
         var parsedResult = await ReceiveResponseAsync(cancellationToken);
         Log.Debug("Receiving response: {@Response}", parsedResult);
 
         if (parsedResult is null) throw new NullReferenceException("Deserialization of the response failed");
-        if (parsedResult.Errors.Count != 0)
-        {
-            throw new CommunicationException(parsedResult.Errors.First());
-        }
+        if (parsedResult.Errors.Count != 0) throw new CommunicationException(parsedResult.Errors.First());
 
         return parsedResult;
     }
@@ -74,7 +71,7 @@ public sealed class WebSocketCommunicator
 
     private async Task<Response?> ReceiveResponseAsync(CancellationToken cancellationToken)
     {
-        var singleResponseBuffer = new byte[1024*4];
+        var singleResponseBuffer = new byte[1024 * 4];
         await _wsClient.ReceiveAsync(new ArraySegment<byte>(singleResponseBuffer), cancellationToken);
 
         var res = Encoding.UTF8.GetString(singleResponseBuffer, 0, singleResponseBuffer.Length);

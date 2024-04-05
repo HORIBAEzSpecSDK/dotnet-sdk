@@ -12,9 +12,9 @@ public class ChargedCoupleDeviceTests
         await dm.StartAsync();
         var ccd = dm.ChargedCoupledDevices[0];
         await ccd.OpenConnectionAsync();
-        
+
         // Act
-        var list = new List<object>()
+        var list = new List<object>
         {
             await ccd.GetChipSizeAsync(),
             await ccd.GetGainAsync(),
@@ -33,7 +33,7 @@ public class ChargedCoupleDeviceTests
             // await ccd.GetNumberOfAveragesAsync(), // maybe device does not support this?
             await ccd.GetXAxisConversionTypeAsync()
         };
-        
+
         // Assert
         list.MatchSnapshot();
     }
@@ -49,11 +49,11 @@ public class ChargedCoupleDeviceTests
         await dm.StartAsync();
         var ccd = dm.ChargedCoupledDevices.First();
         await ccd.OpenConnectionAsync();
-        
+
         // Act
         await ccd.SetGainAsync(expectedSetting);
         var actualSetting = await ccd.GetGainAsync();
-        
+
         // Assert
         actualSetting.Should().HaveSameValueAs(expectedSetting);
     }
@@ -67,11 +67,11 @@ public class ChargedCoupleDeviceTests
         var ccd = dm.ChargedCoupledDevices.First();
         await ccd.OpenConnectionAsync();
         var expectedParams = "1,1,1,1";
-        
+
         // Act
         await ccd.SetFitParametersAsync(expectedParams);
         var actual = await ccd.GetFitParametersAsync();
-        
+
         // Assert
         actual.Should().BeSameAs(expectedParams);
     }

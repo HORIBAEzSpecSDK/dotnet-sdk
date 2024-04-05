@@ -5,7 +5,7 @@ using Serilog;
 
 namespace Horiba.Sdk.Devices;
 
-public sealed class DeviceManager : IDeviceManager, IDisposable
+public sealed class DeviceManager : IDisposable
 {
     internal readonly Process IclProcess = new();
     private bool _isIclRunning;
@@ -18,7 +18,7 @@ public sealed class DeviceManager : IDeviceManager, IDisposable
             .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
             .CreateLogger();
         Communicator = new WebSocketCommunicator();
-        IclProcess.StartInfo.FileName = iclExePath ?? 
+        IclProcess.StartInfo.FileName = iclExePath ??
                                         $@"{Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles)}\HORIBA Scientific\SDK\icl.exe";
         IclProcess.Exited += IclProcessOnExited;
     }
@@ -26,6 +26,19 @@ public sealed class DeviceManager : IDeviceManager, IDisposable
     public WebSocketCommunicator Communicator { get; }
     public List<MonochromatorDevice> Monochromators { get; private set; } = [];
     public List<ChargedCoupledDevice> ChargedCoupledDevices { get; private set; } = [];
+
+    public void Dispose()
+    {
+        if (_isIclRunning)
+        {
+            Log.Debug("Killing ICL process...");
+            IclProcess.Kill();
+        }
+
+        IclProcess.Exited -= IclProcessOnExited;
+        IclProcess.Dispose();
+        if (Communicator.IsConnectionOpened) Communicator.CloseConnectionAsync();
+    }
 
     public async Task StartAsync(bool startIcl = true, bool enableBinaryMessages = false)
     {
@@ -64,24 +77,12 @@ public sealed class DeviceManager : IDeviceManager, IDisposable
         try
         {
             //Monochromators = await new MonochromatorDeviceDiscovery(Communicator).DiscoverDevicesAsync(cancellationToken);
-            ChargedCoupledDevices = await new ChargedCoupleDeviceDeviceDiscovery(Communicator).DiscoverDevicesAsync(cancellationToken);
+            ChargedCoupledDevices =
+                await new ChargedCoupleDeviceDeviceDiscovery(Communicator).DiscoverDevicesAsync(cancellationToken);
         }
         catch (Exception e)
         {
         }
-    }
-
-    public void Dispose()
-    {
-        if (_isIclRunning)
-        {
-            Log.Debug("Killing ICL process...");
-            IclProcess.Kill();
-        }
-
-        IclProcess.Exited -= IclProcessOnExited;
-        IclProcess.Dispose();
-        if (Communicator.IsConnectionOpened) Communicator.CloseConnectionAsync();
     }
 
     private void IclProcessOnExited(object sender, EventArgs e)
