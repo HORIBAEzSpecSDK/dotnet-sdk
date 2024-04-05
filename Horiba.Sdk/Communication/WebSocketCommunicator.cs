@@ -41,7 +41,7 @@ public sealed class WebSocketCommunicator
     {
         await SendInternalAsync(command, cancellationToken);
 
-        // TODO this is hard limit! Check what is the maximum info that can be sent and its configuration options
+        
         var parsedResult = await ReceiveResponseAsync(cancellationToken);
         Log.Debug("Receiving response: {@Response}", parsedResult);
 
@@ -58,7 +58,7 @@ public sealed class WebSocketCommunicator
     {
         await SendInternalAsync(command, cancellationToken);
         var echo = await ReceiveResponseAsync(cancellationToken);
-        Log.Debug("ECHO set command: {@Response}", echo);
+        Log.Debug("ECHO sent command: {@Response}", echo);
     }
 
     private async Task SendInternalAsync(Command command, CancellationToken cancellationToken)

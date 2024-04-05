@@ -33,7 +33,7 @@ public class ChargedCoupleDeviceDeviceDiscovery(WebSocketCommunicator communicat
         return result;
     }
 
-    internal ChargedCoupledDeviceDescription ExtractDescription(KeyValuePair<string, object> pair)
+    internal DeviceDescription ExtractDescription(KeyValuePair<string, object> pair)
     {
         var ccdTypeMatch = Regex.Match(pair.Value.ToString(), @"deviceType: (.*?),");
         var ccdIdMatch = Regex.Match(pair.Key, @"index(.*?):");
@@ -43,7 +43,7 @@ public class ChargedCoupleDeviceDeviceDiscovery(WebSocketCommunicator communicat
         var ccdType = ccdTypeMatch.Groups[1].Value.Trim();
         var serialNumber = ccdSerialNumberMatch.Groups[1].Value.Trim();
         
-        return new ChargedCoupledDeviceDescription { ProductId = int.Parse(id), DeviceType = ccdType, SerialNumber = serialNumber };
+        return new DeviceDescription { ProductId = int.Parse(id), DeviceType = ccdType, SerialNumber = serialNumber };
     }
 }
 
@@ -70,7 +70,7 @@ public class MonochromatorDeviceDiscovery(WebSocketCommunicator communicator) : 
         return result;
     }
 
-    internal ChargedCoupledDeviceDescription ExtractDescription(string rawDescription)
+    internal DeviceDescription ExtractDescription(string rawDescription)
     {
         var splitDescription = rawDescription.Split(";");
 
@@ -78,6 +78,6 @@ public class MonochromatorDeviceDiscovery(WebSocketCommunicator communicator) : 
         var ccdType = splitDescription[1];
         var serialNumber = splitDescription[2];
         
-        return new ChargedCoupledDeviceDescription { ProductId = int.Parse(id), DeviceType = ccdType, SerialNumber = serialNumber };
+        return new DeviceDescription { ProductId = int.Parse(id), DeviceType = ccdType, SerialNumber = serialNumber };
     }
 }

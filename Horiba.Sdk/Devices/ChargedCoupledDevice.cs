@@ -1,18 +1,18 @@
-﻿using System.Text;
-using Horiba.Sdk.Commands;
+﻿using Horiba.Sdk.Commands;
 using Horiba.Sdk.Communication;
 using Horiba.Sdk.Enums;
 using Newtonsoft.Json;
 
 namespace Horiba.Sdk.Devices;
 
-public class ChargedCoupledDeviceDescription
+internal sealed class DeviceDescription
 {
     [JsonProperty("productId")] public int ProductId { get; set; }
     [JsonProperty("deviceType")] public string DeviceType { get; set; }
     [JsonProperty("serialNumber")] public string SerialNumber { get; set; }
 }
-public record ChargedCoupledDevice(int DeviceId, string DeviceType, string SerialNumber, WebSocketCommunicator Communicator) : Device(DeviceId, DeviceType, SerialNumber, Communicator)
+
+public sealed record ChargedCoupledDevice(int DeviceId, string DeviceType, string SerialNumber, WebSocketCommunicator Communicator) : Device(DeviceId, DeviceType, SerialNumber, Communicator)
 {
     public override async Task<bool> IsConnectionOpenedAsync(CancellationToken cancellationToken = default)
     {
@@ -20,8 +20,9 @@ public record ChargedCoupledDevice(int DeviceId, string DeviceType, string Seria
             await Communicator.SendWithResponseAsync(new CcdIsConnectionOpenedCommand(DeviceId), cancellationToken);
 
         if (result.Results.TryGetValue("open", out var bR))
-            // TODO figure out if .ToString() is enough
+        {
             return bool.Parse(bR.ToString());
+        }
 
         return false;
     }
