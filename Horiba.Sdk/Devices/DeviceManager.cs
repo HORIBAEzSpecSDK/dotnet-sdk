@@ -76,7 +76,7 @@ public sealed class DeviceManager : IDisposable
     {
         try
         {
-            //Monochromators = await new MonochromatorDeviceDiscovery(Communicator).DiscoverDevicesAsync(cancellationToken);
+            Monochromators = await new MonochromatorDeviceDiscovery(Communicator).DiscoverDevicesAsync(cancellationToken);
             ChargedCoupledDevices =
                 await new ChargedCoupleDeviceDeviceDiscovery(Communicator).DiscoverDevicesAsync(cancellationToken);
         }

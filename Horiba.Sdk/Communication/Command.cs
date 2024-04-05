@@ -23,37 +23,3 @@ public abstract record Command
 
     [JsonProperty("parameters")] public Dictionary<string, object> Parameters { get; protected set; }
 }
-
-public abstract record ChargedCoupleDeviceCommand : Command
-{
-    protected ChargedCoupleDeviceCommand(string commandName, int deviceId) :
-        base(commandName, new Dictionary<string, object> { { "index", deviceId } })
-    {
-    }
-
-    protected ChargedCoupleDeviceCommand(string commandName, Dictionary<string, object> parameters) : base(commandName,
-        parameters)
-    {
-    }
-}
-
-public abstract record MonochromatorDeviceCommand : Command
-{
-    protected MonochromatorDeviceCommand(string commandName, int deviceId) :
-        base(commandName, new Dictionary<string, object> { { "index", deviceId } })
-    {
-    }
-
-    protected MonochromatorDeviceCommand(string commandName, Dictionary<string, object> parameters) : base(commandName,
-        parameters)
-    {
-    }
-}
-
-public abstract record SingleChanelDetectorCommand : Command
-{
-    protected SingleChanelDetectorCommand(string commandName, Dictionary<string, object> parameters) : base(commandName,
-        parameters)
-    {
-    }
-}

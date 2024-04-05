@@ -4,7 +4,7 @@ using Horiba.Sdk.Enums;
 
 namespace Horiba.Sdk.Devices;
 
-public record MonochromatorDevice(
+public sealed record MonochromatorDevice(
     int DeviceId,
     string DeviceType,
     string SerialNumber,

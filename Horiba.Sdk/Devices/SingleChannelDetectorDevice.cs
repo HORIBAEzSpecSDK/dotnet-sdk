@@ -2,7 +2,7 @@
 
 namespace Horiba.Sdk.Devices;
 
-public record SingleChannelDetectorDevice(
+public sealed record SingleChannelDetectorDevice(
     int DeviceId,
     string DeviceType,
     string SerialNumber,
