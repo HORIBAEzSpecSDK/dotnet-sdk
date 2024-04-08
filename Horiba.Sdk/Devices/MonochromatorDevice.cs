@@ -1,6 +1,7 @@
 ﻿using Horiba.Sdk.Commands;
 using Horiba.Sdk.Communication;
 using Horiba.Sdk.Enums;
+using Serilog;
 
 namespace Horiba.Sdk.Devices;
 
@@ -42,11 +43,14 @@ public sealed record MonochromatorDevice(
         return Communicator.SendAsync(new MonoCloseCommand(DeviceId), cancellationToken);
     }
 
-    public override async Task WaitForDeviceBusy(int waitIntervalInMs = 1000, CancellationToken cancellationToken = default)
+    public override async Task WaitForDeviceBusy(int waitIntervalInMs = 1500, CancellationToken cancellationToken = default)
     {
-        while (await IsDeviceBusyAsync(cancellationToken))
+        var isDeviceBusy = true;
+        while (isDeviceBusy)
         {
+            Log.Information("Waiting for device operation to complete");
             Task.Delay(waitIntervalInMs, cancellationToken).Wait(cancellationToken);
+            isDeviceBusy = await IsDeviceBusyAsync(cancellationToken);
         }
     }
 

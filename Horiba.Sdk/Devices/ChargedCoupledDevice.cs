@@ -1,6 +1,7 @@
 ﻿using Horiba.Sdk.Commands;
 using Horiba.Sdk.Communication;
 using Horiba.Sdk.Enums;
+using Serilog;
 
 namespace Horiba.Sdk.Devices;
 
@@ -31,11 +32,14 @@ public sealed record ChargedCoupledDevice(
         return Communicator.SendAsync(new CcdCloseCommand(DeviceId), cancellationToken);
     }
 
-    public override async Task WaitForDeviceBusy(int waitIntervalInMs = 300, CancellationToken cancellationToken = default)
+    public override async Task WaitForDeviceBusy(int waitIntervalInMs = 500, CancellationToken cancellationToken = default)
     {
-        while (await GetAcquisitionBusyAsync(cancellationToken))
+        var isDeviceBusy = true;
+        while (isDeviceBusy)
         {
+            Log.Information("CCD: Waiting for device operation to complete");
             Task.Delay(waitIntervalInMs, cancellationToken).Wait(cancellationToken);
+            isDeviceBusy = await GetAcquisitionBusyAsync(cancellationToken);
         }
     }
 

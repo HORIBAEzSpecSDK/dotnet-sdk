@@ -214,7 +214,7 @@ public class ChargedCoupleDeviceTests
         await dm.StartAsync();
         var ccd = dm.ChargedCoupledDevices.First();
         await ccd.OpenConnectionAsync();
-        var targetResolution = 5;
+        var targetResolution = 5000;
 
         // Act
         await ccd.SetTimerResolutionAsync(targetResolution);
