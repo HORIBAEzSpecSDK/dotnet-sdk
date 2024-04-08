@@ -160,10 +160,10 @@ public class DeviceManagerTests
     }
 
     [Theory]
-    [InlineData(Mirror.First, MirrorPosition.A)]
-    [InlineData(Mirror.First, MirrorPosition.B)]
-    [InlineData(Mirror.Second, MirrorPosition.A)]
-    [InlineData(Mirror.Second, MirrorPosition.B)]
+    [InlineData(Mirror.First, MirrorPosition.Axial)]
+    [InlineData(Mirror.First, MirrorPosition.Literal)]
+    [InlineData(Mirror.Second, MirrorPosition.Axial)]
+    [InlineData(Mirror.Second, MirrorPosition.Literal)]
     public async Task GivenMonoDevice_WhenMovingMirrorToPosition_ThenMirrorPositionIsChanged(Mirror mirror, MirrorPosition target)
     {
         // Arrange

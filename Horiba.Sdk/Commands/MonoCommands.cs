@@ -114,7 +114,7 @@ internal record MonoMoveMirrorCommand(int DeviceId, Mirror Mirror, MirrorPositio
     : MonochromatorDeviceCommand("mono_moveMirror", new Dictionary<string, object>
     {
         { "index", DeviceId },
-        { "type", (int)Mirror },
+        { "id", (int)Mirror },
         { "position", (int)MirrorPosition }
     })
 {
@@ -127,7 +127,7 @@ internal record MonoGetSlitPositionInMMCommand(int DeviceId, Slit Slit) : Monoch
     "mono_getSlitPositionInMM", new Dictionary<string, object>
     {
         { "index", DeviceId },
-        { "type", (int)Slit }
+        { "id", (int)Slit }
     })
 {
     public int DeviceId { get; } = DeviceId;
@@ -138,7 +138,7 @@ internal record MonoMoveSlitMMCommand(int DeviceId, Slit Slit, float PositionInM
     "mono_moveSlitMM", new Dictionary<string, object>
     {
         { "index", DeviceId },
-        { "type", (int)Slit },
+        { "id", (int)Slit },
         { "position", PositionInMM }
     })
 {
@@ -151,7 +151,7 @@ internal record MonoGetSlitStepPositionCommand(int DeviceId, Slit Slit) : Monoch
     "mono_getSlitStepPosition", new Dictionary<string, object>
     {
         { "index", DeviceId },
-        { "type", (int)Slit }
+        { "id", (int)Slit }
     })
 {
     public int DeviceId { get; } = DeviceId;
@@ -162,7 +162,7 @@ internal record MonoMoveSlitCommand(int DeviceId, Slit Slit, SlitStepPosition Po
     "mono_moveSlit", new Dictionary<string, object>
     {
         { "index", DeviceId },
-        { "type", (int)Slit },
+        { "id", (int)Slit },
         { "position", (int)Position }
     })
 {
