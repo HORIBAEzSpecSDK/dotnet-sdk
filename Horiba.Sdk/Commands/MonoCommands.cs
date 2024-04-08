@@ -70,7 +70,7 @@ internal record MonoMoveGratingCommand(int DeviceId, Grating Grating) : Monochro
     new Dictionary<string, object>
     {
         { "index", DeviceId },
-        { "position", Grating }
+        { "position", (int)Grating }
     })
 {
     public int DeviceId { get; } = DeviceId;
@@ -92,7 +92,7 @@ internal record MonoMoveFilterWheelCommand(int DeviceId, FilterWheelPosition Fil
     {
         { "index", DeviceId },
         { "type", 1 },
-        { "position", FilterWheelPosition }
+        { "position", (int)FilterWheelPosition }
     })
 {
     public int DeviceId { get; } = DeviceId;

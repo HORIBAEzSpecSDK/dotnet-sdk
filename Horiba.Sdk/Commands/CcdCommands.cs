@@ -98,7 +98,7 @@ internal record CcdSetXAxisConversionTypeCommand(int DeviceId, ConversionType Co
         new Dictionary<string, object>
         {
             { "index", DeviceId },
-            { "type", ConversionType }
+            { "type", (int)ConversionType }
         })
 {
     public int DeviceId { get; } = DeviceId;
@@ -144,12 +144,11 @@ internal record CcdGetGainCommand(int DeviceId) : ChargedCoupleDeviceCommand("cc
     public int DeviceId { get; } = DeviceId;
 }
 
-internal record CcdSetGainCommand(int DeviceId, Gain Gain) : ChargedCoupleDeviceCommand("ccd_setNumberOfAvgs",
+internal record CcdSetGainCommand(int DeviceId, Gain Gain) : ChargedCoupleDeviceCommand("ccd_setGain",
     new Dictionary<string, object>
     {
         { "index", DeviceId },
-        // TODO do we use the string representation or the number representation of the enum
-        { "token", Gain }
+        { "token", (int)Gain }
     })
 {
     public int DeviceId { get; } = DeviceId;
@@ -195,8 +194,8 @@ internal record CcdSetAcquisitionFormatCommand(int DeviceId, AcquisitionFormat F
         new Dictionary<string, object>
         {
             { "index", DeviceId },
-            { "format", Format },
-            { "numberOfRois", Format }
+            { "format", (int)Format },
+            { "numberOfRois", NumberOfRois }
         })
 {
     public int DeviceId { get; } = DeviceId;
@@ -226,7 +225,7 @@ internal record CcdSetCleanCountCommand(int DeviceId, int Count, CleanCountMode 
     {
         { "index", DeviceId },
         { "count", Count },
-        { "mode", Mode }
+        { "mode", (int)Mode }
     })
 {
     public int DeviceId { get; } = DeviceId;
