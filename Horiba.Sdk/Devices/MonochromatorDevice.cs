@@ -187,6 +187,12 @@ public sealed record MonochromatorDevice(
         return (MirrorPosition)int.Parse(response.Results["position"].ToString());
     }
 
+    public Task SetMirrorPositionAsync(Mirror mirror, MirrorPosition position,
+        CancellationToken cancellationToken = default)
+    {
+        return Communicator.SendAsync(new MonoMoveMirrorCommand(DeviceId, mirror, position), cancellationToken);
+    }
+
     public async Task<float> GetSlitPositionInMMAsync(Slit slit, CancellationToken cancellationToken = default)
     {
         var response =
