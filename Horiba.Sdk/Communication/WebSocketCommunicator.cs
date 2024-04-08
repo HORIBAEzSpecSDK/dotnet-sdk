@@ -12,7 +12,7 @@ public sealed class WebSocketCommunicator
     private readonly IPAddress _ip = IPAddress.Loopback;
     private readonly ClientWebSocket _wsClient = new();
     private readonly Uri _wsUri;
-
+ 
     public WebSocketCommunicator()
     {
         _wsUri = new Uri("ws://" + _ip + ":" + Port);

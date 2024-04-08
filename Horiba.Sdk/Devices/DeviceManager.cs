@@ -51,8 +51,6 @@ public sealed class DeviceManager : IDisposable
 
         await Communicator.OpenConnectionAsync();
 
-        var test = await Communicator.SendWithResponseAsync(new IclInfoCommand());
-
         if (enableBinaryMessages) await Communicator.SendWithResponseAsync(new IclBinaryModeAllCommand());
 
         await DiscoverDevicesAsync();
@@ -60,9 +58,6 @@ public sealed class DeviceManager : IDisposable
 
     public async Task StopAsync()
     {
-        // TODO should we log these responses? Why do we need them?
-        var info = await Communicator.SendWithResponseAsync(new IclInfoCommand());
-
         await Communicator.SendAsync(new IclShutdownCommand());
 
         if (_isIclRunning)
@@ -74,15 +69,8 @@ public sealed class DeviceManager : IDisposable
 
     public async Task DiscoverDevicesAsync(CancellationToken cancellationToken = default)
     {
-        try
-        {
-            Monochromators = await new MonochromatorDeviceDiscovery(Communicator).DiscoverDevicesAsync(cancellationToken);
-            ChargedCoupledDevices =
-                await new ChargedCoupleDeviceDeviceDiscovery(Communicator).DiscoverDevicesAsync(cancellationToken);
-        }
-        catch (Exception e)
-        {
-        }
+        Monochromators = await new MonochromatorDeviceDiscovery(Communicator).DiscoverDevicesAsync(cancellationToken);
+        ChargedCoupledDevices = await new ChargedCoupleDeviceDiscovery(Communicator).DiscoverDevicesAsync(cancellationToken);
     }
 
     private void IclProcessOnExited(object sender, EventArgs e)
