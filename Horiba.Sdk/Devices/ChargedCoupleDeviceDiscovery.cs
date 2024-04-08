@@ -1,6 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using Horiba.Sdk.Commands;
 using Horiba.Sdk.Communication;
+using Newtonsoft.Json;
 
 namespace Horiba.Sdk.Devices;
 
@@ -21,24 +22,20 @@ internal class ChargedCoupleDeviceDiscovery(WebSocketCommunicator communicator) 
         
         foreach (var rawDescription in response.Results)
         {
-            var deviceDescription = ExtractDescription(rawDescription);
-            result.Add(new ChargedCoupledDevice(deviceDescription.ProductId, deviceDescription.DeviceType,
-                deviceDescription.SerialNumber, communicator));
+            var deviceDescriptions = ExtractDescription(rawDescription);
+            foreach (var deviceDescription in deviceDescriptions)
+            {
+                result.Add(new ChargedCoupledDevice(deviceDescription.Index, deviceDescription.DeviceType,
+                    deviceDescription.SerialNumber, communicator));
+            }
         }
 
         return result;
     }
 
-    internal DeviceDescription ExtractDescription(KeyValuePair<string, object> pair)
+    internal DeviceDescription[] ExtractDescription(KeyValuePair<string, object> pair)
     {
-        var ccdTypeMatch = Regex.Match(pair.Value.ToString(), @"deviceType: (.*?),");
-        var ccdIdMatch = Regex.Match(pair.Key, @"index(.*?):");
-        var ccdSerialNumberMatch = Regex.Match(pair.Value.ToString(), @"serialNumber: (.*?)}");
-
-        var id = ccdIdMatch.Groups[1].Value.Trim();
-        var ccdType = ccdTypeMatch.Groups[1].Value.Trim();
-        var serialNumber = ccdSerialNumberMatch.Groups[1].Value.Trim();
-
-        return new DeviceDescription { ProductId = int.Parse(id), DeviceType = ccdType, SerialNumber = serialNumber };
+        return JsonConvert.DeserializeObject<DeviceDescription[]>(pair.Value.ToString()) ??
+               throw new CommunicationException("DeviceDescription mismatch");
     }
 }

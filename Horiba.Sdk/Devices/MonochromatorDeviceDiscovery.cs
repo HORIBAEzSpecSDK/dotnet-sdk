@@ -1,5 +1,6 @@
 ﻿using Horiba.Sdk.Commands;
 using Horiba.Sdk.Communication;
+using Newtonsoft.Json;
 
 namespace Horiba.Sdk.Devices;
 
@@ -21,22 +22,20 @@ internal class MonochromatorDeviceDiscovery(WebSocketCommunicator communicator) 
         
         foreach (var rawDescription in response.Results)
         {
-            var deviceDescription = ExtractDescription(rawDescription.Value.ToString());
-            result.Add(new MonochromatorDevice(deviceDescription.ProductId, deviceDescription.DeviceType,
-                deviceDescription.SerialNumber, communicator));
+            var deviceDescriptions = ExtractDescription(rawDescription.Value.ToString());
+            foreach (var deviceDescription in deviceDescriptions)
+            {
+                result.Add(new MonochromatorDevice(deviceDescription.Index, deviceDescription.DeviceType,
+                    deviceDescription.SerialNumber, communicator));
+            }
         }
 
         return result;
     }
 
-    internal DeviceDescription ExtractDescription(string rawDescription)
+    internal DeviceDescription[] ExtractDescription(string rawDescription)
     {
-        var splitDescription = rawDescription.Split(";");
-
-        var id = splitDescription[0].Replace("[\r\n  \"", "").Trim();
-        var ccdType = splitDescription[1];
-        var serialNumber = splitDescription[2];
-
-        return new DeviceDescription { ProductId = int.Parse(id), DeviceType = ccdType, SerialNumber = serialNumber };
+        return JsonConvert.DeserializeObject<DeviceDescription[]>(rawDescription) ??
+               throw new CommunicationException("DeviceDescription mismatch");
     }
 }
