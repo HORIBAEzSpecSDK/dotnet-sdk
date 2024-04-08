@@ -42,6 +42,14 @@ public sealed record MonochromatorDevice(
         return Communicator.SendAsync(new MonoCloseCommand(DeviceId), cancellationToken);
     }
 
+    public override async Task WaitForDeviceBusy(int waitIntervalInMs = 1000, CancellationToken cancellationToken = default)
+    {
+        while (await IsDeviceBusyAsync(cancellationToken))
+        {
+            Task.Delay(waitIntervalInMs, cancellationToken).Wait(cancellationToken);
+        }
+    }
+
     /// <summary>
     ///     Checks if the monochromator is busy.
     /// </summary>

@@ -23,4 +23,9 @@ public sealed record SingleChannelDetectorDevice(
     {
         throw new NotImplementedException();
     }
+
+    public override Task WaitForDeviceBusy(int waitIntervalInMs, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
 }

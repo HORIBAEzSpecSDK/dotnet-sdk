@@ -31,6 +31,14 @@ public sealed record ChargedCoupledDevice(
         return Communicator.SendAsync(new CcdCloseCommand(DeviceId), cancellationToken);
     }
 
+    public override async Task WaitForDeviceBusy(int waitIntervalInMs = 300, CancellationToken cancellationToken = default)
+    {
+        while (await GetAcquisitionBusyAsync(cancellationToken))
+        {
+            Task.Delay(waitIntervalInMs, cancellationToken).Wait(cancellationToken);
+        }
+    }
+
     public async Task<double> GetChipTemperatureAsync(CancellationToken cancellationToken = default)
     {
         var result =

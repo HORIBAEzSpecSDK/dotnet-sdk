@@ -20,6 +20,8 @@ public static class RegionOfInterestExtensions
 
 public record RegionOfInterest(int RoiIndex, (int X, int Y) Origin, (int X, int Y) Bin, (int Width, int Height) Size)
 {
+    public static readonly RegionOfInterest Default = new RegionOfInterest(1, (0, 0), (1, 256), (1024, 256));
+    
     public int RoiIndex { get; } = RoiIndex;
     public (int X, int Y) Origin { get; } = Origin;
     public (int X, int Y) Bin { get; } = Bin;

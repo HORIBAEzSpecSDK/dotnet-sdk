@@ -12,4 +12,5 @@ public abstract record Device(int DeviceId, string DeviceType, string SerialNumb
     public abstract Task<bool> IsConnectionOpenedAsync(CancellationToken cancellationToken = default);
     public abstract Task OpenConnectionAsync(CancellationToken cancellationToken = default);
     public abstract Task CloseConnectionAsync(CancellationToken cancellationToken = default);
+    public abstract Task WaitForDeviceBusy(int waitIntervalInMs, CancellationToken cancellationToken = default);
 }

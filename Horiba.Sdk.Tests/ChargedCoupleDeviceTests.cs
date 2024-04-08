@@ -75,4 +75,31 @@ public class ChargedCoupleDeviceTests
         // Assert
         actual.Should().BeSameAs(expectedParams);
     }
+    
+    //TODO test SET/GET command pairs
+
+    [Fact]
+    public async Task GivenCcd_WhenGettingActualData_ThenReturnsByteData()
+    {
+        // Arrange
+        var dm = new DeviceManager();
+        await dm.StartAsync();
+        var ccd = dm.ChargedCoupledDevices.First();
+        await ccd.OpenConnectionAsync();
+        await ccd.SetAcquisitionCountAsync(1);
+        await ccd.SetXAxisConversionTypeAsync(ConversionType.None);
+        await ccd.SetExposureTimeAsync(1000);
+        await ccd.SetRegionOfInterestAsync(RegionOfInterest.Default);
+        
+        // Act
+        var isReady = await ccd.GetAcquisitionReadyAsync();
+        await ccd.SetAcquisitionStartAsync(true);
+        await ccd.WaitForDeviceBusy();
+        var data = await ccd.GetAcquisitionDataAsync();
+
+        // Assert
+        data.MatchSnapshot();
+    }
+    
+    // TODO test procedure get picture, move mono, get picture again
 }
