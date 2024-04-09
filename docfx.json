@@ -1,0 +1,45 @@
+{
+  "metadata": [
+    {
+      "src": [
+        {
+          "src": "Horiba.Sdk/",
+          "files": [
+            "**/*.csproj"
+          ]
+        }
+      ],
+      "dest": "docs/api"
+    }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": [
+          "**/*.{md,yml}"
+        ],
+        "exclude": [
+          "_site/**"
+        ]
+      }
+    ],
+    "resource": [
+      {
+        "files": [
+          "images/**"
+        ]
+      }
+    ],
+    "output": "docs/_site",
+    "template": [
+      "default",
+      "modern"
+    ],
+    "globalMetadata": {
+      "_appName": "Horiba C# SDK",
+      "_appTitle": "Horiba C# SDK",
+      "_enableSearch": true,
+      "pdf": false
+    }
+  }
+}
