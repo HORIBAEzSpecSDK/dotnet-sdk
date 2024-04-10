@@ -20,3 +20,7 @@ ___
 
 * .NET Standard or .NET 6+
 * ICL.exe installed as part of the Horiba SDK, licensed and activated
+
+# API reference is available at
+https://thatstheend.github.io/horiba-dotnet-sdk/docs/api/Horiba.Sdk.html
+
