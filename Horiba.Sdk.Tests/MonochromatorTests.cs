@@ -212,4 +212,20 @@ public class MonochromatorTests
         // Assert
         actual.Should().Be(ShutterPosition.Closed);
     }
+
+    [Fact]
+    public async Task GivenMono_WhenReadingConfiguration_ThenReturnsConsistentConfiguration()
+    {
+        // Arrange
+        var dm = new DeviceManager();
+        await dm.StartAsync();
+        var mono = dm.Monochromators.First();
+        await mono.OpenConnectionAsync();
+        
+        // Act
+        var config = await mono.GetDeviceConfigurationAsync();
+
+        // Assert
+        config.MatchSnapshot();
+    }
 }

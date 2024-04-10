@@ -75,8 +75,6 @@ public class ChargedCoupleDeviceTests
         // Assert
         actual.Should().BeSameAs(expectedParams);
     }
-    
-    //TODO test SET/GET command pairs
 
     [Fact]
     public async Task GivenCcd_WhenGettingActualData_ThenReturnsByteData()
@@ -257,5 +255,53 @@ public class ChargedCoupleDeviceTests
 
         // Assert
         actual.MatchSnapshot();
+    }
+
+    [Fact]
+    public async Task GivenCcd_WhenReadingDeviceConfiguration_ThenReturnsConsistentDeviceConfiguration()
+    {
+        // Arrange
+        var dm = new DeviceManager();
+        await dm.StartAsync();
+        var ccd = dm.ChargedCoupledDevices.First();
+        await ccd.OpenConnectionAsync();
+        
+        // Act
+        var cofig = await ccd.GetDeviceConfigurationAsync();
+
+        // Assert
+        cofig.MatchSnapshot();
+    }
+
+    [Fact]
+    public async Task GivenCcd_WhenGettingChipSize_ThenReturnsConsistentSize()
+    {
+        // Arrange
+        var dm = new DeviceManager();
+        await dm.StartAsync();
+        var ccd = dm.ChargedCoupledDevices.First();
+        await ccd.OpenConnectionAsync();
+        
+        // Act
+        var size = await ccd.GetChipSizeAsync();
+
+        // Assert
+        size.MatchSnapshot();
+    }
+
+    [Fact]
+    public async Task GivenCcd_WhenGettingChipTemperature_ThenReturnsConsistentTemperature()
+    {
+        // Arrange
+        var dm = new DeviceManager();
+        await dm.StartAsync();
+        var ccd = dm.ChargedCoupledDevices.First();
+        await ccd.OpenConnectionAsync();
+        
+        // Act
+        var temp = await ccd.GetChipTemperatureAsync();
+
+        // Assert
+        temp.Should().BeInRange(-59, -61);
     }
 }
