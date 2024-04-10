@@ -17,14 +17,17 @@ public sealed record ChargedCoupledDevice(
         var result =
             await Communicator.SendWithResponseAsync(new CcdIsConnectionOpenedCommand(DeviceId), cancellationToken);
 
-        if (result.Results.TryGetValue("open", out var bR)) return bool.Parse(bR.ToString());
+        if (result.Results.TryGetValue("open", out var bR))
+        {
+            return bool.Parse(bR.ToString());
+        }
 
         return false;
     }
 
     public override Task OpenConnectionAsync(CancellationToken cancellationToken = default)
     {
-        return Communicator.SendWithResponseAsync(new CcdOpenCommand(DeviceId), cancellationToken);
+        return Communicator.SendAsync(new CcdOpenCommand(DeviceId), cancellationToken);
     }
 
     public override Task CloseConnectionAsync(CancellationToken cancellationToken = default)
@@ -65,6 +68,11 @@ public sealed record ChargedCoupledDevice(
     {
         var result = await Communicator.SendWithResponseAsync(new CcdGetSpeedCommand(DeviceId), cancellationToken);
         return (Speed)int.Parse(result.Results["token"].ToString());
+    }
+
+    public Task SetSpeedAsync(Speed speed, CancellationToken cancellationToken = default)
+    {
+        return Communicator.SendAsync(new CcdSetSpeedCommand(DeviceId, speed), cancellationToken);
     }
 
     public async Task<int> GetExposureTimeAsync(CancellationToken cancellationToken = default)

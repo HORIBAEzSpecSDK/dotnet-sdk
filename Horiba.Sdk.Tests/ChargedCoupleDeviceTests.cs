@@ -134,8 +134,11 @@ public class ChargedCoupleDeviceTests
         actualStatus.Should().BeFalse();
     }
 
-    [Fact]
-    public async Task GivenCcd_WhenGettingSpeed_ThenReturnsSpeed()
+    [Theory]
+    [InlineData(Speed.Slow)]
+    [InlineData(Speed.Medium)]
+    [InlineData(Speed.Fast)]
+    public async Task GivenCcd_WhenSettingSpeed_ThenSpeedIsUpdated(Speed targetSpeed)
     {
         // Arrange
         var dm = new DeviceManager();
@@ -144,10 +147,11 @@ public class ChargedCoupleDeviceTests
         await ccd.OpenConnectionAsync();
         
         // Act
+        await ccd.SetSpeedAsync(targetSpeed);
         var speed = await ccd.GetSpeedAsync();
 
         // Assert
-        speed.MatchSnapshot();
+        speed.Should().Be(targetSpeed);
     }
 
     [Fact]
