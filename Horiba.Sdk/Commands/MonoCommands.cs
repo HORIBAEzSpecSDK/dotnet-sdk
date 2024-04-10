@@ -50,7 +50,7 @@ internal record MonoSetPositionCommand(int DeviceId, float Wavelength) : Monochr
 }
 
 internal record MonoMoveToPositionCommand(int DeviceId, float Wavelength) : MonochromatorDeviceCommand(
-    "mono_setPosition", new Dictionary<string, object>
+    "mono_moveToPosition", new Dictionary<string, object>
     {
         { "index", DeviceId },
         { "wavelength", Wavelength }
