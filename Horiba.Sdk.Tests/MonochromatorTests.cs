@@ -31,7 +31,9 @@ public class MonochromatorTests
         
         // Act
         await mono.OpenConnectionAsync();
+        await mono.WaitForDeviceNotBusy();
         await mono.CloseConnectionAsync();
+        await mono.WaitForDeviceNotBusy();
         var actual = await mono.IsConnectionOpenedAsync();
 
         // Assert
@@ -46,14 +48,15 @@ public class MonochromatorTests
         await dm.StartAsync();
         var mono = dm.Monochromators.First();
         await mono.OpenConnectionAsync();
-        var target = 390;
+        float target = 390;
         
         // Act
         await mono.MoveToWavelengthAsync(target);
+        await mono.WaitForDeviceNotBusy();
         var actual = await mono.GetCurrentWavelengthAsync();
 
         // Assert
-        actual.Should().Be(target);
+        actual.Should().BeApproximately(target, 0.1f);
     }
 
     [Theory]
@@ -70,6 +73,7 @@ public class MonochromatorTests
         
         // Act
         await mono.SetTurretGratingAsync(target);
+        await mono.WaitForDeviceNotBusy();
         var actual = await mono.GetTurretGratingAsync();
 
         // Assert
@@ -137,6 +141,7 @@ public class MonochromatorTests
         
         // Act
         await mono.SetSlitPositionAsync(slit, targetPosition);
+        await mono.WaitForDeviceNotBusy();
         var actual = await mono.GetSlitPositionInMMAsync(slit);
 
         // Assert
@@ -206,7 +211,9 @@ public class MonochromatorTests
         
         // Act
         await mono.OpenShutterAsync();
+        await mono.WaitForDeviceNotBusy();
         await mono.CloseShutterAsync();
+        await mono.WaitForDeviceNotBusy();
         var actual = await mono.GetShutterPositionAsync();
         
         // Assert
