@@ -32,14 +32,19 @@ public sealed record ChargedCoupledDevice(
         return Communicator.SendAsync(new CcdCloseCommand(DeviceId), cancellationToken);
     }
 
-    public override async Task WaitForDeviceBusy(int waitIntervalInMs = 500, CancellationToken cancellationToken = default)
+    /// <summary>
+    /// Waits for the device to complete an acquisition
+    /// </summary>
+    /// <param name="waitIntervalInMs">Defines how long will a waiting cycle lasts</param>
+    /// <param name="initialWaitInMs">Defines the time before the waiting cycle begins</param>
+    /// <param name="cancellationToken"></param>
+    public override async Task WaitForDeviceNotBusy(int waitIntervalInMs = 500, int initialWaitInMs = 500, CancellationToken cancellationToken = default)
     {
-        var isDeviceBusy = true;
-        while (isDeviceBusy)
+        Task.Delay(initialWaitInMs, cancellationToken).Wait(cancellationToken);
+        while (await GetAcquisitionBusyAsync(cancellationToken))
         {
             Log.Information("CCD: Waiting for device operation to complete");
             Task.Delay(waitIntervalInMs, cancellationToken).Wait(cancellationToken);
-            isDeviceBusy = await GetAcquisitionBusyAsync(cancellationToken);
         }
     }
 

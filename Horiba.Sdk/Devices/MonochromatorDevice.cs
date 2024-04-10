@@ -43,14 +43,19 @@ public sealed record MonochromatorDevice(
         return Communicator.SendAsync(new MonoCloseCommand(DeviceId), cancellationToken);
     }
 
-    public override async Task WaitForDeviceBusy(int waitIntervalInMs = 1500, CancellationToken cancellationToken = default)
+    /// <summary>
+    /// Waits for the device to complete an acquisition
+    /// </summary>
+    /// <param name="waitIntervalInMs">Defines how long will a waiting cycle lasts</param>
+    /// <param name="initialWaitInMs">Defines the time before the waiting cycle begins</param>
+    /// <param name="cancellationToken"></param>
+    public override async Task WaitForDeviceNotBusy(int waitIntervalInMs = 1500, int initialWaitInMs = 500, CancellationToken cancellationToken = default)
     {
-        var isDeviceBusy = true;
-        while (isDeviceBusy)
+        Task.Delay(initialWaitInMs, cancellationToken).Wait(cancellationToken);
+        while (await IsDeviceBusyAsync(cancellationToken))
         {
-            Log.Information("Waiting for device operation to complete");
+            Log.Information("CCD: Waiting for device operation to complete");
             Task.Delay(waitIntervalInMs, cancellationToken).Wait(cancellationToken);
-            isDeviceBusy = await IsDeviceBusyAsync(cancellationToken);
         }
     }
 
@@ -108,6 +113,7 @@ public sealed record MonochromatorDevice(
 
     /// <summary>
     ///     This command sets the wavelength value of the current grating position of the monochromator.
+    /// 
     ///     WARNING : This could potentially un-calibrate the monochromator and report an incorrect wavelength
     ///     compared to the actual output wavelength.
     /// </summary>

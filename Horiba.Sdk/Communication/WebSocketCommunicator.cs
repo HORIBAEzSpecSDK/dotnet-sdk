@@ -6,17 +6,10 @@ using Serilog;
 
 namespace Horiba.Sdk.Communication;
 
-public sealed class WebSocketCommunicator
+public sealed class WebSocketCommunicator(IPAddress ipAddress, int port)
 {
-    private const int Port = 25010;
-    private readonly IPAddress _ip = IPAddress.Loopback;
     private readonly ClientWebSocket _wsClient = new();
-    private readonly Uri _wsUri;
- 
-    public WebSocketCommunicator()
-    {
-        _wsUri = new Uri("ws://" + _ip + ":" + Port);
-    }
+    private readonly Uri _wsUri = new("ws://" + ipAddress + ":" + port);
 
     public bool IsConnectionOpened => _wsClient.State == WebSocketState.Open;
 

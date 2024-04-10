@@ -94,7 +94,7 @@ public class ChargedCoupleDeviceTests
         // Act
         var isReady = await ccd.GetAcquisitionReadyAsync();
         await ccd.SetAcquisitionStartAsync(true);
-        await ccd.WaitForDeviceBusy();
+        await ccd.WaitForDeviceNotBusy();
         var data = await ccd.GetAcquisitionDataAsync();
 
         // Assert

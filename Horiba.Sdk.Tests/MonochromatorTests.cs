@@ -170,7 +170,7 @@ public class MonochromatorTests
         
         // Act
         await mono.SetSlitStepPositionAsync(slit, targetPosition);
-        await mono.WaitForDeviceBusy();
+        await mono.WaitForDeviceNotBusy();
         var actual = await mono.GetSlitStepPositionAsync(slit);
 
         // Assert
