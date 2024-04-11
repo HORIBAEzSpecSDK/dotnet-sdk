@@ -23,7 +23,7 @@ internal record MonoIsBusyCommand(int DeviceId) : MonochromatorDeviceCommand("mo
     public int DeviceId { get; } = DeviceId;
 }
 
-internal record MonoHomeCommand(int DeviceId) : MonochromatorDeviceCommand("mono_init", DeviceId)
+internal record MonoInitCommand(int DeviceId) : MonochromatorDeviceCommand("mono_init", DeviceId)
 {
     public int DeviceId { get; } = DeviceId;
 }

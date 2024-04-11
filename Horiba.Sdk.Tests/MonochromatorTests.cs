@@ -1,21 +1,21 @@
-using System.ComponentModel;
 using Horiba.Sdk.Enums;
 
 namespace Horiba.Sdk.Tests;
 
-public class MonochromatorTests
+public class MonochromatorTests : IClassFixture<MonochromatorTestFixture>
 {
+    private readonly MonochromatorTestFixture _fixture;
+
+    public MonochromatorTests(MonochromatorTestFixture fixture)
+    {
+        _fixture = fixture;
+    }
+    
     [Fact]
     public async Task GivenMonoDevice_WhenOpeningConnection_ThenConnectionIsOpened()
     {
-        // Arrange
-        var dm = new DeviceManager();
-        await dm.StartAsync();
-        var mono = dm.Monochromators.First();
-        
         // Act
-        await mono.OpenConnectionAsync();
-        var actual = await mono.IsConnectionOpenedAsync();
+        var actual = await _fixture.Mono.IsConnectionOpenedAsync();
 
         // Assert
         actual.Should().BeTrue();
@@ -24,17 +24,11 @@ public class MonochromatorTests
     [Fact]
     public async Task GivenMonoDevice_WhenOpeningAndClosingConnection_ThenConnectionIsClosed()
     {
-        // Arrange
-        var dm = new DeviceManager();
-        await dm.StartAsync();
-        var mono = dm.Monochromators.First();
-        
         // Act
-        await mono.OpenConnectionAsync();
-        await mono.WaitForDeviceNotBusy();
-        await mono.CloseConnectionAsync();
-        await mono.WaitForDeviceNotBusy();
-        var actual = await mono.IsConnectionOpenedAsync();
+        await _fixture.Mono.WaitForDeviceNotBusy();
+        await _fixture.Mono.CloseConnectionAsync();
+        await _fixture.Mono.WaitForDeviceNotBusy();
+        var actual = await _fixture.Mono.IsConnectionOpenedAsync();
 
         // Assert
         actual.Should().BeFalse();
@@ -44,16 +38,12 @@ public class MonochromatorTests
     public async Task GivenMonoDevice_WhenMovingToPosition_ThenPositionIsUpdated()
     {
         // Arrange
-        var dm = new DeviceManager();
-        await dm.StartAsync();
-        var mono = dm.Monochromators.First();
-        await mono.OpenConnectionAsync();
         float target = 390;
         
         // Act
-        await mono.MoveToWavelengthAsync(target);
-        await mono.WaitForDeviceNotBusy();
-        var actual = await mono.GetCurrentWavelengthAsync();
+        await _fixture.Mono.MoveToWavelengthAsync(target);
+        await _fixture.Mono.WaitForDeviceNotBusy();
+        var actual = await _fixture.Mono.GetCurrentWavelengthAsync();
 
         // Assert
         actual.Should().BeApproximately(target, 0.1f);
@@ -65,16 +55,13 @@ public class MonochromatorTests
     [InlineData(Grating.Third)]
     public async Task GivenMonoDevice_WhenMovingToGratingPosition_ThenGratingPositionIsUpdated(Grating target)
     {
-        // Arrange
-        var dm = new DeviceManager();
-        await dm.StartAsync();
-        var mono = dm.Monochromators.First();
-        await mono.OpenConnectionAsync();
-        
         // Act
-        await mono.SetTurretGratingAsync(target);
-        await mono.WaitForDeviceNotBusy();
-        var actual = await mono.GetTurretGratingAsync();
+        await _fixture.Mono.SetTurretGratingAsync(target);
+        
+        //TODO make sure there is enough time for the device to move a grating
+        await _fixture.Mono.WaitForDeviceNotBusy();
+        
+        var actual = await _fixture.Mono.GetTurretGratingAsync();
 
         // Assert
         actual.Should().Be(target);
@@ -87,15 +74,9 @@ public class MonochromatorTests
     [InlineData(FilterWheelPosition.Yellow)]
     public async Task GivenMonoDevice_WhenMovingFilterPosition_ThenFilterPositionIsUpdated(FilterWheelPosition target)
     {
-        // Arrange
-        var dm = new DeviceManager();
-        await dm.StartAsync();
-        var mono = dm.Monochromators.First();
-        await mono.OpenConnectionAsync();
-        
         // Act
-        await mono.SetFilterWheelPositionAsync(target);
-        var actual = await mono.GetFilterWheelPositionAsync();
+        await _fixture.Mono.SetFilterWheelPositionAsync(target);
+        var actual = await _fixture.Mono.GetFilterWheelPositionAsync();
 
         // Assert
         actual.Should().Be(target);
@@ -108,15 +89,9 @@ public class MonochromatorTests
     [InlineData(Mirror.Second, MirrorPosition.Literal)]
     public async Task GivenMonoDevice_WhenMovingMirrorToPosition_ThenMirrorPositionIsChanged(Mirror mirror, MirrorPosition target)
     {
-        // Arrange
-        var dm = new DeviceManager();
-        await dm.StartAsync();
-        var mono = dm.Monochromators.First();
-        await mono.OpenConnectionAsync();
-        
         // Act
-        await mono.SetMirrorPositionAsync(mirror, target);
-        var actual = await mono.GetMirrorPosition(mirror);
+        await _fixture.Mono.SetMirrorPositionAsync(mirror, target);
+        var actual = await _fixture.Mono.GetMirrorPosition(mirror);
 
         // Assert
         actual.Should().Be(target);
@@ -133,16 +108,10 @@ public class MonochromatorTests
     [InlineData(Slit.D, 7.4)]
     public async Task GivenMonoDevice_WhenMovingSlitPosition_ThenSlitPositionIsUpdated(Slit slit, float targetPosition)
     {
-        // Arrange
-        var dm = new DeviceManager();
-        await dm.StartAsync();
-        var mono = dm.Monochromators.First();
-        await mono.OpenConnectionAsync();
-        
         // Act
-        await mono.SetSlitPositionAsync(slit, targetPosition);
-        await mono.WaitForDeviceNotBusy();
-        var actual = await mono.GetSlitPositionInMMAsync(slit);
+        await _fixture.Mono.SetSlitPositionAsync(slit, targetPosition);
+        await _fixture.Mono.WaitForDeviceNotBusy();
+        var actual = await _fixture.Mono.GetSlitPositionInMMAsync(slit);
 
         // Assert
         actual.Should().Be(targetPosition);
@@ -167,16 +136,10 @@ public class MonochromatorTests
     [InlineData(Slit.D, SlitStepPosition.D)]
     public async Task GivenMonoDevice_WhenMovingSlitStepPosition_ThenSlitStepPositionIsUpdated(Slit slit, SlitStepPosition targetPosition)
     {
-        // Arrange
-        var dm = new DeviceManager();
-        await dm.StartAsync();
-        var mono = dm.Monochromators.First();
-        await mono.OpenConnectionAsync();
-        
         // Act
-        await mono.SetSlitStepPositionAsync(slit, targetPosition);
-        await mono.WaitForDeviceNotBusy();
-        var actual = await mono.GetSlitStepPositionAsync(slit);
+        await _fixture.Mono.SetSlitStepPositionAsync(slit, targetPosition);
+        await _fixture.Mono.WaitForDeviceNotBusy();
+        var actual = await _fixture.Mono.GetSlitStepPositionAsync(slit);
 
         // Assert
         actual.Should().Be(targetPosition);
@@ -185,16 +148,10 @@ public class MonochromatorTests
     [Fact]
     public async Task GivenMonoDevice_WhenOpeningShutter_ThenShutterIsOpened()
     {
-        // Arrange
-        var dm = new DeviceManager();
-        await dm.StartAsync();
-        var mono = dm.Monochromators.First();
-        await mono.OpenConnectionAsync();
-        
         // Act
-        await mono.CloseShutterAsync();
-        await mono.OpenShutterAsync();
-        var actual = await mono.GetShutterPositionAsync();
+        await _fixture.Mono.CloseShutterAsync();
+        await _fixture.Mono.OpenShutterAsync();
+        var actual = await _fixture.Mono.GetShutterPositionAsync();
         
         // Assert
         actual.Should().Be(ShutterPosition.Opened);
@@ -203,18 +160,12 @@ public class MonochromatorTests
     [Fact]
     public async Task GivenMonoDevice_WhenClosingShutter_ThenShutterIsClosed()
     {
-        // Arrange
-        var dm = new DeviceManager();
-        await dm.StartAsync();
-        var mono = dm.Monochromators.First();
-        await mono.OpenConnectionAsync();
-        
         // Act
-        await mono.OpenShutterAsync();
-        await mono.WaitForDeviceNotBusy();
-        await mono.CloseShutterAsync();
-        await mono.WaitForDeviceNotBusy();
-        var actual = await mono.GetShutterPositionAsync();
+        await _fixture.Mono.OpenShutterAsync();
+        await _fixture.Mono.WaitForDeviceNotBusy();
+        await _fixture.Mono.CloseShutterAsync();
+        await _fixture.Mono.WaitForDeviceNotBusy();
+        var actual = await _fixture.Mono.GetShutterPositionAsync();
         
         // Assert
         actual.Should().Be(ShutterPosition.Closed);
@@ -223,14 +174,8 @@ public class MonochromatorTests
     [Fact]
     public async Task GivenMono_WhenReadingConfiguration_ThenReturnsConsistentConfiguration()
     {
-        // Arrange
-        var dm = new DeviceManager();
-        await dm.StartAsync();
-        var mono = dm.Monochromators.First();
-        await mono.OpenConnectionAsync();
-        
         // Act
-        var config = await mono.GetDeviceConfigurationAsync();
+        var config = await _fixture.Mono.GetDeviceConfigurationAsync();
 
         // Assert
         config.MatchSnapshot();

@@ -30,6 +30,8 @@ public sealed record MonochromatorDevice(
     /// <returns></returns>
     public override Task OpenConnectionAsync(CancellationToken cancellationToken = default)
     {
+        //TODO accept a bool parameter to stop the mono_init from executing
+        //TODO expose public method to allow sending mono_init separately
         return Communicator.SendAsync(new MonoOpenCommand(DeviceId), cancellationToken);
     }
 
@@ -79,7 +81,7 @@ public sealed record MonochromatorDevice(
     /// <returns></returns>
     public Task HomeAsync(CancellationToken cancellationToken = default)
     {
-        return Communicator.SendAsync(new MonoHomeCommand(DeviceId), cancellationToken);
+        return Communicator.SendAsync(new MonoInitCommand(DeviceId), cancellationToken);
     }
 
     /// <summary>

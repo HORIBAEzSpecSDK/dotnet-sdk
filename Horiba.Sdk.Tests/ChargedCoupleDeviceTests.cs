@@ -2,23 +2,24 @@
 
 namespace Horiba.Sdk.Tests;
 
-public class ChargedCoupleDeviceTests
+public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFixture>
 {
+    private readonly ChargedCoupleDeviceTestFixture _fixture;
+
+    public ChargedCoupleDeviceTests(ChargedCoupleDeviceTestFixture fixture)
+    {
+        _fixture = fixture;
+    }
+    
     [Theory]
     [InlineData(Gain.HighLight)]
     [InlineData(Gain.BestDynamicRange)]
     [InlineData(Gain.HighSensitivity)]
     public async Task GivenCcd_WhenTriggeringSetGainMethod_ThenGainIsSet(Gain expectedSetting)
     {
-        // Arrange
-        var dm = new DeviceManager();
-        await dm.StartAsync();
-        var ccd = dm.ChargedCoupledDevices.First();
-        await ccd.OpenConnectionAsync();
-
         // Act
-        await ccd.SetGainAsync(expectedSetting);
-        var actualSetting = await ccd.GetGainAsync();
+        await _fixture.Ccd.SetGainAsync(expectedSetting);
+        var actualSetting = await _fixture.Ccd.GetGainAsync();
 
         // Assert
         actualSetting.Should().HaveSameValueAs(expectedSetting);
@@ -28,15 +29,11 @@ public class ChargedCoupleDeviceTests
     public async Task GivenCcd_WhenTriggeringSetFitParameters_ThenFitParametersAreSet()
     {
         // Arrange
-        var dm = new DeviceManager();
-        await dm.StartAsync();
-        var ccd = dm.ChargedCoupledDevices.First();
-        await ccd.OpenConnectionAsync();
         var expectedParams = "1,1,1,1";
 
         // Act
-        await ccd.SetFitParametersAsync(expectedParams);
-        var actual = await ccd.GetFitParametersAsync();
+        await _fixture.Ccd.SetFitParametersAsync(expectedParams);
+        var actual = await _fixture.Ccd.GetFitParametersAsync();
 
         // Assert
         actual.Should().BeSameAs(expectedParams);
@@ -46,20 +43,17 @@ public class ChargedCoupleDeviceTests
     public async Task GivenCcd_WhenGettingActualData_ThenReturnsByteData()
     {
         // Arrange
-        var dm = new DeviceManager();
-        await dm.StartAsync();
-        var ccd = dm.ChargedCoupledDevices.First();
-        await ccd.OpenConnectionAsync();
-        await ccd.SetAcquisitionCountAsync(1);
-        await ccd.SetXAxisConversionTypeAsync(ConversionType.None);
-        await ccd.SetExposureTimeAsync(1000);
-        await ccd.SetRegionOfInterestAsync(RegionOfInterest.Default);
+        await _fixture.Ccd.OpenConnectionAsync();
+        await _fixture.Ccd.SetAcquisitionCountAsync(1);
+        await _fixture.Ccd.SetXAxisConversionTypeAsync(ConversionType.None);
+        await _fixture.Ccd.SetExposureTimeAsync(1000);
+        await _fixture.Ccd.SetRegionOfInterestAsync(RegionOfInterest.Default);
         
         // Act
-        var isReady = await ccd.GetAcquisitionReadyAsync();
-        await ccd.SetAcquisitionStartAsync(true);
-        await ccd.WaitForDeviceNotBusy();
-        var data = await ccd.GetAcquisitionDataAsync();
+        var isReady = await _fixture.Ccd.GetAcquisitionReadyAsync();
+        await _fixture.Ccd.SetAcquisitionStartAsync(true);
+        await _fixture.Ccd.WaitForDeviceNotBusy();
+        var data = await _fixture.Ccd.GetAcquisitionDataAsync();
 
         // Assert
         data.MatchSnapshot();
@@ -70,14 +64,9 @@ public class ChargedCoupleDeviceTests
     [Fact]
     public async Task GivenCcd_WhenOpeningConnection_ThenConnectionIsOpened()
     {
-        // Arrange
-        var dm = new DeviceManager();
-        await dm.StartAsync();
-        var ccd = dm.ChargedCoupledDevices.First();
-        
         // Act
-        await ccd.OpenConnectionAsync();
-        var actualStatus = await ccd.IsConnectionOpenedAsync();
+        await _fixture.Ccd.OpenConnectionAsync();
+        var actualStatus = await _fixture.Ccd.IsConnectionOpenedAsync();
 
         // Assert
         actualStatus.Should().BeTrue();
@@ -86,15 +75,10 @@ public class ChargedCoupleDeviceTests
     [Fact]
     public async Task GivenCcd_WhenOpeningAndClosingConnection_ThenConnectionIsClosed()
     {
-        // Arrange
-        var dm = new DeviceManager();
-        await dm.StartAsync();
-        var ccd = dm.ChargedCoupledDevices.First();
-        
         // Act
-        await ccd.OpenConnectionAsync();
-        await ccd.CloseConnectionAsync();
-        var actualStatus = await ccd.IsConnectionOpenedAsync();
+        await _fixture.Ccd.OpenConnectionAsync();
+        await _fixture.Ccd.CloseConnectionAsync();
+        var actualStatus = await _fixture.Ccd.IsConnectionOpenedAsync();
 
         // Assert
         actualStatus.Should().BeFalse();
@@ -106,15 +90,9 @@ public class ChargedCoupleDeviceTests
     [InlineData(Speed.Fast)]
     public async Task GivenCcd_WhenSettingSpeed_ThenSpeedIsUpdated(Speed targetSpeed)
     {
-        // Arrange
-        var dm = new DeviceManager();
-        await dm.StartAsync();
-        var ccd = dm.ChargedCoupledDevices.First();
-        await ccd.OpenConnectionAsync();
-        
         // Act
-        await ccd.SetSpeedAsync(targetSpeed);
-        var speed = await ccd.GetSpeedAsync();
+        await _fixture.Ccd.SetSpeedAsync(targetSpeed);
+        var speed = await _fixture.Ccd.GetSpeedAsync();
 
         // Assert
         speed.Should().Be(targetSpeed);
@@ -124,15 +102,11 @@ public class ChargedCoupleDeviceTests
     public async Task GivenCcd_WhenSettingExposureTime_ThenSetsExposureTimeCorrectly()
     {
         // Arrange
-        var dm = new DeviceManager();
-        await dm.StartAsync();
-        var ccd = dm.ChargedCoupledDevices.First();
-        await ccd.OpenConnectionAsync();
         var time = 1234;
         
         // Act
-        await ccd.SetExposureTimeAsync(time);
-        var actualTime = await ccd.GetExposureTimeAsync();
+        await _fixture.Ccd.SetExposureTimeAsync(time);
+        var actualTime = await _fixture.Ccd.GetExposureTimeAsync();
 
         // Assert
         actualTime.Should().Be(time);
@@ -142,15 +116,11 @@ public class ChargedCoupleDeviceTests
     public async Task GivenCcd_WhenSettingXAxisConversionType_ThenSetsXAxisConversionType()
     {
         // Arrange
-        var dm = new DeviceManager();
-        await dm.StartAsync();
-        var ccd = dm.ChargedCoupledDevices.First();
-        await ccd.OpenConnectionAsync();
         var targetConversionType = ConversionType.FromCcdFirmware;
 
         // Act
-        await ccd.SetXAxisConversionTypeAsync(targetConversionType);
-        var actual = await ccd.GetXAxisConversionTypeAsync();
+        await _fixture.Ccd.SetXAxisConversionTypeAsync(targetConversionType);
+        var actual = await _fixture.Ccd.GetXAxisConversionTypeAsync();
         
         // Assert
         actual.Should().Be(targetConversionType);
@@ -160,15 +130,11 @@ public class ChargedCoupleDeviceTests
     public async Task GivenCcd_WhenSettingNumberOfAverages_ThenSetsTheNumberOfAverages()
     {
         // Arrange
-        var dm = new DeviceManager();
-        await dm.StartAsync();
-        var ccd = dm.ChargedCoupledDevices.First();
-        await ccd.OpenConnectionAsync();
         var targetNumber = 5;
 
         // Act
-        await ccd.SetNumberOfAveragesAsync(targetNumber);
-        var actual = await ccd.GetNumberOfAveragesAsync();
+        await _fixture.Ccd.SetNumberOfAveragesAsync(targetNumber);
+        var actual = await _fixture.Ccd.GetNumberOfAveragesAsync();
 
         // Assert
         actual.Should().Be(targetNumber);
@@ -178,15 +144,11 @@ public class ChargedCoupleDeviceTests
     public async Task GivenCcd_WhenSettingTimeResolution_ThenSetsTheTimeResolution()
     {
         // Arrange
-        var dm = new DeviceManager();
-        await dm.StartAsync();
-        var ccd = dm.ChargedCoupledDevices.First();
-        await ccd.OpenConnectionAsync();
         var targetResolution = 500;
 
         // Act
-        await ccd.SetTimerResolutionAsync(targetResolution);
-        var actual = await ccd.GetTimerResolutionAsync();
+        await _fixture.Ccd.SetTimerResolutionAsync(targetResolution);
+        var actual = await _fixture.Ccd.GetTimerResolutionAsync();
 
         // Assert
         actual.Should().Be(targetResolution);
@@ -196,15 +158,11 @@ public class ChargedCoupleDeviceTests
     public async Task GivenCcd_WhenSettingAcquisitionCount_ThenSetsTheAcquisitionCount()
     {
         // Arrange
-        var dm = new DeviceManager();
-        await dm.StartAsync();
-        var ccd = dm.ChargedCoupledDevices.First();
-        await ccd.OpenConnectionAsync();
         var targetCount = 5;
 
         // Act
-        await ccd.SetAcquisitionCountAsync(targetCount);
-        var actual = await ccd.GetAcquisitionCountAsync();
+        await _fixture.Ccd.SetAcquisitionCountAsync(targetCount);
+        var actual = await _fixture.Ccd.GetAcquisitionCountAsync();
 
         // Assert
         actual.Should().Be(targetCount);
@@ -213,15 +171,9 @@ public class ChargedCoupleDeviceTests
     [Fact]
     public async Task GivenCcd_WhenSettingCleanCount_ThenSetsCleanCount()
     {
-        // Arrange
-        var dm = new DeviceManager();
-        await dm.StartAsync();
-        var ccd = dm.ChargedCoupledDevices.First();
-        await ccd.OpenConnectionAsync();
-
         // Act
-        await ccd.SetCleanCountAsync(5, CleanCountMode.Mode1);
-        var actual = await ccd.GetCleanCountAsync();
+        await _fixture.Ccd.SetCleanCountAsync(5, CleanCountMode.Mode1);
+        var actual = await _fixture.Ccd.GetCleanCountAsync();
 
         // Assert
         actual.MatchSnapshot();
@@ -230,14 +182,8 @@ public class ChargedCoupleDeviceTests
     [Fact]
     public async Task GivenCcd_WhenReadingDeviceConfiguration_ThenReturnsConsistentDeviceConfiguration()
     {
-        // Arrange
-        var dm = new DeviceManager();
-        await dm.StartAsync();
-        var ccd = dm.ChargedCoupledDevices.First();
-        await ccd.OpenConnectionAsync();
-        
         // Act
-        var cofig = await ccd.GetDeviceConfigurationAsync();
+        var cofig = await _fixture.Ccd.GetDeviceConfigurationAsync();
 
         // Assert
         cofig.MatchSnapshot();
@@ -246,14 +192,8 @@ public class ChargedCoupleDeviceTests
     [Fact]
     public async Task GivenCcd_WhenGettingChipSize_ThenReturnsConsistentSize()
     {
-        // Arrange
-        var dm = new DeviceManager();
-        await dm.StartAsync();
-        var ccd = dm.ChargedCoupledDevices.First();
-        await ccd.OpenConnectionAsync();
-        
         // Act
-        var size = await ccd.GetChipSizeAsync();
+        var size = await _fixture.Ccd.GetChipSizeAsync();
 
         // Assert
         size.MatchSnapshot();
@@ -262,14 +202,8 @@ public class ChargedCoupleDeviceTests
     [Fact]
     public async Task GivenCcd_WhenGettingChipTemperature_ThenReturnsConsistentTemperature()
     {
-        // Arrange
-        var dm = new DeviceManager();
-        await dm.StartAsync();
-        var ccd = dm.ChargedCoupledDevices.First();
-        await ccd.OpenConnectionAsync();
-        
         // Act
-        var temp = await ccd.GetChipTemperatureAsync();
+        var temp = await _fixture.Ccd.GetChipTemperatureAsync();
 
         // Assert
         temp.Should().BeApproximately(-60, 0.1f);
