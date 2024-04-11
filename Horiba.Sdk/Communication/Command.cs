@@ -2,6 +2,10 @@
 
 namespace Horiba.Sdk.Communication;
 
+/// <summary>
+/// Abstraction which defines the essential structure of the TCP communication.
+/// It also takes care of generating sequential Ids for every command sent using the <see cref="WebSocketCommunicator"/>  
+/// </summary>
 public abstract record Command
 {
     private static int _initialCommandId;

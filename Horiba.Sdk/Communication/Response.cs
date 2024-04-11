@@ -2,6 +2,13 @@
 
 namespace Horiba.Sdk.Communication;
 
+/// <summary>
+/// Represents a response coming from the ICL
+/// </summary>
+/// <param name="Id">The id of the command this response is for</param>
+/// <param name="CommandName">The name of the command this response is for</param>
+/// <param name="Results">The results caused by triggering the command</param>
+/// <param name="Errors">The errors the command caused</param>
 public sealed record Response(int Id, string CommandName, Dictionary<string, object> Results, List<string> Errors)
 {
     [JsonProperty("id")] public int Id { get; set; } = Id;

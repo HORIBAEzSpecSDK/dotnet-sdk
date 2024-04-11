@@ -6,6 +6,14 @@ using Serilog;
 
 namespace Horiba.Sdk.Communication;
 
+/// <summary>
+/// Encapsulates the communication between ICL and the SDK. This class is responsible for sending, receiving and logging
+/// all commands sent to and from the ICL.
+/// This class should not be used on its own. <see cref="Horiba.Sdk.Devices.DeviceManager"/> Is responsible for creating it.
+/// All devices are using the same instance of the <see cref="WebSocketCommunicator"/> once generated.
+/// </summary>
+/// <param name="ipAddress">The IP address of the machine running the ICL process. Defaults to 127.0.0.1</param>
+/// <param name="port">The port on which the ICL expects communication to happen. Defaults to </param>
 public sealed class WebSocketCommunicator(IPAddress ipAddress, int port)
 {
     private readonly ClientWebSocket _wsClient = new();
