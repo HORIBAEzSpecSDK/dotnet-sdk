@@ -84,10 +84,10 @@ public sealed class DeviceManager : IDisposable
         ChargedCoupledDevices = await new ChargedCoupleDeviceDiscovery(Communicator).DiscoverDevicesAsync(cancellationToken);
     }
 
-    public async Task<string> GetIclInfoAsync(CancellationToken cancellationToken = default)
+    public async Task<Dictionary<string,object>> GetIclInfoAsync(CancellationToken cancellationToken = default)
     {
         var result = await Communicator.SendWithResponseAsync(new IclInfoCommand(), cancellationToken);
-        return result.Results["info"].ToString();
+        return result.Results;
     }
 
     private void IclProcessOnExited(object sender, EventArgs e)

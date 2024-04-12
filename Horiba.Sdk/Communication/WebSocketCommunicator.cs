@@ -72,7 +72,7 @@ public sealed class WebSocketCommunicator(IPAddress ipAddress, int port)
 
     private async Task<Response?> ReceiveResponseAsync(CancellationToken cancellationToken)
     {
-        var singleResponseBuffer = new byte[1024 * 4];
+        var singleResponseBuffer = new byte[1024 * 11];
         await _wsClient.ReceiveAsync(new ArraySegment<byte>(singleResponseBuffer), cancellationToken);
 
         var res = Encoding.UTF8.GetString(singleResponseBuffer, 0, singleResponseBuffer.Length);

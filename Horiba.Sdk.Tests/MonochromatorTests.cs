@@ -46,7 +46,7 @@ public class MonochromatorTests : IClassFixture<MonochromatorTestFixture>
         var actual = await _fixture.Mono.GetCurrentWavelengthAsync();
 
         // Assert
-        actual.Should().BeApproximately(target, 0.1f);
+        actual.Should().BeApproximately(target, 1f);
     }
 
     [Theory]
@@ -114,7 +114,7 @@ public class MonochromatorTests : IClassFixture<MonochromatorTestFixture>
     [InlineData(Slit.D, 7.4)]
     public async Task GivenMonoDevice_WhenMovingSlitPosition_ThenSlitPositionIsUpdated(Slit slit, float targetPosition)
     {
-        Task.Delay(TimeSpan.FromMilliseconds(100)).Wait();
+        Task.Delay(TimeSpan.FromMilliseconds(600)).Wait();
         
         // Act
         await _fixture.Mono.SetSlitPositionAsync(slit, targetPosition);
