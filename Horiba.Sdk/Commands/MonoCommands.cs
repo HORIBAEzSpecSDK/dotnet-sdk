@@ -23,7 +23,7 @@ internal record MonoIsBusyCommand(int DeviceId) : MonochromatorDeviceCommand("mo
     public int DeviceId { get; } = DeviceId;
 }
 
-internal record MonoHomeCommand(int DeviceId) : MonochromatorDeviceCommand("mono_init", DeviceId)
+internal record MonoInitCommand(int DeviceId) : MonochromatorDeviceCommand("mono_init", DeviceId)
 {
     public int DeviceId { get; } = DeviceId;
 }
@@ -114,7 +114,7 @@ internal record MonoMoveMirrorCommand(int DeviceId, Mirror Mirror, MirrorPositio
     : MonochromatorDeviceCommand("mono_moveMirror", new Dictionary<string, object>
     {
         { "index", DeviceId },
-        { "id", (int)Mirror },
+        { "type", (int)Mirror },
         { "position", (int)MirrorPosition }
     })
 {

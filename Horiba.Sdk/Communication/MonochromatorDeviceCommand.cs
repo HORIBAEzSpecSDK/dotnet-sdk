@@ -1,5 +1,9 @@
 ﻿namespace Horiba.Sdk.Communication;
 
+/// <summary>
+/// A dedicated abstraction used to group device specific commands.
+/// Only commands targeting a MonochromatorDevice should derive from this class.
+/// </summary>
 public abstract record MonochromatorDeviceCommand : Command
 {
     protected MonochromatorDeviceCommand(string commandName, int deviceId) :

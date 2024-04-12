@@ -30,6 +30,8 @@ public sealed record MonochromatorDevice(
     /// <returns></returns>
     public override Task OpenConnectionAsync(CancellationToken cancellationToken = default)
     {
+        //TODO accept a bool parameter to stop the mono_init from executing
+        //TODO expose public method to allow sending mono_init separately
         return Communicator.SendAsync(new MonoOpenCommand(DeviceId), cancellationToken);
     }
 
@@ -46,10 +48,11 @@ public sealed record MonochromatorDevice(
     /// <summary>
     /// Waits for the device to complete an acquisition
     /// </summary>
-    /// <param name="waitIntervalInMs">Defines how long will a waiting cycle lasts</param>
     /// <param name="initialWaitInMs">Defines the time before the waiting cycle begins</param>
+    /// <param name="waitIntervalInMs">Defines how long will a waiting cycle lasts</param>
     /// <param name="cancellationToken"></param>
-    public override async Task WaitForDeviceNotBusy(int waitIntervalInMs = 1500, int initialWaitInMs = 500, CancellationToken cancellationToken = default)
+    public override async Task WaitForDeviceNotBusy(int initialWaitInMs = 500, int waitIntervalInMs = 500,
+        CancellationToken cancellationToken = default)
     {
         Task.Delay(initialWaitInMs, cancellationToken).Wait(cancellationToken);
         while (await IsDeviceBusyAsync(cancellationToken))
@@ -79,7 +82,7 @@ public sealed record MonochromatorDevice(
     /// <returns></returns>
     public Task HomeAsync(CancellationToken cancellationToken = default)
     {
-        return Communicator.SendAsync(new MonoHomeCommand(DeviceId), cancellationToken);
+        return Communicator.SendAsync(new MonoInitCommand(DeviceId), cancellationToken);
     }
 
     /// <summary>

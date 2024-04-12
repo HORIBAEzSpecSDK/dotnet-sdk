@@ -84,6 +84,12 @@ public sealed class DeviceManager : IDisposable
         ChargedCoupledDevices = await new ChargedCoupleDeviceDiscovery(Communicator).DiscoverDevicesAsync(cancellationToken);
     }
 
+    public async Task<string> GetIclInfoAsync(CancellationToken cancellationToken = default)
+    {
+        var result = await Communicator.SendWithResponseAsync(new IclInfoCommand(), cancellationToken);
+        return result.Results["info"].ToString();
+    }
+
     private void IclProcessOnExited(object sender, EventArgs e)
     {
         Log.Debug("ICL process terminated");
