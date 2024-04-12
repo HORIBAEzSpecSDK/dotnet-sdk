@@ -5,7 +5,7 @@
 
 ## ICL version 2.0.0.124.b4cc4e55
 
-### Generic Commands
+**Generic Commands**
 
 | Command      | Implemented | Tests available | Status | Comment |
 | ------------ | :---------: | :-------------: | :----: | :-----: |
@@ -13,7 +13,7 @@
 | icl_shutdown |      ✅      |        ✖️        |   ✖️    |         |
 | icl_binMode  |      ✅      |        ✖️        |   ✖️    |         |
 
-### Monochromator Commands
+**Monochromator Commands**
 
 | Command                     | Implemented | Tests available | Status |                                          Comment                                          |
 | --------------------------- | :---------: | :-------------: | :----: | :---------------------------------------------------------------------------------------: |
@@ -44,7 +44,7 @@
 | mono_getSlitStepPosition    |      ✅      |        ✅        |   ✅    |                                                                                           |
 | mono_moveSlit               |      ✅      |        ✅        |   ✅    |                                   Slit C is not moving                                    |
 
-### CCD Commands
+**CCD Commands**
 
 | Command                    | Implemented | Tests available | Status |                            Comment                            |
 | -------------------------- | :---------: | :-------------: | :----: | :-----------------------------------------------------------: |
@@ -91,7 +91,7 @@
 | ccd_setAcquisitionAbort    |      ✅      |        ✖️        |   ❓    |            what is the expected 'Abort' procedure?            |
 | ccd_getAcquisitionData     |      ✅      |        ✅        |   ⛔    |             [E];-326;Error Data Formatting Error              |
 
-### Single Chanel Detector Commands
+**Single Chanel Detector Commands**
 
 | Command       | Implemented | Tested | Status | Comment |
 | ------------- | :---------: | -----: | -----: | ------: |
