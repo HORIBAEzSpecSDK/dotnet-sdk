@@ -34,8 +34,8 @@
 | mono_shutterOpen            |      ✅      |        ✅        |   ⛔    |     [E];-519;Mono must be configured for internal shutter mode     |
 | mono_shutterClose           |      ✅      |        ✅        |   ⛔    |     [E];-519;Mono must be configured for internal shutter mode     |
 | mono_getShutterStatus       |      ✅      |        ✅        |   ⚠️    |                                                                    |
-| mono_getSlitStepPosition    |      ✅      |        ✅        |   ⚠️    |                                                                    |
-| mono_moveSlit               |      ✅      |        ✅        |   ⛔    | does not work, sometimes the device gets disconnected from USB bus |
+| mono_getSlitStepPosition    |      ✅      |        ✅        |   ✅    |                                                                    |
+| mono_moveSlit               |      ✅      |        ✅        |   ⛔    |                        Slit C is not moving                        |
 
 # CCD Commands
 

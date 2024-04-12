@@ -114,7 +114,7 @@ internal record MonoMoveMirrorCommand(int DeviceId, Mirror Mirror, MirrorPositio
     : MonochromatorDeviceCommand("mono_moveMirror", new Dictionary<string, object>
     {
         { "index", DeviceId },
-        { "id", (int)Mirror },
+        { "type", (int)Mirror },
         { "position", (int)MirrorPosition }
     })
 {

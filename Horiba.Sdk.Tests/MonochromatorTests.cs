@@ -110,7 +110,7 @@ public class MonochromatorTests : IClassFixture<MonochromatorTestFixture>
     {
         // Act
         await _fixture.Mono.SetSlitPositionAsync(slit, targetPosition);
-        await _fixture.Mono.WaitForDeviceNotBusy();
+        await _fixture.Mono.WaitForDeviceNotBusy(5000);
         var actual = await _fixture.Mono.GetSlitPositionInMMAsync(slit);
 
         // Assert

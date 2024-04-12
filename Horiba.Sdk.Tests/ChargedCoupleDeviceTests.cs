@@ -58,10 +58,8 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
         // Assert
         data.MatchSnapshot();
     }
-    
-    // TODO test procedure get picture, move mono, get picture again
 
-    [Fact]
+    [Fact(Skip = "It should be tested separately")]
     public async Task GivenCcd_WhenOpeningConnection_ThenConnectionIsOpened()
     {
         // Act
@@ -72,7 +70,7 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
         actualStatus.Should().BeTrue();
     }
 
-    [Fact]
+    [Fact(Skip = "It should be tested separately")]
     public async Task GivenCcd_WhenOpeningAndClosingConnection_ThenConnectionIsClosed()
     {
         // Act

@@ -38,10 +38,11 @@ public sealed record ChargedCoupledDevice(
     /// <summary>
     /// Waits for the device to complete an acquisition
     /// </summary>
-    /// <param name="waitIntervalInMs">Defines how long will a waiting cycle lasts</param>
     /// <param name="initialWaitInMs">Defines the time before the waiting cycle begins</param>
+    /// <param name="waitIntervalInMs">Defines how long will a waiting cycle lasts</param>
     /// <param name="cancellationToken"></param>
-    public override async Task WaitForDeviceNotBusy(int waitIntervalInMs = 500, int initialWaitInMs = 500, CancellationToken cancellationToken = default)
+    public override async Task WaitForDeviceNotBusy(int initialWaitInMs = 250, int waitIntervalInMs = 250,
+        CancellationToken cancellationToken = default)
     {
         Task.Delay(initialWaitInMs, cancellationToken).Wait(cancellationToken);
         while (await GetAcquisitionBusyAsync(cancellationToken))
