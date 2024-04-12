@@ -66,4 +66,18 @@ public class DeviceManagerTests
         // Assert
         expectedException.Should().NotBeNull();
     }
+
+    [Fact]
+    public async Task GivenNewDeviceManager_WhenGettingIclInfo_ThenReturnsConsistentResult()
+    {
+        // Arrange
+        using var deviceManager = new DeviceManager();
+        await deviceManager.StartAsync();
+        
+        // Act
+        var info = await deviceManager.GetIclInfoAsync();
+
+        // Assert
+        info.MatchSnapshot();
+    }
 }
