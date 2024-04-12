@@ -57,17 +57,14 @@ public class MonochromatorTests : IClassFixture<MonochromatorTestFixture>
     {
         // Act
         await _fixture.Mono.SetTurretGratingAsync(target);
-        
-        //TODO make sure there is enough time for the device to move a grating
-        await _fixture.Mono.WaitForDeviceNotBusy();
-        
+        await _fixture.Mono.WaitForDeviceNotBusy(30000);
         var actual = await _fixture.Mono.GetTurretGratingAsync();
 
         // Assert
         actual.Should().Be(target);
     }
 
-    [Theory]
+    [Theory(Skip = "The available device does not have a wheel installed. Hardware feature is missing")]
     [InlineData(FilterWheelPosition.Red)]
     [InlineData(FilterWheelPosition.Green)]
     [InlineData(FilterWheelPosition.Blue)]
@@ -91,6 +88,7 @@ public class MonochromatorTests : IClassFixture<MonochromatorTestFixture>
     {
         // Act
         await _fixture.Mono.SetMirrorPositionAsync(mirror, target);
+        await _fixture.Mono.WaitForDeviceNotBusy(5000);
         var actual = await _fixture.Mono.GetMirrorPosition(mirror);
 
         // Assert
@@ -138,7 +136,7 @@ public class MonochromatorTests : IClassFixture<MonochromatorTestFixture>
     {
         // Act
         await _fixture.Mono.SetSlitStepPositionAsync(slit, targetPosition);
-        await _fixture.Mono.WaitForDeviceNotBusy();
+        await _fixture.Mono.WaitForDeviceNotBusy(5000);
         var actual = await _fixture.Mono.GetSlitStepPositionAsync(slit);
 
         // Assert
