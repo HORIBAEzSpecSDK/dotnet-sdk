@@ -1,6 +1,7 @@
 ﻿using Horiba.Sdk.Commands;
 using Horiba.Sdk.Communication;
 using Horiba.Sdk.Enums;
+using Newtonsoft.Json;
 using Serilog;
 
 namespace Horiba.Sdk.Devices;
@@ -146,7 +147,8 @@ public sealed record ChargedCoupledDevice(
         CancellationToken cancellationToken = default)
     {
         var result = await Communicator.SendWithResponseAsync(new CcdGetConfigCommand(DeviceId), cancellationToken);
-        return result.Results;
+        // TODO this is really breakable, find a better way to implement it
+        return JsonConvert.DeserializeObject<Dictionary<string, object>>(result.Results.First().Value.ToString());
     }
 
     public async Task<int> GetNumberOfAveragesAsync(CancellationToken cancellationToken = default)

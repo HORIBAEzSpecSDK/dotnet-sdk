@@ -179,12 +179,11 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
     [Fact]
     public async Task GivenCcd_WhenReadingDeviceConfiguration_ThenReturnsConsistentDeviceConfiguration()
     {
-        // TODO figure out how to test this without pre-setting the entire state before the test
         // Act
-        var cofig = await _fixture.Ccd.GetDeviceConfigurationAsync();
+        var config = await _fixture.Ccd.GetDeviceConfigurationAsync();
 
         // Assert
-        Assert.True(cofig.Count > 1);
+        Assert.True(config.Count > 1);
     }
 
     [Fact]
