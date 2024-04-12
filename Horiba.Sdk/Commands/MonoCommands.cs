@@ -114,7 +114,7 @@ internal record MonoMoveMirrorCommand(int DeviceId, Mirror Mirror, MirrorPositio
     : MonochromatorDeviceCommand("mono_moveMirror", new Dictionary<string, object>
     {
         { "index", DeviceId },
-        { "type", (int)Mirror },
+        { "id", (int)Mirror },
         { "position", (int)MirrorPosition }
     })
 {
@@ -185,4 +185,16 @@ internal record MonoGetShutterStatusCommand(int DeviceId)
     : MonochromatorDeviceCommand("mono_getShutterStatus", DeviceId)
 {
     public int DeviceId { get; } = DeviceId;
+}
+
+internal record MonoShutterSelectCommand(int DeviceId, Shutter Shutter)
+    : MonochromatorDeviceCommand("mono_shutterSelect",
+        new Dictionary<string, object>
+    {
+        { "index", DeviceId },
+        { "shutter", (int)Shutter }
+    })
+{
+    public int DeviceId { get; } = DeviceId;
+    public Shutter Shutter { get; } = Shutter;
 }

@@ -250,4 +250,9 @@ public sealed record MonochromatorDevice(
             await Communicator.SendWithResponseAsync(new MonoGetShutterStatusCommand(DeviceId), cancellationToken);
         return (ShutterPosition)int.Parse(response.Results["position"].ToString());
     }
+
+    public Task SelectShutterAsync(Shutter shutter, CancellationToken cancellationToken = default)
+    {
+        return Communicator.SendAsync(new MonoShutterSelectCommand(DeviceId, shutter), cancellationToken);
+    }
 }
