@@ -61,7 +61,7 @@ public sealed class DeviceManager : IDisposable
         if (enableBinaryMessages)
         {
             // TODO TEST if enabled, can I see binary message?
-            await Communicator.SendWithResponseAsync(new IclBinaryModeAllCommand());
+            await Communicator.SendAsync(new IclBinaryModeAllCommand());
         }
 
         await DiscoverDevicesAsync();

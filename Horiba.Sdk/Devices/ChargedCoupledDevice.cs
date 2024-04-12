@@ -211,8 +211,8 @@ public sealed record ChargedCoupledDevice(
     public async Task<int> GetAcquisitionCountAsync(CancellationToken cancellationToken = default)
     {
         var result =
-            await Communicator.SendWithResponseAsync(new CcdGetTimerResolutionCommand(DeviceId), cancellationToken);
-        return int.Parse(result.Results["resolution"].ToString());
+            await Communicator.SendWithResponseAsync(new CcdGetAcquisitionCountCommand(DeviceId), cancellationToken);
+        return int.Parse(result.Results["count"].ToString());
     }
 
     public async Task SetCleanCountAsync(int count, CleanCountMode mode, CancellationToken cancellationToken = default)

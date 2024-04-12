@@ -141,7 +141,7 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
     public async Task GivenCcd_WhenSettingTimeResolution_ThenSetsTheTimeResolution()
     {
         // Arrange
-        var targetResolution = 500;
+        var targetResolution = 1;
 
         // Act
         await _fixture.Ccd.SetTimerResolutionAsync(targetResolution);
@@ -204,5 +204,15 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
 
         // Assert
         temp.Should().BeApproximately(-60, 0.1f);
+    }
+
+    [Fact]
+    public async Task GivenCcd_WhenGettingDataSize_ThenDataSizeGetsReturned()
+    {
+        // Act
+        var size = await _fixture.Ccd.GetDataSizeAsync();
+        
+        // Assert
+        size.Should().Be(1024 * 256);
     }
 }
