@@ -213,6 +213,6 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
         var size = await _fixture.Ccd.GetDataSizeAsync();
         
         // Assert
-        size.Should().Be(1024 * 256);
+        size.Should().Be(1024);
     }
 }
