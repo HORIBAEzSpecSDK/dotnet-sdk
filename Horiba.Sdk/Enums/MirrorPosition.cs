@@ -4,5 +4,5 @@
 public enum MirrorPosition
 {
     Axial = 0,
-    Literal = 1
+    Lateral = 1
 }

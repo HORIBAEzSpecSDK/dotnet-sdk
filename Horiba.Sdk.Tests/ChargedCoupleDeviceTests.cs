@@ -43,7 +43,6 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
     public async Task GivenCcd_WhenGettingActualData_ThenReturnsByteData()
     {
         // Arrange
-        await _fixture.Ccd.OpenConnectionAsync();
         await _fixture.Ccd.SetAcquisitionCountAsync(1);
         await _fixture.Ccd.SetXAxisConversionTypeAsync(ConversionType.None);
         await _fixture.Ccd.SetExposureTimeAsync(1000);
