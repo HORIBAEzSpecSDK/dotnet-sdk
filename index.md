@@ -1,37 +1,11 @@
-# horiba-dotnet-sdk
-This is the c# .NET repository for the Horiba SDK components.
-
-___
-
-⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️
-
-> [!WARNING]  
-> This SDK is under development and not yet released.
-
-> [!IMPORTANT]  
-> For this .NET code to work, the SDK from Horiba has to be purchased, installed and licensed.
-> The code in this repo and the SDK are under development and not yet released for public use!
-
-⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️
-
-___
-
-**📦 Prerequisites**
-
-* .NET Standard or .NET 6+
-* ICL.exe installed as part of the Horiba SDK, licensed and activated
-
-
-
-
-
 # Command Status
 
-## ICL version 2.0.0.124.b4cc4e55
 ---
 ---
 
-# Generic Commands
+## ICL version 2.0.0.124.b4cc4e55
+
+### Generic Commands
 
 | Command      | Implemented | Tests available | Status | Comment |
 | ------------ | :---------: | :-------------: | :----: | :-----: |
@@ -39,7 +13,7 @@ ___
 | icl_shutdown |      ✅      |        ✖️        |   ✖️    |         |
 | icl_binMode  |      ✅      |        ✖️        |   ✖️    |         |
 
-# Monochromator Commands
+### Monochromator Commands
 
 | Command                     | Implemented | Tests available | Status |                                          Comment                                          |
 | --------------------------- | :---------: | :-------------: | :----: | :---------------------------------------------------------------------------------------: |
@@ -70,7 +44,7 @@ ___
 | mono_getSlitStepPosition    |      ✅      |        ✅        |   ✅    |                                                                                           |
 | mono_moveSlit               |      ✅      |        ✅        |   ⛔    |                                   Slit C is not moving                                    |
 
-# CCD Commands
+### CCD Commands
 
 | Command                    | Implemented | Tests available | Status |                                            Comment                                            |
 | -------------------------- | :---------: | :-------------: | :----: | :-------------------------------------------------------------------------------------------: |
@@ -117,7 +91,7 @@ ___
 | ccd_setAcquisitionAbort    |      ✅      |        ✖️        |   ❓    |                            what is the expected 'Abort' procedure?                            |
 | ccd_getAcquisitionData     |      ✅      |        ✅        |   ⛔    |                             [E];-326;Error Data Formatting Error                              |
 
-# Single Chanel Detector Commands
+### Single Chanel Detector Commands
 
 | Command       | Implemented | Tested | Status | Comment |
 | ------------- | :---------: | -----: | -----: | ------: |
@@ -127,7 +101,6 @@ ___
 | scd_open      |      ✖️      |      ✖️ |      ✖️ |         |
 | scd_close     |      ✖️      |      ✖️ |      ✖️ |         |
 | scd_isOpen    |      ✖️      |      ✖️ |      ✖️ |         |
-
 
 ---
 ---
