@@ -1,4 +1,5 @@
-﻿using Horiba.Sdk.Commands;
+﻿using System.Diagnostics.CodeAnalysis;
+using Horiba.Sdk.Commands;
 using Horiba.Sdk.Communication;
 using Horiba.Sdk.Enums;
 using Serilog;
@@ -13,7 +14,7 @@ public sealed record MonochromatorDevice(
     Device(DeviceId, DeviceType, SerialNumber, Communicator)
 {
     /// <summary>
-    ///     Checks if the connection to the monochromator is open.
+    /// Checks if the connection to the monochromator is open.
     /// </summary>
     /// <param name="cancellationToken">Propagates notification that operations should be canceled.</param>
     /// <returns></returns>
@@ -24,19 +25,17 @@ public sealed record MonochromatorDevice(
     }
 
     /// <summary>
-    ///     Opens the connection to the Monochromator
+    /// Opens the connection to the Monochromator by sending mono_open command
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     public override Task OpenConnectionAsync(CancellationToken cancellationToken = default)
     {
-        //TODO accept a bool parameter to stop the mono_init from executing
-        //TODO expose public method to allow sending mono_init separately
         return Communicator.SendAsync(new MonoOpenCommand(DeviceId), cancellationToken);
     }
 
     /// <summary>
-    ///     Closes the connection to the Monochromator
+    /// Closes the connection to the Monochromator by sending mono_close command
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
@@ -46,11 +45,12 @@ public sealed record MonochromatorDevice(
     }
 
     /// <summary>
-    /// Waits for the device to complete an acquisition
+    /// Waits for the device to report not busy
     /// </summary>
     /// <param name="initialWaitInMs">Defines the time before the waiting cycle begins</param>
     /// <param name="waitIntervalInMs">Defines how long will a waiting cycle lasts</param>
     /// <param name="cancellationToken"></param>
+    [SuppressMessage("ReSharper", "OptionalParameterHierarchyMismatch")]
     public override async Task WaitForDeviceNotBusy(int initialWaitInMs = 500, int waitIntervalInMs = 500,
         CancellationToken cancellationToken = default)
     {
@@ -61,14 +61,12 @@ public sealed record MonochromatorDevice(
             Task.Delay(waitIntervalInMs, cancellationToken).Wait(cancellationToken);
         }
     }
-
+    
     /// <summary>
-    ///     Checks if the monochromator is busy.
+    /// Actively checks if the device is busy by sending mono_isBusy command
     /// </summary>
     /// <param name="cancellationToken"></param>
-    /// <returns>
-    ///     <see cref="bool" />
-    /// </returns>
+    /// <returns></returns>
     public async Task<bool> IsDeviceBusyAsync(CancellationToken cancellationToken = default)
     {
         var response = await Communicator.SendWithResponseAsync(new MonoIsBusyCommand(DeviceId), cancellationToken);
@@ -76,38 +74,34 @@ public sealed record MonochromatorDevice(
     }
 
     /// <summary>
-    ///     Starts the monochromator initialization process called "homing".
+    /// Starts the monochromator initialization process called "homing" by sending mono_init command
     /// </summary>
     /// <param name="cancellationToken"></param>
-    /// <returns></returns>
+    /// <returns>Task representing the communication between SDK and ICL</returns>
     public Task HomeAsync(CancellationToken cancellationToken = default)
     {
         return Communicator.SendAsync(new MonoInitCommand(DeviceId), cancellationToken);
     }
-
+    
     /// <summary>
-    ///     Returns the configuration of the monochromator.
+    /// Retrieves the configuration of the monochromator by sending the mono_getConfig command
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     public async Task<Dictionary<string, object>> GetDeviceConfigurationAsync(
         CancellationToken cancellationToken = default)
     {
-        // TODO consider creating dedicated type for the configuration and return it instead
         var response =
             await Communicator.SendWithResponseAsync(new MonoGetConfigurationCommand(DeviceId), cancellationToken);
         return response.Results;
     }
-
+    
     /// <summary>
-    ///     Current wavelength of the monochromator's position in nm.
+    /// Retrieves the current wavelength of the monochromator by sending the mono_getPosition command
     /// </summary>
     /// <param name="cancellationToken"></param>
-    /// <returns>
-    ///     <see cref="float" />
-    /// </returns>
-    public async Task<float> GetCurrentWavelengthAsync(
-        CancellationToken cancellationToken = default)
+    /// <returns></returns>
+    public async Task<float> GetCurrentWavelengthAsync(CancellationToken cancellationToken = default)
     {
         var response =
             await Communicator.SendWithResponseAsync(new MonoGetPositionCommand(DeviceId), cancellationToken);
@@ -115,14 +109,15 @@ public sealed record MonochromatorDevice(
     }
 
     /// <summary>
-    ///     This command sets the wavelength value of the current grating position of the monochromator.
+    ///     This command sets the wavelength value of the current grating position of the monochromator
+    ///     by sending the mono_setPosition command.
     /// 
     ///     WARNING : This could potentially un-calibrate the monochromator and report an incorrect wavelength
     ///     compared to the actual output wavelength.
     /// </summary>
     /// <param name="wavelength">Wavelength in nm</param>
     /// <param name="cancellationToken"></param>
-    /// <returns></returns>
+    /// <returns>Task representing the communication between SDK and ICL</returns>
     public Task CalibrateWavelengthAsync(float wavelength, CancellationToken cancellationToken = default)
     {
         return Communicator.SendAsync(new MonoSetPositionCommand(DeviceId, wavelength), cancellationToken);
@@ -191,21 +186,40 @@ public sealed record MonochromatorDevice(
         return Communicator.SendAsync(new MonoMoveFilterWheelCommand(DeviceId, filterWheelPosition), cancellationToken);
     }
 
+    /// <summary>
+    /// Retrieves the current mirror position by sending the mono_getMirrorPosition command
+    /// </summary>
+    /// <param name="mirror"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     public async Task<MirrorPosition> GetMirrorPosition(Mirror mirror, CancellationToken cancellationToken = default)
     {
-        // TODO clarify how the Mirror enum relates to the device and how is it intended to be used
         var response =
             await Communicator.SendWithResponseAsync(new MonoGetMirrorPositionCommand(DeviceId, mirror),
                 cancellationToken);
         return (MirrorPosition)int.Parse(response.Results["position"].ToString());
     }
 
+    /// <summary>
+    /// Sets the mirror position by sending the mono_moveMirror command
+    /// </summary>
+    /// <param name="mirror"></param>
+    /// <param name="position"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>Task representing the communication between SDK and ICL</returns>
     public Task SetMirrorPositionAsync(Mirror mirror, MirrorPosition position,
         CancellationToken cancellationToken = default)
     {
         return Communicator.SendAsync(new MonoMoveMirrorCommand(DeviceId, mirror, position), cancellationToken);
     }
 
+    /// <summary>
+    /// Retrieves the slit position in mm by sending the mono_getSlitPositionInMM command
+    /// </summary>
+    /// <param name="slit"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    // ReSharper disable once InconsistentNaming
     public async Task<float> GetSlitPositionInMMAsync(Slit slit, CancellationToken cancellationToken = default)
     {
         var response =
@@ -214,13 +228,25 @@ public sealed record MonochromatorDevice(
         return float.Parse(response.Results["position"].ToString());
     }
 
+    /// <summary>
+    /// Sets the slit position in mm by sending the mono_moveSlitMM command
+    /// </summary>
+    /// <param name="slit"></param>
+    /// <param name="position"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>Task representing the communication between SDK and ICL</returns>
     public Task SetSlitPositionAsync(Slit slit, float position, CancellationToken cancellationToken = default)
     {
         return Communicator.SendAsync(new MonoMoveSlitMMCommand(DeviceId, slit, position), cancellationToken);
     }
 
-    public async Task<SlitStepPosition> GetSlitStepPositionAsync(Slit slit,
-        CancellationToken cancellationToken = default)
+    /// <summary>
+    /// Retrieves the slit step position by sending the mono_getSlitStepPosition command
+    /// </summary>
+    /// <param name="slit"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public async Task<SlitStepPosition> GetSlitStepPositionAsync(Slit slit, CancellationToken cancellationToken = default)
     {
         var response =
             await Communicator.SendWithResponseAsync(new MonoGetSlitStepPositionCommand(DeviceId, slit),
@@ -228,22 +254,44 @@ public sealed record MonochromatorDevice(
         return (SlitStepPosition)int.Parse(response.Results["position"].ToString());
     }
 
+    /// <summary>
+    /// Sets the slit step position by sending the mono_moveSlit command
+    /// </summary>
+    /// <param name="slit"></param>
+    /// <param name="stepPosition"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>Task representing the communication between SDK and ICL</returns>
     public Task SetSlitStepPositionAsync(Slit slit, SlitStepPosition stepPosition,
         CancellationToken cancellationToken = default)
     {
         return Communicator.SendAsync(new MonoMoveSlitCommand(DeviceId, slit, stepPosition), cancellationToken);
     }
 
+    /// <summary>
+    /// Opens the shutter by sending the mono_shutterOpen command
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns>Task representing the communication between SDK and ICL</returns>
     public Task OpenShutterAsync(CancellationToken cancellationToken = default)
     {
         return Communicator.SendAsync(new MonoShutterOpenCommand(DeviceId), cancellationToken);
     }
 
+    /// <summary>
+    /// Closes the shutter by sending the mono_shutterClose command
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns>Task representing the communication between SDK and ICL</returns>
     public Task CloseShutterAsync(CancellationToken cancellationToken = default)
     {
         return Communicator.SendAsync(new MonoShutterCloseCommand(DeviceId), cancellationToken);
     }
 
+    /// <summary>
+    /// Retrieves the shutter position by sending the mono_getShutterStatus command
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns>Task representing the communication between SDK and ICL</returns>
     public async Task<ShutterPosition> GetShutterPositionAsync(CancellationToken cancellationToken = default)
     {
         var response =
@@ -251,6 +299,12 @@ public sealed record MonochromatorDevice(
         return (ShutterPosition)int.Parse(response.Results["shutter 1"].ToString());
     }
 
+    /// <summary>
+    /// Sets the active shutter by sending the mono_shutterSelect command
+    /// </summary>
+    /// <param name="shutter"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>Task representing the communication between SDK and ICL</returns>
     public Task SelectShutterAsync(Shutter shutter, CancellationToken cancellationToken = default)
     {
         return Communicator.SendAsync(new MonoShutterSelectCommand(DeviceId, shutter), cancellationToken);

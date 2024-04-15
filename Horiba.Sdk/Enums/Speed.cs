@@ -1,5 +1,8 @@
 ﻿namespace Horiba.Sdk.Enums;
 
+/// <summary>
+/// Predefined working speeds
+/// </summary>
 public enum Speed
 {
     /// <summary>

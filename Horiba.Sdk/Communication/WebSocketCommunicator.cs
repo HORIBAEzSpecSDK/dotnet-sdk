@@ -31,6 +31,11 @@ public sealed class WebSocketCommunicator(IPAddress ipAddress, int port)
         // _ = Task.Run(() => ReceiveMessage(_wsClient, cancellationToken));
     }
 
+    /// <summary>
+    /// Terminates the connection to the ICL
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     public Task CloseConnectionAsync(CancellationToken cancellationToken = default)
     {
         Log.Debug("Closing WebSocket connection");
@@ -38,6 +43,14 @@ public sealed class WebSocketCommunicator(IPAddress ipAddress, int port)
             cancellationToken);
     }
 
+    /// <summary>
+    /// Sends a command to the ICL and waits for a response. If the response contains errors, an exception is thrown.
+    /// </summary>
+    /// <param name="command">The command to be sent</param>
+    /// <param name="cancellationToken">A token for cancelling all long lasting tasks</param>
+    /// <returns></returns>
+    /// <exception cref="NullReferenceException">Thrown when there is an issue with receiving a response</exception>
+    /// <exception cref="CommunicationException">Thrown when the ICL responds with an error</exception>
     public async Task<Response> SendWithResponseAsync(Command command, CancellationToken cancellationToken = default)
     {
         await SendInternalAsync(command, cancellationToken);
@@ -52,6 +65,11 @@ public sealed class WebSocketCommunicator(IPAddress ipAddress, int port)
         return parsedResult;
     }
 
+    /// <summary>
+    /// Sends a command to the ICL without waiting for a response. Just logs the echo of the command.
+    /// </summary>
+    /// <param name="command">The command to be sent</param>
+    /// <param name="cancellationToken">A token for cancelling all long lasting tasks</param>
     public async Task SendAsync(Command command, CancellationToken cancellationToken = default)
     {
         await SendInternalAsync(command, cancellationToken);

@@ -18,8 +18,18 @@ public static class RegionOfInterestExtensions
     }
 }
 
+/// <summary>
+/// Represents the region which the device will read data from
+/// </summary>
+/// <param name="RoiIndex"></param>
+/// <param name="Origin">X,Y coordinates setting the starting point of the region</param>
+/// <param name="Bin"></param>
+/// <param name="Size">Width,Height of the region</param>
 public record RegionOfInterest(int RoiIndex, (int X, int Y) Origin, (int X, int Y) Bin, (int Width, int Height) Size)
 {
+    /// <summary>
+    /// Defines a region which covers the entire chip and create a histogram
+    /// </summary>
     public static readonly RegionOfInterest Default = new RegionOfInterest(1, (0, 0), (1, 256), (1024, 256));
     
     public int RoiIndex { get; } = RoiIndex;
