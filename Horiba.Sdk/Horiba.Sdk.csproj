@@ -9,10 +9,10 @@
         <PackageProjectUrl>https://github.com/ThatsTheEnd/horiba-dotnet-sdk</PackageProjectUrl>
         <PackageLicenseUrl>https://github.com/ThatsTheEnd/horiba-dotnet-sdk/blob/main/LICENSE</PackageLicenseUrl>
         <RepositoryUrl>https://github.com/ThatsTheEnd/horiba-dotnet-sdk</RepositoryUrl>
-        <Version>0.0.1</Version>
+        <Version>1.0.0</Version>
         <Copyright>Zuhlke Engineering</Copyright>
         <RepositoryType>SourceCode repo</RepositoryType>
-        <PackageTags>0.0.1</PackageTags>
+        <PackageTags>1.0.0</PackageTags>
         <PackageReleaseNotes>Initial pipeline deployment</PackageReleaseNotes>
         <TargetFrameworks>netstandard2.1;net7.0;net8.0</TargetFrameworks>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
