@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.1</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <LangVersion>latestmajor</LangVersion>
@@ -15,6 +14,11 @@
         <RepositoryType>SourceCode repo</RepositoryType>
         <PackageTags>0.0.1</PackageTags>
         <PackageReleaseNotes>Initial pipeline deployment</PackageReleaseNotes>
+        <TargetFrameworks>netstandard2.1;net7.0;net8.0</TargetFrameworks>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <AssemblyVersion>1.0.0</AssemblyVersion>
+        <FileVersion>1.0.0</FileVersion>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     </PropertyGroup>
 
     <ItemGroup>
