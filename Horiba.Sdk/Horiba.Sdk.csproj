@@ -5,6 +5,16 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <LangVersion>latestmajor</LangVersion>
+        <Title>Horiba.Sdk</Title>
+        <Authors>Zuhlke Engineering</Authors>
+        <PackageProjectUrl>https://github.com/ThatsTheEnd/horiba-dotnet-sdk</PackageProjectUrl>
+        <PackageLicenseUrl>https://github.com/ThatsTheEnd/horiba-dotnet-sdk/blob/main/LICENSE</PackageLicenseUrl>
+        <RepositoryUrl>https://github.com/ThatsTheEnd/horiba-dotnet-sdk</RepositoryUrl>
+        <Version>0.0.1</Version>
+        <Copyright>Zuhlke Engineering</Copyright>
+        <RepositoryType>SourceCode repo</RepositoryType>
+        <PackageTags>0.0.1</PackageTags>
+        <PackageReleaseNotes>Initial pipeline deployment</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
