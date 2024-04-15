@@ -59,6 +59,11 @@ public sealed class DeviceManager : IDisposable
         }
     }
 
+    /// <summary>
+    /// Initializes the connection to the ICL and starts the discovery process of devices.
+    /// </summary>
+    /// <param name="startIcl"></param>
+    /// <param name="enableBinaryMessages"></param>
     public async Task StartAsync(bool startIcl = true, bool enableBinaryMessages = false)
     {
         if (startIcl)
@@ -78,6 +83,9 @@ public sealed class DeviceManager : IDisposable
         await DiscoverDevicesAsync();
     }
 
+    /// <summary>
+    /// Terminates the connection to the ICL by sending icl_shutdown and kills the related (if any) ICL process.
+    /// </summary>
     public async Task StopAsync()
     {
         await Communicator.SendAsync(new IclShutdownCommand());
@@ -89,12 +97,21 @@ public sealed class DeviceManager : IDisposable
         }
     }
 
+    /// <summary>
+    /// Initiates the discovery process of devices.
+    /// </summary>
+    /// <param name="cancellationToken"></param>
     public async Task DiscoverDevicesAsync(CancellationToken cancellationToken = default)
     {
         Monochromators = await new MonochromatorDeviceDiscovery(Communicator).DiscoverDevicesAsync(cancellationToken);
         ChargedCoupledDevices = await new ChargedCoupleDeviceDiscovery(Communicator).DiscoverDevicesAsync(cancellationToken);
     }
 
+    /// <summary>
+    /// Retrieves the ICL information by sending the icl_info command.
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     public async Task<Dictionary<string,object>> GetIclInfoAsync(CancellationToken cancellationToken = default)
     {
         var result = await Communicator.SendWithResponseAsync(new IclInfoCommand(), cancellationToken);
