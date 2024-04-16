@@ -18,7 +18,7 @@ internal class ChargedCoupleDeviceDiscovery(WebSocketCommunicator communicator) 
         }
         var result = new List<ChargedCoupledDevice>();
         var response =
-            await communicator.SendWithResponseAsync(new IclListCcdCommand(), cancellationToken);
+            await communicator.SendWithResponseAsync(new IclCcdListCommand(), cancellationToken);
         
         foreach (var rawDescription in response.Results)
         {

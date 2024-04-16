@@ -19,7 +19,7 @@
 | --------------------------- | :---------: | :-------------: | :----: | :---------------------------------------------------------------------------------------: |
 | mono_discover               |      ✅      |        ✅        |   ✅    |                                                                                           |
 | mono_list                   |      ✅      |        ✅        |   ✅    |                                                                                           |
-| mono_listCount              |      ❓      |        ✖️        |   ✖️    |                         how is this different from mono_discover                          |
+| mono_listCount              |      ✅      |        ✅        |   ✅    |                                                                                           |
 | mono_open                   |      ✅      |        ✅        |   ✅    |                                                                                           |
 | mono_close                  |      ✅      |        ✅        |   ✅    |                                                                                           |
 | mono_isOpen                 |      ✅      |        ✅        |   ✅    |                                                                                           |
@@ -36,13 +36,13 @@
 | mono_getMirrorPosition      |      ✅      |        ✅        |   ✅    |                                                                                           |
 | mono_moveMirror             |      ✅      |        ✅        |   ✅    |                                                                                           |
 | mono_getSlitPositionInMM    |      ✅      |        ✅        |   ✅    |                                                                                           |
-| mono_moveSlitMM             |      ✅      |        ✅        |   ✅    |                                   Slit C is not moving                                    |
+| mono_moveSlitMM             |      ✅      |        ✅        |   ⚠️    |                                   Slit C is not moving                                    |
 | mono_shutterSelect          |      ✅      |        ✅        |   ⛔    |                [E];-519;Mono must be configured for internal shutter mode                 |
 | mono_shutterOpen            |      ✅      |        ✅        |   ⛔    |                [E];-519;Mono must be configured for internal shutter mode                 |
 | mono_shutterClose           |      ✅      |        ✅        |   ⛔    |                [E];-519;Mono must be configured for internal shutter mode                 |
 | mono_getShutterStatus       |      ✅      |        ✅        |   ⛔    |                [E];-519;Mono must be configured for internal shutter mode                 |
 | mono_getSlitStepPosition    |      ✅      |        ✅        |   ✅    |                                                                                           |
-| mono_moveSlit               |      ✅      |        ✅        |   ✅    |                                   Slit C is not moving                                    |
+| mono_moveSlit               |      ✅      |        ✅        |   ⚠️    |                                   Slit C is not moving                                    |
 
 **CCD Commands**
 
@@ -50,11 +50,11 @@
 | -------------------------- | :---------: | :-------------: | :----: | :--------------------------------------------------------: |
 | ccd_discover               |      ✅      |        ✅        |   ✅    |                                                            |
 | ccd_list                   |      ✅      |        ✅        |   ✅    |                                                            |
-| ccd_listCount              |      ❓      |        ✖️        |   ✖️    |           how is this different fromccd_discover           |
+| ccd_listCount              |      ✅      |        ✅        |   ✅    |                                                            |
 | ccd_open                   |      ✅      |        ✅        |   ✅    |                                                            |
 | ccd_close                  |      ✅      |        ✅        |   ✅    |                                                            |
 | ccd_isOpen                 |      ✅      |        ✅        |   ✅    |                                                            |
-| ccd_restart                |      ✅      |        ✖️        |   ❓    |           how can this be tested with code only?           |
+| ccd_restart                |      ✅      |        ✖️        |   ✅    |                                                            |
 | ccd_getConfig              |      ✅      |        ✅        |   ✅    |                                                            |
 | ccd_getChipSize            |      ✅      |        ✅        |   ✅    |                                                            |
 | ccd_getChipTemperature     |      ✅      |        ✅        |   ✅    |                                                            |

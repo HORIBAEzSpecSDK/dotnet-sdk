@@ -117,6 +117,30 @@ public sealed class DeviceManager : IDisposable
         var result = await Communicator.SendWithResponseAsync(new IclInfoCommand(), cancellationToken);
         return result.Results;
     }
+    
+    /// <summary>
+    /// Retrieves the number of monochromator devices by sending the mono_listCount command.
+    /// This command will return result only after completing discovery process.
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public async Task<int> GetMonochromatorCountAsync(CancellationToken cancellationToken = default)
+    {
+        var result = await Communicator.SendWithResponseAsync(new IclMonochromatorListCountCommand(), cancellationToken);
+        return (int)result.Results["count"];
+    }
+    
+    /// <summary>
+    /// Retrieves the number of Charged Couple Devices by sending the ccd_listCount command.
+    /// This command will return result only after completing discovery process.
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public async Task<int> GetCcdCountAsync(CancellationToken cancellationToken = default)
+    {
+        var result = await Communicator.SendWithResponseAsync(new IclCcdListCountCommand(), cancellationToken);
+        return (int)result.Results["count"];
+    }
 
     private void IclProcessOnExited(object sender, EventArgs e)
     {

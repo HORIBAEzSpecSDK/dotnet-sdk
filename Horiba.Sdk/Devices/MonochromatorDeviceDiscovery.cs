@@ -18,7 +18,7 @@ internal class MonochromatorDeviceDiscovery(WebSocketCommunicator communicator) 
         }
         var result = new List<MonochromatorDevice>();
         var response =
-            await communicator.SendWithResponseAsync(new IclListMonochromatorDevicesCommand(), cancellationToken);
+            await communicator.SendWithResponseAsync(new IclMonochromatorListCommand(), cancellationToken);
         
         foreach (var rawDescription in response.Results)
         {

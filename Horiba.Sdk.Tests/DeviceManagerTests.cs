@@ -80,4 +80,32 @@ public class DeviceManagerTests
         // Assert
         info.MatchSnapshot();
     }
+
+    [Fact]
+    public async Task GivenDeviceManager_WhenGetCountOfCcd_ThenReturnsCountAfterDiscovery()
+    {
+        // Arrange
+        using var deviceManager = new DeviceManager();
+        await deviceManager.StartAsync();
+        
+        // Act
+        var ccdListCount = await deviceManager.GetCcdCountAsync();
+
+        // Assert
+        ccdListCount.Should().BeGreaterOrEqualTo(1);
+    }
+
+    [Fact]
+    public async Task GivenDeviceManager_WhenGetCountOfMonochromators_ThenReturnsCountAfterDiscovery()
+    {
+        // Arrange
+        using var deviceManager = new DeviceManager();
+        await deviceManager.StartAsync();
+        
+        // Act
+        var monoListCount = await deviceManager.GetMonochromatorCountAsync();
+
+        // Assert
+        monoListCount.Should().BeGreaterOrEqualTo(1);
+    }
 }
