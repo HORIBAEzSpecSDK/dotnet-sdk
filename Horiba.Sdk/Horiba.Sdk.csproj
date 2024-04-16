@@ -7,17 +7,17 @@
         <Title>Horiba.Sdk</Title>
         <Authors>Zuhlke Engineering</Authors>
         <PackageProjectUrl>https://github.com/ThatsTheEnd/horiba-dotnet-sdk</PackageProjectUrl>
-        <PackageLicenseUrl>https://github.com/ThatsTheEnd/horiba-dotnet-sdk/blob/main/LICENSE</PackageLicenseUrl>
+        <License>https://github.com/ThatsTheEnd/horiba-dotnet-sdk/blob/main/LICENSE</License>
         <RepositoryUrl>https://github.com/ThatsTheEnd/horiba-dotnet-sdk</RepositoryUrl>
-        <Version>1.0.0</Version>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
         <Copyright>Zuhlke Engineering</Copyright>
-        <RepositoryType>SourceCode repo</RepositoryType>
-        <PackageTags>1.0.0</PackageTags>
+        <Company>HORIBA</Company>
+        <RepositoryType>git</RepositoryType>
+        <AssemblyVersion>1.0.1</AssemblyVersion>
+        <PackageTags>1.0.1</PackageTags>
+        <Version>1.0.1</Version>
         <PackageReleaseNotes>Initial pipeline deployment</PackageReleaseNotes>
         <TargetFrameworks>netstandard2.1;net7.0;net8.0</TargetFrameworks>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <AssemblyVersion>1.0.0</AssemblyVersion>
-        <FileVersion>1.0.0</FileVersion>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     </PropertyGroup>
 
@@ -26,6 +26,7 @@
         <PackageReference Include="Serilog" Version="3.1.1"/>
         <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1"/>
         <PackageReference Include="Serilog.Sinks.File" Version="5.0.0"/>
+        <None Include="..\README.md" Pack="true" PackagePath="\"/>
     </ItemGroup>
 
 </Project>

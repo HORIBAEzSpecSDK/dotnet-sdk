@@ -34,7 +34,12 @@ jobs:
         dotnet-version: 8.x
         
     - name: Set VERSION variable from tag
-      run: echo "VERSION=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
+      run:  |
+        if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+          echo "VERSION=1.0.2" >> $GITHUB_ENV
+        else
+          echo "VERSION=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
+        fi
       
     - name: Build
       run: dotnet build --configuration Release /p:Version=${VERSION}
