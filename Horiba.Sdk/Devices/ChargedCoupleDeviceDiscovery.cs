@@ -2,6 +2,7 @@
 using Horiba.Sdk.Commands;
 using Horiba.Sdk.Communication;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace Horiba.Sdk.Devices;
 
@@ -10,11 +11,20 @@ internal class ChargedCoupleDeviceDiscovery(WebSocketCommunicator communicator) 
 {
     public override async Task<List<ChargedCoupledDevice>> DiscoverDevicesAsync(CancellationToken cancellationToken)
     {
-        var countResponse = await communicator.SendWithResponseAsync(new IclDiscoverCcdCommand(), cancellationToken);
+        Response countResponse;
+        try
+        {
+            countResponse = await communicator.SendWithResponseAsync(new IclDiscoverCcdCommand(), cancellationToken);
+        }
+        catch (CommunicationException e)
+        {
+            Log.Warning(e, "No CCD devices found");
+            return [];
+        }
         var devicesCount = (long)countResponse.Results["count"];
         if (devicesCount < 0)
         {
-            return new List<ChargedCoupledDevice>();
+            return [];
         }
         var result = new List<ChargedCoupledDevice>();
         var response =

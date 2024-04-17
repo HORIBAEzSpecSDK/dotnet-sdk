@@ -1,6 +1,7 @@
 ﻿using Horiba.Sdk.Commands;
 using Horiba.Sdk.Communication;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace Horiba.Sdk.Devices;
 
@@ -9,12 +10,21 @@ internal class MonochromatorDeviceDiscovery(WebSocketCommunicator communicator) 
 {
     public override async Task<List<MonochromatorDevice>> DiscoverDevicesAsync(CancellationToken cancellationToken)
     {
-        var countResponse =
-            await communicator.SendWithResponseAsync(new IclDiscoverMonochromatorDevicesCommand(), cancellationToken);
+        Response countResponse;
+        try
+        {
+            countResponse = await communicator.SendWithResponseAsync(new IclDiscoverMonochromatorDevicesCommand(),
+                cancellationToken);
+        }
+        catch (CommunicationException e)
+        {
+            Log.Warning(e, "No Monochromator devices found.");
+            return [];
+        }
         var devicesCount = (long)countResponse.Results["count"];
         if (devicesCount < 0)
         {
-            return new List<MonochromatorDevice>();
+            return [];
         }
         var result = new List<MonochromatorDevice>();
         var response =
