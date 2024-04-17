@@ -124,20 +124,6 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
     }
 
     [Fact]
-    public async Task GivenCcd_WhenSettingNumberOfAverages_ThenSetsTheNumberOfAverages()
-    {
-        // Arrange
-        var targetNumber = 5;
-
-        // Act
-        await _fixture.Ccd.SetNumberOfAveragesAsync(targetNumber);
-        var actual = await _fixture.Ccd.GetNumberOfAveragesAsync();
-
-        // Assert
-        actual.Should().Be(targetNumber);
-    }
-
-    [Fact]
     public async Task GivenCcd_WhenSettingTimeResolution_ThenSetsTheTimeResolution()
     {
         // Arrange

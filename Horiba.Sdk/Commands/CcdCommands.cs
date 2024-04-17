@@ -132,24 +132,6 @@ internal record CcdGetConfigCommand(int DeviceId) : ChargedCoupleDeviceCommand("
     public int DeviceId { get; } = DeviceId;
 }
 
-internal record CcdGetNumberOfAveragesCommand(int DeviceId)
-    : ChargedCoupleDeviceCommand("ccd_getNumberOfAvgs", DeviceId)
-{
-    public int DeviceId { get; } = DeviceId;
-}
-
-internal record CcdSetNumberOfAveragesCommand(int DeviceId, int NumberOfAverages) : ChargedCoupleDeviceCommand(
-    "ccd_setNumberOfAvgs",
-    new Dictionary<string, object>
-    {
-        { "index", DeviceId },
-        { "count", NumberOfAverages }
-    })
-{
-    public int DeviceId { get; } = DeviceId;
-    public int NumberOfAverages { get; } = NumberOfAverages;
-}
-
 internal record CcdGetGainCommand(int DeviceId) : ChargedCoupleDeviceCommand("ccd_getGain", DeviceId)
 {
     public int DeviceId { get; } = DeviceId;

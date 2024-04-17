@@ -248,29 +248,6 @@ public sealed record ChargedCoupledDevice(
     }
 
     /// <summary>
-    /// Retrieves the number of averages of the CCD by sending the ccd_getNumberOfAverages command
-    /// </summary>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    public async Task<int> GetNumberOfAveragesAsync(CancellationToken cancellationToken = default)
-    {
-        var result =
-            await Communicator.SendWithResponseAsync(new CcdGetNumberOfAveragesCommand(DeviceId), cancellationToken);
-        return int.Parse(result.Results["count"].ToString());
-    }
-
-    /// <summary>
-    /// Sets the number of averages of the CCD by sending the ccd_setNumberOfAverages command
-    /// </summary>
-    /// <param name="numberOfAverages"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>Task representing the communication between SDK and ICL</returns>
-    public Task SetNumberOfAveragesAsync(int numberOfAverages, CancellationToken cancellationToken = default)
-    {
-        return Communicator.SendAsync(new CcdSetNumberOfAveragesCommand(DeviceId, numberOfAverages), cancellationToken);
-    }
-
-    /// <summary>
     /// Retrieves the gain of the CCD by sending the ccd_getGain command
     /// </summary>
     /// <param name="cancellationToken"></param>
