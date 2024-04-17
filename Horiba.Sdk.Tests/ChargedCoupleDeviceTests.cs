@@ -201,4 +201,26 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
         // Assert
         size.Should().Be(1024);
     }
+
+    [Fact]
+    public async Task GivenCcd_WhenReadingDataFromDevice_ThenRetrievingDataWorksAsConfigured()
+    {
+        // Arrange
+        await _fixture.Ccd.SetAcquisitionCountAsync(1);
+        await _fixture.Ccd.SetExposureTimeAsync(1500);
+        await _fixture.Ccd.SetRegionOfInterestAsync(RegionOfInterest.Default);
+        await _fixture.Ccd.SetXAxisConversionTypeAsync(ConversionType.None);
+
+        // Act
+        Dictionary<string, object> data = [];
+        if (await _fixture.Ccd.GetAcquisitionReadyAsync())
+        {
+            await _fixture.Ccd.SetAcquisitionStartAsync(true);
+            await _fixture.Ccd.WaitForDeviceNotBusy(TimeSpan.FromSeconds(1));
+            data = await _fixture.Ccd.GetAcquisitionDataAsync();
+        }
+        
+        // Assert
+        data.MatchSnapshot();
+    }
 }

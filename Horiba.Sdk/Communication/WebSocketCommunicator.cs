@@ -100,6 +100,7 @@ public sealed class WebSocketCommunicator(IPAddress ipAddress, int port)
 
     private async Task ReceiveMessage(WebSocket webSocket, CancellationToken cancellationToken)
     {
+        // TODO if this is required feature, decide on the mechanism for handling incoming messages
         var buffer = new ArraySegment<byte>(new byte[1024]);
         while (webSocket.State == WebSocketState.Open)
         {
