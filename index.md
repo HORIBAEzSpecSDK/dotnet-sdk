@@ -71,7 +71,7 @@
 | ccd_getTimerResolution     |      ✅      |        ✅        |   ✅    |                                                            |
 | ccd_setTimerResolution     |      ✅      |        ✅        |   ⛔    | [E];-316;CCD does not support Timer Resolution Token = 500 |
 | ccd_setAcqFormat           |      ✅      |        ✖️        |   ❓    |           how can this be tested with code only?           |
-| ccd_setRoi                 |      ✅      |        ✖️        |   ❓    |           how can this be tested with code only?           |
+| ccd_setRoi                 |      ✅      |        ✅        |   ✅    |                                                            |
 | ccd_getXAxisConversionType |      ✅      |        ✅        |   ✅    |                                                            |
 | ccd_setXAxisConversionType |      ✅      |        ✅        |   ✅    |                                                            |
 | ccd_getDataRetrievalMethod |      ✖️      |        ✖️        |   ✖️    |                                                            |
