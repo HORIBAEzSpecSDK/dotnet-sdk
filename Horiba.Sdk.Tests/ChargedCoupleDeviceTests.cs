@@ -1,4 +1,5 @@
 ﻿using Horiba.Sdk.Enums;
+using Newtonsoft.Json;
 
 namespace Horiba.Sdk.Tests;
 
@@ -220,7 +221,21 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
             data = await _fixture.Ccd.GetAcquisitionDataAsync();
         }
         
+        var acquisition = data.GetValueOrDefault("acquisition");
+        var timestamp = data.GetValueOrDefault("timestamp");
+        var actualData = JsonConvert.DeserializeObject<List<AcquisitionDescription>>(acquisition.ToString());
+        
         // Assert
-        data.MatchSnapshot();
+        actualData.Should().NotBeNull();
+        actualData.Count.Should().Be(1);
+        actualData[0].Region.Count.Should().Be(1);
+        actualData[0].Region[0].Data.Count.Should().Be(1024);
+        actualData[0].Region[0].Index.Should().Be(1);
+        actualData[0].Region[0].XBinning.Should().Be(1);
+        actualData[0].Region[0].XOrigin.Should().Be(0);
+        actualData[0].Region[0].XSize.Should().Be(1024);
+        actualData[0].Region[0].YBinning.Should().Be(256);
+        actualData[0].Region[0].YOrigin.Should().Be(0);
+        actualData[0].Region[0].YSize.Should().Be(256);
     }
 }

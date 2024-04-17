@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using Horiba.Sdk.Enums;
+using Newtonsoft.Json;
 
 namespace Horiba.Sdk.Tests;
 
@@ -107,5 +108,19 @@ public class DeviceManagerTests
 
         // Assert
         monoListCount.Should().BeGreaterOrEqualTo(1);
+    }
+
+    [Fact]
+    public void GivenAcquisitionData_WhenDeserializing_ThenHasCorrectClassStructure()
+    {
+        // Arrange
+        var result =
+            "[\n  {\n    \"acqIndex\": 1,\n    \"roi\": [\n      {\n        \"roiIndex\": 1,\n        \"xBinning\": 1,\n        \"xOrigin\": 0,\n        \"xSize\": 1024,\n        \"xyData\": [\n          [\n            0,\n            610\n          ],\n          [\n            1,\n            607\n          ],\n          [\n            2,\n            606\n          ],\n          [\n            3,\n            607\n          ],\n        \"yBinning\": 256,\n        \"yOrigin\": 0,\n        \"ySize\": 256\n      }\n    ]\n  }\n]";
+        
+        //Act
+        var obj = JsonConvert.DeserializeObject<List<AcquisitionDescription>>(result);
+            
+        // Assert
+        obj.Should().NotBeNull();
     }
 }
