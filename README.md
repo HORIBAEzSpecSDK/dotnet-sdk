@@ -80,4 +80,64 @@ var ccdConfig = await ccd.GetDeviceConfigurationAsync();
 var monoConfig = await mono.GetDeviceConfigurationAsync();
 ```
 
-Now you are ready to start implementing thefunctionality that best suites your case.
+Now you are ready to start implementing the functionality that best suites your case.
+
+# How To?
+
+#### Read actual data from CCD
+
+* Create new ConsoleApplication
+
+```dotnetcli
+dotnet new console --framework net8.0
+```
+
+* Install the Nuget package
+
+```dotnetcli
+dotnet add package Horiba.Sdk
+```
+
+* Open the Program.cs file and update the implementation
+
+```csh
+using Horiba.Sdk.Devices;
+using Horiba.Sdk.Enums;
+
+var deviceManager = new DeviceManager();
+await deviceManager.StartAsync();
+var ccd = deviceManager.ChargedCoupledDevices.First();
+await ccd.OpenConnectionAsync();
+
+await ccd.SetAcquisitionCountAsync(1);
+await ccd.SetExposureTimeAsync(1500);
+await ccd.SetRegionOfInterestAsync(RegionOfInterest.Default);
+await ccd.SetXAxisConversionTypeAsync(ConversionType.None);
+
+Dictionary<string, object> data = [];
+if (await ccd.GetAcquisitionReadyAsync())
+{
+    await ccd.SetAcquisitionStartAsync(true);
+    
+    // This method will start a polling procedure after 1s initial delay
+    // this initial delay is needed to allow the device to start the acquisition.
+    // The interval of the polling procedure is set to be 300ms
+    // every iteration of the polling procedure will check if the device is busy
+    // by sending a request to the device.
+    // The method will return when the device is not busy anymore
+    await ccd.WaitForDeviceNotBusy(TimeSpan.FromSeconds(1), TimeSpan.FromMilliseconds(300));
+    
+    data = await ccd.GetAcquisitionDataAsync();
+}
+        
+var acquisitionRawData = data.GetValueOrDefault("acquisition");
+var timestamp = data.GetValueOrDefault("timestamp");
+```
+
+The raw data will be in the shape of **Dictionary<string, object>** you will be able to extract the interesting data as per your needs.
+
+However, if you want to just be able to use JSON deserialization functionality to work with typed object, you can take a look at the **Horiba.Sdk.Tests.AcquisitionDescription.cs** class and use it to deserialize the data into.
+
+```csh
+var parsedData = JsonConvert.DeserializeObject<List<AcquisitionDescription>>(acquisitionRawData.ToString());
+```
