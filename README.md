@@ -136,7 +136,7 @@ var timestamp = data.GetValueOrDefault("timestamp");
 
 The raw data will be in the shape of **Dictionary<string, object>** you will be able to extract the interesting data as per your needs.
 
-However, if you want to just be able to use JSON deserialization functionality to work with typed object, you can take a look at the **Horiba.Sdk.Tests.AcquisitionDescription.cs** class and use it to deserialize the data into.
+However, if you want to just be able to use JSON deserialization functionality to work with typed object, you can take a look at the [**Horiba.Sdk.Tests.AcquisitionDescription.cs**](https://github.com/ThatsTheEnd/horiba-dotnet-sdk/blob/main/Horiba.Sdk.Tests/AcquisitionDescription.cs) class and use it to deserialize the data into.
 
 ```csh
 var parsedData = JsonConvert.DeserializeObject<List<AcquisitionDescription>>(acquisitionRawData.ToString());
