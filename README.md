@@ -104,7 +104,7 @@ dotnet add package Horiba.Sdk
 using Horiba.Sdk.Devices;
 using Horiba.Sdk.Enums;
 
-var deviceManager = new DeviceManager();
+using var deviceManager = new DeviceManager();
 await deviceManager.StartAsync();
 var ccd = deviceManager.ChargedCoupledDevices.First();
 await ccd.OpenConnectionAsync();
