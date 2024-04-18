@@ -1,6 +1,9 @@
-# horiba-dotnet-sdk
-This is the c# .NET repository for the Horiba SDK components.
+# Introduction
 
+This SDK is created to streamline the configuration and usage of hardware produced by Horiba. This icludes ChargetCoupleDevices and Monochromators.
+On top of the hardware devices, Horiba develops propriatery communication layer based on WebSocket connection. This layer is encapsulated in a process called ICL. ICL needs to be licensed and installed on a PC which has USB connection to the hardware. Once this is setup and ready, this SDK comes to play.
+
+C# developers can use this SDK to offload the complexity related to establishing and maintaining connection to both the ICL and the hardware devices. This will allow them to focus on building the solution they need from the get go.
 ___
 
 ⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️
@@ -52,7 +55,7 @@ using var deviceManager = new DeviceManager();
 await deviceManager.StartAsync();
 ```
 
-Note the **using** declaration, this is needed to ensure proper disposal of all resources utilized by the **DeviceManager**
+Note the **using** declaration, this is needed to ensure proper disposal of all resources utilized by the **DeviceManager**. If the class is not properly disposed, multiple instances of the ICL.exe process might be left running. This can lead to inconsistent communication between available hardware and deviceManager.
 
 After completion of the **StartAsync()** method, the collections of devices of the **DeviceManager** will be populated with concreat devices
 
@@ -71,7 +74,9 @@ await ccd.OpenConnectionAsync();
 await mono.OpenConnectionAsync();
 ```
 
-After establishing connection to a device, you can start invoking the rest of the available commands
+If no **CommunicationException** is thrown, a connection will be established.
+
+After establishing connection, you can start invoking the rest of the available commands
 
 #### Interacting with a device
 
@@ -136,7 +141,7 @@ var timestamp = data.GetValueOrDefault("timestamp");
 
 The raw data will be in the shape of **Dictionary<string, object>** you will be able to extract the interesting data as per your needs.
 
-However, if you want to just be able to use JSON deserialization functionality to work with typed object, you can take a look at the [**Horiba.Sdk.Tests.AcquisitionDescription.cs**](https://github.com/ThatsTheEnd/horiba-dotnet-sdk/blob/main/Horiba.Sdk.Tests/AcquisitionDescription.cs) class and use it to deserialize the data into.
+However, if you need to use JSON deserialization functionality to work with typed objects, you can take a look at the [**Horiba.Sdk.Tests.AcquisitionDescription.cs**](https://github.com/ThatsTheEnd/horiba-dotnet-sdk/blob/main/Horiba.Sdk.Tests/AcquisitionDescription.cs) class and use it to deserialize the data into.
 
 ```csh
 var parsedData = JsonConvert.DeserializeObject<List<AcquisitionDescription>>(acquisitionRawData.ToString());
