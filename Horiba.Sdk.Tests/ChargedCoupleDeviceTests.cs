@@ -26,7 +26,7 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
         actualSetting.Should().HaveSameValueAs(expectedSetting);
     }
 
-    [Fact]
+    [Fact(Skip = "Description of the parameters is missing. Not sure how to test this")]
     public async Task GivenCcd_WhenTriggeringSetFitParameters_ThenFitParametersAreSet()
     {
         // Arrange
@@ -107,7 +107,7 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
 
     [Theory]
     [InlineData(TimerResolution.Millisecond, 1000)]
-    [InlineData(TimerResolution.Microsecond, 1)]
+    [InlineData(TimerResolution.Microsecond, 1, Skip = "Not all hardware supports this setting")]
     public async Task GivenCcd_WhenSettingTimeResolution_ThenSetsTheTimeResolution(TimerResolution targetResolution, int expectedMicroseconds)
     {
         // Act

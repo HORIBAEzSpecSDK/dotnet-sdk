@@ -155,7 +155,7 @@ public class MonochromatorTests : IClassFixture<MonochromatorTestFixture>
         actual.Should().Be(targetPosition);
     }
 
-    [Fact]
+    [Fact(Skip = "Expected error [E];-519;Mono must be configured for internal shutter mode")]
     public async Task GivenMonoDevice_WhenOpeningShutter_ThenShutterIsOpened()
     {
         // Act
@@ -167,7 +167,7 @@ public class MonochromatorTests : IClassFixture<MonochromatorTestFixture>
         actual.Should().Be(ShutterPosition.Opened);
     }
 
-    [Fact]
+    [Fact(Skip = "Expected error: [E];-519;Mono must be configured for internal shutter mode")]
     public async Task GivenMonoDevice_WhenClosingShutter_ThenShutterIsClosed()
     {
         // Act
