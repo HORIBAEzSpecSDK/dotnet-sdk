@@ -170,16 +170,16 @@ internal record CcdGetTimerResolutionCommand(int DeviceId)
     public int DeviceId { get; } = DeviceId;
 }
 
-internal record CcdSetTimerResolutionCommand(int DeviceId, int Resolution) : ChargedCoupleDeviceCommand(
+internal record CcdSetTimerResolutionCommand(int DeviceId, TimerResolution Resolution) : ChargedCoupleDeviceCommand(
     "ccd_setTimerResolution",
     new Dictionary<string, object>
     {
         { "index", DeviceId },
-        { "resolution", Resolution }
+        { "resolution", (int)Resolution }
     })
 {
     public int DeviceId { get; } = DeviceId;
-    public int Resolution { get; } = Resolution;
+    public TimerResolution Resolution { get; } = Resolution;
 }
 
 internal record CcdSetAcquisitionFormatCommand(int DeviceId, AcquisitionFormat Format, int NumberOfRois)

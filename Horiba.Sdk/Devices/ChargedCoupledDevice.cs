@@ -147,7 +147,13 @@ public sealed record ChargedCoupledDevice(
     }
 
     /// <summary>
-    /// Sets the exposure time of the CCD by sending the ccd_setExposureTime command
+    /// Sets the exposure time of the CCD (expressed in Timer Resolution units) by sending the ccd_setExposureTime command.
+    /// NOTE:
+    /// To check the current TimerResolution value see <see cref="GetTimerResolutionAsync"/>. Alternatively the Timer Resolution value can be set using <see cref="SetTimerResolutionAsync"/>
+    /// 
+    /// Examples:
+    /// If Exposure Time is set to 50, and the Timer Resolution value is 1000, the CCD exposure time (integration time) = 50 milliseconds.
+    /// If Exposure Time is set to 50, and the Timer Resolution value is 1, the CCD exposure time (integration time) = 50 microseconds.
     /// </summary>
     /// <param name="exposureTimeInMs">Target time in milliseconds</param>
     /// <param name="cancellationToken"></param>
@@ -327,7 +333,7 @@ public sealed record ChargedCoupledDevice(
     /// <param name="resolution"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>Task representing the communication between SDK and ICL</returns>
-    public Task SetTimerResolutionAsync(int resolution, CancellationToken cancellationToken = default)
+    public Task SetTimerResolutionAsync(TimerResolution resolution, CancellationToken cancellationToken = default)
     {
         return Communicator.SendAsync(new CcdSetTimerResolutionCommand(DeviceId, resolution), cancellationToken);
     }

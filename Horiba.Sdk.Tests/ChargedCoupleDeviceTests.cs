@@ -128,14 +128,14 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
     public async Task GivenCcd_WhenSettingTimeResolution_ThenSetsTheTimeResolution()
     {
         // Arrange
-        var targetResolution = 1;
+        var targetResolution = TimerResolution.Millisecond;
 
         // Act
         await _fixture.Ccd.SetTimerResolutionAsync(targetResolution);
         var actual = await _fixture.Ccd.GetTimerResolutionAsync();
 
         // Assert
-        actual.Should().Be(targetResolution);
+        actual.Should().Be((int)targetResolution);
     }
 
     [Fact]
