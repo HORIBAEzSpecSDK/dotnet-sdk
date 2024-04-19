@@ -319,7 +319,7 @@ public sealed record ChargedCoupledDevice(
     /// Retrieves the timer resolution of the CCD by sending the ccd_getTimerResolution command
     /// </summary>
     /// <param name="cancellationToken"></param>
-    /// <returns></returns>
+    /// <returns>The Timer Resolution in microseconds [uS]</returns>
     public async Task<int> GetTimerResolutionAsync(CancellationToken cancellationToken = default)
     {
         var result =
@@ -329,6 +329,8 @@ public sealed record ChargedCoupledDevice(
 
     /// <summary>
     /// Sets the timer resolution of the CCD by sending the ccd_setTimerResolution command
+    /// 
+    /// Note: The timer resolution value of 1 microsecond is not supported by every CCD.
     /// </summary>
     /// <param name="resolution"></param>
     /// <param name="cancellationToken"></param>

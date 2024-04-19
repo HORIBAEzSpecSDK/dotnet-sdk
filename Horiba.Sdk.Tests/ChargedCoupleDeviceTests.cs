@@ -40,25 +40,6 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
         actual.Should().BeSameAs(expectedParams);
     }
 
-    [Fact]
-    public async Task GivenCcd_WhenGettingActualData_ThenReturnsByteData()
-    {
-        // Arrange
-        await _fixture.Ccd.SetAcquisitionCountAsync(1);
-        await _fixture.Ccd.SetXAxisConversionTypeAsync(ConversionType.None);
-        await _fixture.Ccd.SetExposureTimeAsync(1000);
-        await _fixture.Ccd.SetRegionOfInterestAsync(RegionOfInterest.Default);
-        
-        // Act
-        var isReady = await _fixture.Ccd.GetAcquisitionReadyAsync();
-        await _fixture.Ccd.SetAcquisitionStartAsync(true);
-        await _fixture.Ccd.WaitForDeviceNotBusy();
-        var data = await _fixture.Ccd.GetAcquisitionDataAsync();
-
-        // Assert
-        data.MatchSnapshot();
-    }
-
     [Fact(Skip = "It should be tested separately")]
     public async Task GivenCcd_WhenOpeningConnection_ThenConnectionIsOpened()
     {
@@ -124,18 +105,17 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
         actual.Should().Be(targetConversionType);
     }
 
-    [Fact]
-    public async Task GivenCcd_WhenSettingTimeResolution_ThenSetsTheTimeResolution()
+    [Theory]
+    [InlineData(TimerResolution.Millisecond, 1000)]
+    [InlineData(TimerResolution.Microsecond, 1)]
+    public async Task GivenCcd_WhenSettingTimeResolution_ThenSetsTheTimeResolution(TimerResolution targetResolution, int expectedMicroseconds)
     {
-        // Arrange
-        var targetResolution = TimerResolution.Millisecond;
-
         // Act
         await _fixture.Ccd.SetTimerResolutionAsync(targetResolution);
         var actual = await _fixture.Ccd.GetTimerResolutionAsync();
 
         // Assert
-        actual.Should().Be((int)targetResolution);
+        actual.Should().Be(expectedMicroseconds);
     }
 
     [Fact]

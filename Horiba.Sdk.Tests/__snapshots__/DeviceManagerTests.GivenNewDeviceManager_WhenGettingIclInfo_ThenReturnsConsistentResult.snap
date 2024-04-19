@@ -1,8 +1,8 @@
 ﻿{
   "nodeAlias": "ICL",
   "nodeApiVersion": 300,
-  "nodeBuilt": "Apr  4 2024-08:53:20",
+  "nodeBuilt": "Apr 10 2024-17:19:23",
   "nodeDescription": "Instrument Control Library",
   "nodeId": 1,
-  "nodeVersion": "2.0.0.124.b4cc4e55"
+  "nodeVersion": "2.0.0.125.45db7b8c"
 }

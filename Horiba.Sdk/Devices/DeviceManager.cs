@@ -124,10 +124,10 @@ public sealed class DeviceManager : IDisposable
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<int> GetMonochromatorCountAsync(CancellationToken cancellationToken = default)
+    public async Task<long> GetMonochromatorCountAsync(CancellationToken cancellationToken = default)
     {
         var result = await Communicator.SendWithResponseAsync(new IclMonochromatorListCountCommand(), cancellationToken);
-        return (int)result.Results["count"];
+        return (long)result.Results["count"];
     }
     
     /// <summary>
@@ -136,10 +136,10 @@ public sealed class DeviceManager : IDisposable
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<int> GetCcdCountAsync(CancellationToken cancellationToken = default)
+    public async Task<long> GetCcdCountAsync(CancellationToken cancellationToken = default)
     {
         var result = await Communicator.SendWithResponseAsync(new IclCcdListCountCommand(), cancellationToken);
-        return (int)result.Results["count"];
+        return (long)result.Results["count"];
     }
 
     private void IclProcessOnExited(object sender, EventArgs e)

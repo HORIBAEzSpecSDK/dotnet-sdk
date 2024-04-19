@@ -110,7 +110,7 @@ public class DeviceManagerTests
         monoListCount.Should().BeGreaterOrEqualTo(1);
     }
 
-    [Fact]
+    [Fact(Skip = "this test is used for quick debugging issues related to parsing acquisition data")]
     public void GivenAcquisitionData_WhenDeserializing_ThenHasCorrectClassStructure()
     {
         // Arrange
