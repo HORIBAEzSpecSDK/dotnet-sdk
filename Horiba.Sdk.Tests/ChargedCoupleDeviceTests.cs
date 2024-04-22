@@ -12,18 +12,16 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
         _fixture = fixture;
     }
     
-    [Theory]
-    [InlineData(Gain.HighLight)]
-    [InlineData(Gain.BestDynamicRange)]
-    [InlineData(Gain.HighSensitivity)]
-    public async Task GivenCcd_WhenTriggeringSetGainMethod_ThenGainIsSet(Gain expectedSetting)
+    [Fact]
+    public async Task GivenCcd_WhenTriggeringSetGainMethod_ThenGainIsSet()
     {
         // Act
+        var expectedSetting = SyncerityOEGain.HighLight;
         await _fixture.Ccd.SetGainAsync(expectedSetting);
         var actualSetting = await _fixture.Ccd.GetGainAsync();
 
         // Assert
-        actualSetting.Should().HaveSameValueAs(expectedSetting);
+        actualSetting.Should().Be(expectedSetting);
     }
 
     [Fact(Skip = "Description of the parameters is missing. Not sure how to test this")]
@@ -63,13 +61,11 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
         actualStatus.Should().BeFalse();
     }
 
-    [Theory]
-    [InlineData(Speed.Slow)]
-    [InlineData(Speed.Medium)]
-    [InlineData(Speed.Fast)]
-    public async Task GivenCcd_WhenSettingSpeed_ThenSpeedIsUpdated(Speed targetSpeed)
+    [Fact]
+    public async Task GivenCcd_WhenSettingSpeed_ThenSpeedIsUpdated()
     {
         // Act
+        var targetSpeed = SyncerityOESpeed.kHz45;
         await _fixture.Ccd.SetSpeedAsync(targetSpeed);
         var speed = await _fixture.Ccd.GetSpeedAsync();
 

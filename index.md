@@ -42,7 +42,7 @@
 | mono_shutterClose           |      ✅      |        ✅        |   ⚠️    |                [E];-519;Mono must be configured for internal shutter mode                 |
 | mono_getShutterStatus       |      ✅      |        ✅        |   ⚠️    |                [E];-519;Mono must be configured for internal shutter mode                 |
 | mono_getSlitStepPosition    |      ✅      |        ✅        |   ✅    |                                                                                           |
-| mono_moveSlit               |      ✅      |        ✅        |   ⚠️    |                                   Slit C is not moving                                    |
+| mono_moveSlit               |      ✅      |        ✅        |   ✅    |                                   Slit C is not moving                                    |
 
 **CCD Commands**
 

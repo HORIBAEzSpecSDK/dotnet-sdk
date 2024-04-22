@@ -120,7 +120,7 @@ public sealed record ChargedCoupledDevice(
     public async Task<Speed> GetSpeedAsync(CancellationToken cancellationToken = default)
     {
         var result = await Communicator.SendWithResponseAsync(new CcdGetSpeedCommand(DeviceId), cancellationToken);
-        return (Speed)int.Parse(result.Results["token"].ToString());
+        return GetDeviceSpecificSpeed(int.Parse(result.Results["token"].ToString()));
     }
 
     /// <summary>
@@ -278,7 +278,7 @@ public sealed record ChargedCoupledDevice(
     public async Task<Gain> GetGainAsync(CancellationToken cancellationToken = default)
     {
         var result = await Communicator.SendWithResponseAsync(new CcdGetGainCommand(DeviceId), cancellationToken);
-        return (Gain)int.Parse(result.Results["token"].ToString());
+        return GetDeviceSpecificGain(int.Parse(result.Results["token"].ToString()));
     }
 
     /// <summary>
