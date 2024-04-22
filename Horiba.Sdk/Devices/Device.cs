@@ -1,8 +1,10 @@
-﻿using Horiba.Sdk.Communication;
+using System.Diagnostics.CodeAnalysis;
+using Horiba.Sdk.Communication;
 using Horiba.Sdk.Enums;
 
 namespace Horiba.Sdk.Devices;
 
+[SuppressMessage("ReSharper", "InconsistentNaming")]
 public abstract record Device(int DeviceId, string DeviceType, string SerialNumber, WebSocketCommunicator Communicator)
 {
     // TODO: make sure the exact strings are returned by the respective hardware devices
