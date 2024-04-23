@@ -20,9 +20,9 @@ public abstract record Gain(int Value)
 public record SyncerityOEGain(int Value) : Gain(Value)
 {
     /// <summary>
-    /// Defines gain of HighSensitivity
+    /// Defines gain of HighLight
     /// </summary>
-    public static readonly SyncerityOEGain HighSensitivity = new(0);
+    public static readonly SyncerityOEGain HighLight = new(0);
     
     /// <summary>
     /// Defines gain of BestDynamicRange
@@ -30,17 +30,17 @@ public record SyncerityOEGain(int Value) : Gain(Value)
     public static readonly SyncerityOEGain BestDynamicRange = new(1);
     
     /// <summary>
-    /// Defines gain of HighLight
+    /// Defines gain of HighSensitivity
     /// </summary>
-    public static readonly SyncerityOEGain HighLight = new(2);
+    public static readonly SyncerityOEGain HighSensitivity = new(2);
     
     public static explicit operator SyncerityOEGain(int v)
     {
         return v switch
         {
-            0 => HighSensitivity,
+            0 => HighLight,
             1 => BestDynamicRange,
-            2 => HighLight,
+            2 => HighSensitivity,
             _ => throw new ArgumentOutOfRangeException(nameof(v), v, null)
         }; 
     }

@@ -27,6 +27,8 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
             
             // Assert
             actualSetting.Should().Be(expectedSetting);
+            
+            await _fixture.Ccd.WaitForDeviceNotBusy(TimeSpan.FromMilliseconds(550));
         }
     }
 

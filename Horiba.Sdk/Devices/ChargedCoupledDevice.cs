@@ -429,7 +429,7 @@ public sealed record ChargedCoupledDevice(
     public async Task<Trigger> GetTriggerInAsync(CancellationToken cancellationToken = default)
     {
         var result = await Communicator.SendWithResponseAsync(new CcdGetTriggerInCommand(DeviceId), cancellationToken);
-        return Trigger.Default;
+        return result.Results.ToTrigger();
     }
     
     /// <summary>
@@ -452,7 +452,7 @@ public sealed record ChargedCoupledDevice(
     public async Task<Signal> GetSignalOutAsync(CancellationToken cancellationToken = default)
     {
         var result = await Communicator.SendWithResponseAsync(new CcdGetSignalOutCommand(DeviceId), cancellationToken);
-        return Signal.Default;
+        return result.Results.ToSignal();
     }
     
     /// <summary>

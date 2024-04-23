@@ -1,4 +1,34 @@
-﻿namespace Horiba.Sdk.Enums;
+﻿using Serilog;
+
+namespace Horiba.Sdk.Enums;
+
+public static class TriggerExtensions
+{
+    private const string AddressTokenName = "address";
+    private const string EventTokenName = "event";
+    private const string SignalTypeTokenName = "signalType";
+    
+    public static Trigger ToTrigger(this Dictionary<string, object> commandResult)
+    {
+        if (!commandResult.TryGetValue(AddressTokenName, out var triggerAddress) ||
+            !commandResult.TryGetValue(EventTokenName, out var triggerEvent) ||
+            !commandResult.TryGetValue(SignalTypeTokenName, out var triggerSignalType))
+            throw new CommunicationException("Command could not be parsed to a Trigger.");
+        try
+        {
+            return new Trigger(
+                (TriggerAddress)int.Parse(triggerAddress.ToString()),
+                (TriggerEvent)int.Parse(triggerEvent.ToString()),
+                (TriggerSignalType)int.Parse(triggerSignalType.ToString()));
+        }
+        catch (Exception e)
+        {
+            Log.Error(e, "CommandResult did not contain the expected Trigger values");
+                
+            throw;
+        }
+    }
+}
 
 public record Trigger(TriggerAddress TriggerAddress, TriggerEvent TriggerEvent, TriggerSignalType TriggerSignalType)
 {
