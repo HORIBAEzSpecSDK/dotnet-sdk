@@ -214,4 +214,19 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
         actualData[0].Region[0].YOrigin.Should().Be(0);
         actualData[0].Region[0].YSize.Should().Be(256);
     }
+
+    [Fact]
+    public async Task GivenCcd_WhenSettingSpecificTrigger_ThenTriggerIsProperlySet()
+    {
+        // Arrange
+        var target = new Trigger(TriggerAddress.Input, TriggerEvent.Once, TriggerSignalType.FallingEdge);
+        
+        // Act
+        await _fixture.Ccd.SetTriggerInAsync(target, true);
+        await _fixture.Ccd.WaitForDeviceNotBusy(TimeSpan.FromMilliseconds(350));
+        var actual = await _fixture.Ccd.GetTriggerInAsync();
+        
+        // Assert
+        actual.Should().Be(target);
+    }
 }

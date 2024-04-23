@@ -420,4 +420,15 @@ public sealed record ChargedCoupledDevice(
         var result = await Communicator.SendWithResponseAsync(new CcdGetDataSizeCommand(DeviceId), cancellationToken);
         return int.Parse(result.Results["size"].ToString());
     }
+    
+    public async Task<Trigger> GetTriggerInAsync(CancellationToken cancellationToken = default)
+    {
+        var result = await Communicator.SendWithResponseAsync(new CcdGetTriggerInCommand(DeviceId), cancellationToken);
+        return Trigger.Default;
+    }
+    
+    public Task SetTriggerInAsync(Trigger trigger, bool isEnabled, CancellationToken cancellationToken = default)
+    {
+        return Communicator.SendAsync(new CcdSetTriggerInCommand(DeviceId, trigger, isEnabled), cancellationToken);
+    }
 }

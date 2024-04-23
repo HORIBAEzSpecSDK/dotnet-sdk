@@ -235,3 +235,24 @@ internal record CcdGetDataSizeCommand(int DeviceId) : ChargedCoupleDeviceCommand
 {
     public int DeviceId { get; } = DeviceId;
 }
+
+internal record CcdGetTriggerInCommand(int DeviceId) : ChargedCoupleDeviceCommand("ccd_getTriggerIn", DeviceId)
+{
+    public int DeviceId { get; } = DeviceId;
+}
+
+internal record CcdSetTriggerInCommand(int DeviceId, Trigger Trigger, bool IsEnabled) : ChargedCoupleDeviceCommand(
+    "ccd_setTriggerIn",
+    new Dictionary<string, object>
+    {
+        { "index", DeviceId },
+        { "enable", IsEnabled },
+        { "address", (int)Trigger.TriggerAddress },
+        { "event", (int)Trigger.TriggerEvent },
+        { "signalType", (int)Trigger.TriggerSignalType }
+    })
+{
+    public int DeviceId { get; } = DeviceId;
+    public Trigger Trigger { get; } = Trigger;
+    public bool IsEnabled { get; } = IsEnabled;
+}
