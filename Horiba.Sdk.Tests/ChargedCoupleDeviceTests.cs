@@ -13,15 +13,21 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
     }
     
     [Fact]
-    public async Task GivenCcd_WhenTriggeringSetGainMethod_ThenGainIsSet()
+    public async Task GivenCcd_WhenSettingSyncerityOEGain_ThenGainIsSet()
     {
-        // Act
-        var expectedSetting = SyncerityOEGain.HighLight;
-        await _fixture.Ccd.SetGainAsync(expectedSetting);
-        var actualSetting = await _fixture.Ccd.GetGainAsync();
-
-        // Assert
-        actualSetting.Should().Be(expectedSetting);
+        // Arrange
+        SyncerityOEGain[] expectedSettings =
+            [SyncerityOEGain.HighSensitivity, SyncerityOEGain.BestDynamicRange, SyncerityOEGain.HighLight];
+        
+        foreach (var expectedSetting in expectedSettings)
+        {
+            // Act
+            await _fixture.Ccd.SetGainAsync(expectedSetting);
+            var actualSetting = await _fixture.Ccd.GetGainAsync();
+            
+            // Assert
+            actualSetting.Should().Be(expectedSetting);
+        }
     }
 
     [Fact(Skip = "Description of the parameters is missing. Not sure how to test this")]
