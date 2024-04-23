@@ -1,7 +1,7 @@
 # Introduction
 
-This SDK is created to streamline the configuration and usage of hardware produced by Horiba. This icludes ChargetCoupleDevices and Monochromators.
-On top of the hardware devices, Horiba develops propriatery communication layer based on WebSocket connection. This layer is encapsulated in a process called ICL. ICL needs to be licensed and installed on a PC which has USB connection to the hardware. Once this is setup and ready, this SDK comes to play.
+This SDK is created to streamline the configuration and usage of hardware produced by Horiba. This includes ChargetCoupleDevices and Monochromators.
+On top of the hardware devices, Horiba develops propriatery communication layer based on WebSocket connection. This layer is encapsulated in a process called ICL. ICL needs to be licensed and installed on a PC which has USB connection to the hardware. Once this is set up and ready, this SDK comes to play.
 
 C# developers can use this SDK to offload the complexity related to establishing and maintaining connection to both the ICL and the hardware devices. This will allow them to focus on building the solution they need from the get go.
 ___
@@ -89,7 +89,24 @@ Now you are ready to start implementing the functionality that best suites your 
 
 # How To?
 
-#### Read actual data from CCD
+---
+
+## Send separate commands to supported devices
+
+The [test project](https://github.com/ThatsTheEnd/horiba-dotnet-sdk/tree/main/Horiba.Sdk.Tests) demonstrates how commands can be sent to the devices.
+You can look around to see more detailed examples.
+
+    > NOTE: There are seemingly random delays in the tests. However, they are not random! These are the timeouts that the hardware needs to process the commands. They are set in empirical way so keep in mind that this is not exhausted list of all possible delays.
+
+As a rule of thumb you can use the following pattern to send pairs of commands to the devices:
+
+* send a SET command (e.g. setting a parameter on the device)
+* wait for at least 300ms
+* send a corresponding GET command
+
+---
+
+## Read actual data from CCD
 
 * Create new ConsoleApplication
 
@@ -146,3 +163,34 @@ However, if you need to use JSON deserialization functionality to work with type
 ```csh
 var parsedData = JsonConvert.DeserializeObject<List<AcquisitionDescription>>(acquisitionRawData.ToString());
 ```
+
+---
+
+## Use different installation path of the ICL
+
+By default, the SDK will look for the ICL.exe to be present in the following path: 
+    
+>C:\Program Files\HORIBA Scientific\SDK\icl.exe
+
+In cases where the local installation is in different folder, you can provide full path to the same executable in the constructor of the **DeviceManager** class.
+
+```csh
+using var deviceManager = new DeviceManager("C:\Path\To\ICL\icl.exe");
+```
+This path is used to start the ICL process prior connecting to it. The starting and stopping of this process is managed automatically by the DeviceManager. This is why it needs to be properly disposed. Otherwise, there might be multiple instances of the ICL process left running which will cause issues with the communication.
+
+Fixing such issue boils down to manually stopping all locally running instances of the icl.exe and restarting the DeviceManager. 
+
+---
+
+## Use local network to connect to the ICL
+
+The SDK supports connecting to the ICL process over the local network. This can be done by providing the IP address and port of the machine where the ICL process is running.
+
+>NOTE: If you are using this approach, you need to make sure that the ICL process is running on the remote PC prior creating the DeviceManager instance.
+
+```csh
+using var deviceManager = new DeviceManager(ipAddress: IPAddress.Parse("192.168.123.123"), port: 1111);
+```
+
+---
