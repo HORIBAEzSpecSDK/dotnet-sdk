@@ -8,7 +8,7 @@ namespace Horiba.Sdk.Devices;
 public abstract record Device(int DeviceId, string DeviceType, string SerialNumber, WebSocketCommunicator Communicator)
 {
     // TODO: make sure the exact strings are returned by the respective hardware devices
-    private const string SyncerityOE_DeviceType = "SyncerityOE";
+    private const string SyncerityOE_DeviceType = "HORIBA Scientific Syncerity";
     private const string SyncerityNIR_DeviceType = "SyncerityNIR";
     private const string SyncerityUVVis_DeviceType = "SyncerityUVVis";
     private const string SynapseCCD_DeviceType = "SynapseCCD";
