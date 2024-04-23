@@ -421,14 +421,49 @@ public sealed record ChargedCoupledDevice(
         return int.Parse(result.Results["size"].ToString());
     }
     
+    /// <summary>
+    /// Retrieves the trigger in of the CCD by sending the ccd_getTriggerIn command
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     public async Task<Trigger> GetTriggerInAsync(CancellationToken cancellationToken = default)
     {
         var result = await Communicator.SendWithResponseAsync(new CcdGetTriggerInCommand(DeviceId), cancellationToken);
         return Trigger.Default;
     }
     
+    /// <summary>
+    /// Sets the trigger in of the CCD by sending the ccd_setTriggerIn command
+    /// </summary>
+    /// <param name="trigger">Description of the trigger to set</param>
+    /// <param name="isEnabled">State of the trigger</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     public Task SetTriggerInAsync(Trigger trigger, bool isEnabled, CancellationToken cancellationToken = default)
     {
         return Communicator.SendAsync(new CcdSetTriggerInCommand(DeviceId, trigger, isEnabled), cancellationToken);
+    }
+    
+    /// <summary>
+    /// Retrieves the signal in of the CCD by sending the ccd_getSignalIn command
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public async Task<Signal> GetSignalOutAsync(CancellationToken cancellationToken = default)
+    {
+        var result = await Communicator.SendWithResponseAsync(new CcdGetSignalOutCommand(DeviceId), cancellationToken);
+        return Signal.Default;
+    }
+    
+    /// <summary>
+    /// Sets the signal in of the CCD by sending the ccd_setSignalIn command
+    /// </summary>
+    /// <param name="signal">Description of the signal to set</param>
+    /// <param name="isEnabled">State of the signal</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public Task SetSignalOutAsync(Signal signal, bool isEnabled, CancellationToken cancellationToken = default)
+    {
+        return Communicator.SendAsync(new CcdSetSignalOutCommand(DeviceId, signal, isEnabled), cancellationToken);
     }
 }

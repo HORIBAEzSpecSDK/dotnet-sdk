@@ -229,4 +229,19 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
         // Assert
         actual.Should().Be(target);
     }
+
+    [Fact]
+    public async Task GivenCcd_WhenSettingSpecificSignal_ThenSignalIsProperlySet()
+    {
+        // Arrange
+        var target = new Signal(SignalAddress.Output, SignalEvent.StartExperiment, SignalType.ActiveHigh);
+        
+        // Act
+        await _fixture.Ccd.SetSignalOutAsync(target, true);
+        await _fixture.Ccd.WaitForDeviceNotBusy(TimeSpan.FromMilliseconds(350));
+        var actual = await _fixture.Ccd.GetSignalOutAsync();
+        
+        // Assert
+        actual.Should().Be(target);
+    }
 }

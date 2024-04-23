@@ -256,3 +256,24 @@ internal record CcdSetTriggerInCommand(int DeviceId, Trigger Trigger, bool IsEna
     public Trigger Trigger { get; } = Trigger;
     public bool IsEnabled { get; } = IsEnabled;
 }
+
+internal record CcdGetSignalOutCommand(int DeviceId) : ChargedCoupleDeviceCommand("ccd_getSignalOut", DeviceId)
+{
+    public int DeviceId { get; } = DeviceId;
+}
+
+internal record CcdSetSignalOutCommand(int DeviceId, Signal Signal, bool IsEnabled) : ChargedCoupleDeviceCommand(
+    "ccd_setSignalOut",
+    new Dictionary<string, object>
+    {
+        { "index", DeviceId },
+        { "enable", IsEnabled },
+        { "address", (int)Signal.SignalAddress },
+        { "event", (int)Signal.SignalEvent},
+        { "signalType", (int)Signal.SignalType }
+    })
+{
+    public int DeviceId { get; } = DeviceId;
+    public Signal Signal { get; } = Signal;
+    public bool IsEnabled { get; } = IsEnabled;
+}

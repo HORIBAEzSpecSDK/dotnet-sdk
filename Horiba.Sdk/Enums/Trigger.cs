@@ -2,7 +2,7 @@
 
 public record Trigger(TriggerAddress TriggerAddress, TriggerEvent TriggerEvent, TriggerSignalType TriggerSignalType)
 {
-    public static Trigger Default = new(TriggerAddress.Input, TriggerEvent.Once, TriggerSignalType.FallingEdge);
+    public static readonly Trigger Default = new(TriggerAddress.Input, TriggerEvent.Once, TriggerSignalType.FallingEdge);
     
     public TriggerAddress TriggerAddress { get; } = TriggerAddress;
     public TriggerEvent TriggerEvent { get; } = TriggerEvent;
