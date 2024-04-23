@@ -8,6 +8,12 @@ public static class SignalExtensions
     private const string EventTokenName = "event";
     private const string SignalTypeTokenName = "signalType";
     
+    /// <summary>
+    /// Converts the result of a command to a Signal.
+    /// </summary>
+    /// <param name="commandResult">The Results collection of a command response</param>
+    /// <returns></returns>
+    /// <exception cref="CommunicationException"></exception>
     public static Signal ToSignal(this Dictionary<string, object> commandResult)
     {
         if (!commandResult.TryGetValue(AddressTokenName, out var signalAddress) ||

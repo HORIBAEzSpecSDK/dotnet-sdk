@@ -8,6 +8,12 @@ public static class TriggerExtensions
     private const string EventTokenName = "event";
     private const string SignalTypeTokenName = "signalType";
     
+    /// <summary>
+    /// Converts the result of a command to a Trigger.
+    /// </summary>
+    /// <param name="commandResult">The Results collection of a command response</param>
+    /// <returns></returns>
+    /// <exception cref="CommunicationException"></exception>
     public static Trigger ToTrigger(this Dictionary<string, object> commandResult)
     {
         if (!commandResult.TryGetValue(AddressTokenName, out var triggerAddress) ||
