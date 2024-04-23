@@ -30,20 +30,16 @@ internal class MonochromatorDeviceDiscovery(WebSocketCommunicator communicator) 
         var response =
             await communicator.SendWithResponseAsync(new IclMonochromatorListCommand(), cancellationToken);
         
-        foreach (var rawDescription in response.Results)
+        foreach (var deviceDescriptions in response.Results.Select(rawDescription => ExtractDescription(rawDescription.Value.ToString())))
         {
-            var deviceDescriptions = ExtractDescription(rawDescription.Value.ToString());
-            foreach (var deviceDescription in deviceDescriptions)
-            {
-                result.Add(new MonochromatorDevice(deviceDescription.Index, deviceDescription.DeviceType,
-                    deviceDescription.SerialNumber, communicator));
-            }
+            result.AddRange(deviceDescriptions.Select(deviceDescription =>
+                new MonochromatorDevice(deviceDescription.Index, deviceDescription.DeviceType, deviceDescription.SerialNumber, communicator)));
         }
 
         return result;
     }
 
-    internal DeviceDescription[] ExtractDescription(string rawDescription)
+    private static DeviceDescription[] ExtractDescription(string rawDescription)
     {
         return JsonConvert.DeserializeObject<DeviceDescription[]>(rawDescription) ??
                throw new CommunicationException("DeviceDescription mismatch");

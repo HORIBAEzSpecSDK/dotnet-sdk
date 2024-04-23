@@ -1,5 +1,4 @@
-﻿using System.Text.RegularExpressions;
-using Horiba.Sdk.Commands;
+﻿using Horiba.Sdk.Commands;
 using Horiba.Sdk.Communication;
 using Newtonsoft.Json;
 using Serilog;
@@ -30,20 +29,16 @@ internal class ChargedCoupleDeviceDiscovery(WebSocketCommunicator communicator) 
         var response =
             await communicator.SendWithResponseAsync(new IclCcdListCommand(), cancellationToken);
         
-        foreach (var rawDescription in response.Results)
+        foreach (var deviceDescriptions in response.Results.Select(ExtractDescription))
         {
-            var deviceDescriptions = ExtractDescription(rawDescription);
-            foreach (var deviceDescription in deviceDescriptions)
-            {
-                result.Add(new ChargedCoupledDevice(deviceDescription.Index, deviceDescription.DeviceType,
-                    deviceDescription.SerialNumber, communicator));
-            }
+            result.AddRange(deviceDescriptions.Select(deviceDescription => 
+                new ChargedCoupledDevice(deviceDescription.Index, deviceDescription.DeviceType, deviceDescription.SerialNumber, communicator)));
         }
 
         return result;
     }
 
-    internal DeviceDescription[] ExtractDescription(KeyValuePair<string, object> pair)
+    private static DeviceDescription[] ExtractDescription(KeyValuePair<string, object> pair)
     {
         return JsonConvert.DeserializeObject<DeviceDescription[]>(pair.Value.ToString()) ??
                throw new CommunicationException("DeviceDescription mismatch");

@@ -89,8 +89,6 @@ Now you are ready to start implementing the functionality that best suites your 
 
 # How To?
 
----
-
 ## Send separate commands to supported devices
 
 The [test project](https://github.com/ThatsTheEnd/horiba-dotnet-sdk/tree/main/Horiba.Sdk.Tests) demonstrates how commands can be sent to the devices.

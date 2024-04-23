@@ -1,5 +1,4 @@
 using System.ComponentModel;
-using Horiba.Sdk.Enums;
 using Newtonsoft.Json;
 
 namespace Horiba.Sdk.Tests;

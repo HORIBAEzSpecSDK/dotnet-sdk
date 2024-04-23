@@ -46,48 +46,48 @@
 
 **CCD Commands**
 
-| Command                    | Implemented | Tests available | Status |                 Comment                 |
-| -------------------------- | :---------: | :-------------: | :----: | :-------------------------------------: |
-| ccd_discover               |      ✅      |        ✅        |   ✅    |                                         |
-| ccd_list                   |      ✅      |        ✅        |   ✅    |                                         |
-| ccd_listCount              |      ✅      |        ✅        |   ✅    |                                         |
-| ccd_open                   |      ✅      |        ✅        |   ✅    |                                         |
-| ccd_close                  |      ✅      |        ✅        |   ✅    |                                         |
-| ccd_isOpen                 |      ✅      |        ✅        |   ✅    |                                         |
-| ccd_restart                |      ✅      |        ✖️        |   ✅    |                                         |
-| ccd_getConfig              |      ✅      |        ✅        |   ✅    |                                         |
-| ccd_getChipSize            |      ✅      |        ✅        |   ✅    |                                         |
-| ccd_getChipTemperature     |      ✅      |        ✅        |   ✅    |                                         |
-| ccd_getGain                |      ✅      |        ✅        |   ✅    |                                         |
-| ccd_setGain                |      ✅      |        ✅        |   ✅    |                                         |
-| ccd_getSpeed               |      ✅      |        ✅        |   ✅    |                                         |
-| ccd_setSpeed               |      ✅      |        ✅        |   ✅    |                                         |
-| ccd_getFitParams           |      ✅      |        ✅        |   ✅    |                                         |
-| ccd_setFitParams           |      ✅      |        ✅        |   ⛔    | how should these parameters be used/set |
-| ccd_getExposureTime        |      ✅      |        ✅        |   ✅    |                                         |
-| ccd_setExposureTime        |      ✅      |        ✅        |   ✅    |                                         |
-| ccd_getTimerResolution     |      ✅      |        ✅        |   ✅    |                                         |
-| ccd_setTimerResolution     |      ✅      |        ✅        |   ✅    |                                         |
-| ccd_setAcqFormat           |      ✅      |        ✖️        |   ❓    | how can this be tested with code only?  |
-| ccd_setRoi                 |      ✅      |        ✅        |   ✅    |                                         |
-| ccd_getXAxisConversionType |      ✅      |        ✅        |   ✅    |                                         |
-| ccd_setXAxisConversionType |      ✅      |        ✅        |   ✅    |                                         |
-| ccd_getDataRetrievalMethod |      ✖️      |        ✖️        |   ✖️    |                                         |
-| ccd_setDataRetrievalMethod |      ✖️      |        ✖️        |   ✖️    |                                         |
-| ccd_getAcqCount            |      ✅      |        ✅        |   ✅    |                                         |
-| ccd_setAcqCount            |      ✅      |        ✅        |   ✅    |                                         |
-| ccd_getCleanCount          |      ✅      |        ✅        |   ✅    |                                         |
-| ccd_setCleanCount          |      ✅      |        ✅        |   ✅    |                                         |
-| ccd_getDataSize            |      ✅      |        ✅        |   ✅    |                                         |
-| ccd_getTriggerIn           |      ✖️      |        ✖️        |   ✖️    |                                         |
-| ccd_setTriggerIn           |      ✖️      |        ✖️        |   ✖️    |                                         |
-| ccd_getSignalOut           |      ✖️      |        ✖️        |   ✖️    |                                         |
-| ccd_setSignalOut           |      ✖️      |        ✖️        |   ✖️    |                                         |
-| ccd_getAcquisitionReady    |      ✅      |        ✅        |   ✅    |                                         |
-| ccd_setAcquisitionStart    |      ✅      |        ✅        |   ✅    |                                         |
-| ccd_getAcquisitionBusy     |      ✅      |        ✅        |   ✅    |                                         |
-| ccd_setAcquisitionAbort    |      ✅      |        ✖️        |   ❓    | what is the expected 'Abort' procedure? |
-| ccd_getAcquisitionData     |      ✅      |        ✅        |   ✅    |                                         |
+| Command                    | Implemented | Tests available | Status |                            Comment                            |
+| -------------------------- | :---------: | :-------------: | :----: | :-----------------------------------------------------------: |
+| ccd_discover               |      ✅      |        ✅        |   ✅    |                                                               |
+| ccd_list                   |      ✅      |        ✅        |   ✅    |                                                               |
+| ccd_listCount              |      ✅      |        ✅        |   ✅    |                                                               |
+| ccd_open                   |      ✅      |        ✅        |   ✅    |                                                               |
+| ccd_close                  |      ✅      |        ✅        |   ✅    |                                                               |
+| ccd_isOpen                 |      ✅      |        ✅        |   ✅    |                                                               |
+| ccd_restart                |      ✅      |        ✖️        |   ✅    |                                                               |
+| ccd_getConfig              |      ✅      |        ✅        |   ✅    |                                                               |
+| ccd_getChipSize            |      ✅      |        ✅        |   ✅    |                                                               |
+| ccd_getChipTemperature     |      ✅      |        ✅        |   ✅    |                                                               |
+| ccd_getGain                |      ✅      |        ✅        |   ✅    |                                                               |
+| ccd_setGain                |      ✅      |        ✅        |   ✅    |                                                               |
+| ccd_getSpeed               |      ✅      |        ✅        |   ✅    |                                                               |
+| ccd_setSpeed               |      ✅      |        ✅        |   ✅    |                                                               |
+| ccd_getFitParams           |      ✅      |        ✅        |   ✅    |                                                               |
+| ccd_setFitParams           |      ✅      |        ✅        |   ⛔    |            how should these parameters be used/set            |
+| ccd_getExposureTime        |      ✅      |        ✅        |   ✅    |                                                               |
+| ccd_setExposureTime        |      ✅      |        ✅        |   ✅    |                                                               |
+| ccd_getTimerResolution     |      ✅      |        ✅        |   ✅    |                                                               |
+| ccd_setTimerResolution     |      ✅      |        ✅        |   ✅    |                                                               |
+| ccd_setAcqFormat           |      ✅      |        ✖️        |   ❓    |            how can this be tested with code only?             |
+| ccd_setRoi                 |      ✅      |        ✅        |   ✅    |                                                               |
+| ccd_getXAxisConversionType |      ✅      |        ✅        |   ✅    |                                                               |
+| ccd_setXAxisConversionType |      ✅      |        ✅        |   ✅    |                                                               |
+| ccd_getDataRetrievalMethod |      ⛔      |        ✖️        |   ✖️    | "[E];-2;ccd_getDataRetrievalMethod;Command handler not found" |
+| ccd_setDataRetrievalMethod |      ⛔      |        ✖️        |   ✖️    | "[E];-2;ccd_getDataRetrievalMethod;Command handler not found" |
+| ccd_getAcqCount            |      ✅      |        ✅        |   ✅    |                                                               |
+| ccd_setAcqCount            |      ✅      |        ✅        |   ✅    |                                                               |
+| ccd_getCleanCount          |      ✅      |        ✅        |   ✅    |                                                               |
+| ccd_setCleanCount          |      ✅      |        ✅        |   ✅    |                                                               |
+| ccd_getDataSize            |      ✅      |        ✅        |   ✅    |                                                               |
+| ccd_getTriggerIn           |      ✖️      |        ✖️        |   ✖️    |                                                               |
+| ccd_setTriggerIn           |      ✖️      |        ✖️        |   ✖️    |                                                               |
+| ccd_getSignalOut           |      ✖️      |        ✖️        |   ✖️    |                                                               |
+| ccd_setSignalOut           |      ✖️      |        ✖️        |   ✖️    |                                                               |
+| ccd_getAcquisitionReady    |      ✅      |        ✅        |   ✅    |                                                               |
+| ccd_setAcquisitionStart    |      ✅      |        ✅        |   ✅    |                                                               |
+| ccd_getAcquisitionBusy     |      ✅      |        ✅        |   ✅    |                                                               |
+| ccd_setAcquisitionAbort    |      ✅      |        ✖️        |   ❓    |            what is the expected 'Abort' procedure?            |
+| ccd_getAcquisitionData     |      ✅      |        ✅        |   ✅    |                                                               |
 
 **Single Chanel Detector Commands**
 
