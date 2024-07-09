@@ -2,5 +2,8 @@
 
 public enum CleanCountMode
 {
-    Mode1 = 238
+    Never = 0,
+    FirstOnly = 1,
+    BetweenOnly = 2,
+    Each = 3
 }

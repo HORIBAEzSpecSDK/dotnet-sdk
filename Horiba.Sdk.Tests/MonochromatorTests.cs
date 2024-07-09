@@ -82,10 +82,10 @@ public class MonochromatorTests : IClassFixture<MonochromatorTestFixture>
     }
 
     [Theory]
-    [InlineData(Mirror.First, MirrorPosition.Axial)]
-    [InlineData(Mirror.First, MirrorPosition.Lateral)]
-    [InlineData(Mirror.Second, MirrorPosition.Axial)]
-    [InlineData(Mirror.Second, MirrorPosition.Lateral)]
+    [InlineData(Mirror.Entrance, MirrorPosition.Axial)]
+    [InlineData(Mirror.Entrance, MirrorPosition.Lateral)]
+    [InlineData(Mirror.Exit, MirrorPosition.Axial)]
+    [InlineData(Mirror.Exit, MirrorPosition.Lateral)]
     public async Task GivenMonoDevice_WhenMovingMirrorToPosition_ThenMirrorPositionIsChanged(Mirror mirror, MirrorPosition target)
     {
         // NOTE: needed just to have some delay between sequential test runs

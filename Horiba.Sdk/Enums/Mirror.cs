@@ -2,6 +2,6 @@
 
 public enum Mirror
 {
-    First = 0,
-    Second = 1
+    Entrance = 0,
+    Exit = 1
 }

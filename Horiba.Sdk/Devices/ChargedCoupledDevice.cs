@@ -324,7 +324,7 @@ public sealed record ChargedCoupledDevice(
     {
         var result =
             await Communicator.SendWithResponseAsync(new CcdGetTimerResolutionCommand(DeviceId), cancellationToken);
-        return int.Parse(result.Results["resolution"].ToString());
+        return int.Parse(result.Results["resolutionToken"].ToString());
     }
 
     /// <summary>

@@ -110,7 +110,7 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
     }
 
     [Theory]
-    [InlineData(TimerResolution.Millisecond, 1000)]
+    [InlineData(TimerResolution.Millisecond, 0)]
     [InlineData(TimerResolution.Microsecond, 1, Skip = "Not all hardware supports this setting")]
     public async Task GivenCcd_WhenSettingTimeResolution_ThenSetsTheTimeResolution(TimerResolution targetResolution, int expectedMicroseconds)
     {
@@ -140,7 +140,7 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
     public async Task GivenCcd_WhenSettingCleanCount_ThenSetsCleanCount()
     {
         // Act
-        await _fixture.Ccd.SetCleanCountAsync(5, CleanCountMode.Mode1);
+        await _fixture.Ccd.SetCleanCountAsync(5, CleanCountMode.Never);
         var actual = await _fixture.Ccd.GetCleanCountAsync();
 
         // Assert

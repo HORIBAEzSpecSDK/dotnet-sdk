@@ -175,7 +175,7 @@ internal record CcdSetTimerResolutionCommand(int DeviceId, TimerResolution Resol
     new Dictionary<string, object>
     {
         { "index", DeviceId },
-        { "resolution", (int)Resolution }
+        { "resolutionToken", (int)Resolution }
     })
 {
     public int DeviceId { get; } = DeviceId;
