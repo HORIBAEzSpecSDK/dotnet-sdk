@@ -309,4 +309,11 @@ public sealed record MonochromatorDevice(
     {
         return Communicator.SendAsync(new MonoShutterSelectCommand(DeviceId, shutter), cancellationToken);
     }
+
+    public async Task<bool> GetIsInitializedAsync(CancellationToken cancellationToken = default)
+    {
+        var response =
+            await Communicator.SendWithResponseAsync(new MonoGetIsInitializedCommand(DeviceId), cancellationToken);
+        return bool.Parse(response.Results["initialized"].ToString());
+    }
 }

@@ -198,3 +198,8 @@ internal record MonoShutterSelectCommand(int DeviceId, Shutter Shutter)
     public int DeviceId { get; } = DeviceId;
     public Shutter Shutter { get; } = Shutter;
 }
+
+internal record MonoGetIsInitializedCommand(int DeviceId) : MonochromatorDeviceCommand("mono_isInitialized", DeviceId)
+{
+    public int DeviceId { get; } = DeviceId;
+}

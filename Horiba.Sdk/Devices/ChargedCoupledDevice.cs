@@ -466,4 +466,15 @@ public sealed record ChargedCoupledDevice(
     {
         return Communicator.SendAsync(new CcdSetSignalOutCommand(DeviceId, signal, isEnabled), cancellationToken);
     }
+
+    /// <summary>
+    /// Sets the center wavelength value to be used in the grating equation.
+    /// </summary>
+    /// <param name="wavelength">Center wavelength</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public Task SetCenterWavelengthAsync(float wavelength, CancellationToken cancellationToken = default)
+    {
+        return Communicator.SendAsync(new CcdSetCenterWavelengthCommand(DeviceId, wavelength), cancellationToken);
+    }
 }
