@@ -289,3 +289,21 @@ internal record CcdSetCenterWavelengthCommand(int DeviceId, float Wavelength) : 
     public int DeviceId { get; } = DeviceId;
     public float Wavelength { get; } = Wavelength;
 }
+
+internal record CcdCalculateRangeModePositionsCommand(int DeviceId, int MonoIndex, float Start, float End, float Overlap) : ChargedCoupleDeviceCommand(
+    "ccd_calculateRangeModePositions",
+    new Dictionary<string, object>
+    {
+        { "index", DeviceId },
+        { "monoIndex", MonoIndex },
+        { "start", Start },
+        { "end", End },
+        { "overlap", Overlap },
+    })
+{
+    public int DeviceId { get; } = DeviceId;
+    public int MonoIndex { get; } = MonoIndex;
+    public float Start { get; } = Start;
+    public float End { get; } = End;
+    public float Overlap { get; } = Overlap;
+}

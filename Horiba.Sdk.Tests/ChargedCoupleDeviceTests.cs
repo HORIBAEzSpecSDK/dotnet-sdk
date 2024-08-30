@@ -192,7 +192,7 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
     {
         // Arrange
         await _fixture.Ccd.SetAcquisitionCountAsync(1);
-        await _fixture.Ccd.SetExposureTimeAsync(1500);
+        await _fixture.Ccd.SetExposureTimeAsync(5);
         await _fixture.Ccd.SetRegionOfInterestAsync(RegionOfInterest.Default);
         await _fixture.Ccd.SetXAxisConversionTypeAsync(ConversionType.None);
 

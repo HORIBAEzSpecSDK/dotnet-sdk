@@ -477,4 +477,22 @@ public sealed record ChargedCoupledDevice(
     {
         return Communicator.SendAsync(new CcdSetCenterWavelengthCommand(DeviceId, wavelength), cancellationToken);
     }
+
+/// <summary>
+/// Finds the center wavelength positions based on the input range and pixel overlap.
+/// The following commands are prerequisites and should be called prior to using this command:
+/// <see cref="SetXAxisConversionTypeAsync"/>, <see cref="SetAcquisitionFormatAsync"/>, and <see cref="SetRegionOfInterestAsync"/>
+/// </summary>
+/// <param name="monoIndex">Used to identify which mono to target for the current grating density</param>
+/// <param name="startWavelength">Start wavelength</param>
+/// <param name="endWavelength">End wavelength</param>
+/// <param name="overlap">Number of overlapping pixels</param>
+/// <param name="cancellationToken"></param>
+/// <returns></returns>
+    public Task<Response> CalculateRangePositionsAsync(int monoIndex, float startWavelength, float endWavelength, float overlap, CancellationToken cancellationToken = default)
+    {
+        return Communicator.SendWithResponseAsync(
+            new CcdCalculateRangeModePositionsCommand(DeviceId, monoIndex, startWavelength, endWavelength, overlap),
+            cancellationToken);
+    }
 }

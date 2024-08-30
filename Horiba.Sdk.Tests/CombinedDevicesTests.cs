@@ -41,4 +41,34 @@ public class CombinedDevicesTests : IClassFixture<CombinedDevicesTestFixture>
         // Assert
         data.Count.Should().BeGreaterThan(1);
     }
+
+    [Fact]
+    public async Task GivenMonoAndCcd_WhenReadingRangeSpectrum_ThenReturnsRangeData()
+    {
+        // Arrange
+        var startWavelength = 100;
+        var endWavelength = 370;
+        var overlap = 10;
+
+
+        await _fixture.Mono.HomeAsync();
+        await _fixture.Mono.WaitForDeviceNotBusy();
+        await _fixture.Mono.SetTurretGratingAsync(Grating.Third);
+        await _fixture.Mono.WaitForDeviceNotBusy();
+
+
+        await _fixture.Ccd.SetTimerResolutionAsync(TimerResolution.Millisecond);
+        await _fixture.Ccd.SetExposureTimeAsync(50);
+        await _fixture.Ccd.SetGainAsync(SyncerityOEGain.HighLight);
+        await _fixture.Ccd.SetSpeedAsync(SyncerityOESpeed.MHz1U);
+        await _fixture.Ccd.SetXAxisConversionTypeAsync(ConversionType.FromIclSettingsIni);
+        await _fixture.Ccd.SetAcquisitionFormatAsync(AcquisitionFormat.Image, 1);
+        await _fixture.Ccd.SetRegionOfInterestAsync(RegionOfInterest.Default);
+
+        // Act
+        var result = await _fixture.Ccd.CalculateRangePositionsAsync(0, startWavelength, endWavelength, overlap);
+
+        // Assert
+        result.MatchSnapshot();
+    }
 }
