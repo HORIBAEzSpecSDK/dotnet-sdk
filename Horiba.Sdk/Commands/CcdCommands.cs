@@ -278,15 +278,17 @@ internal record CcdSetSignalOutCommand(int DeviceId, Signal Signal, bool IsEnabl
     public bool IsEnabled { get; } = IsEnabled;
 }
 
-internal record CcdSetCenterWavelengthCommand(int DeviceId, float Wavelength) : ChargedCoupleDeviceCommand(
+internal record CcdSetCenterWavelengthCommand(int DeviceId, int MonoIndex, float Wavelength) : ChargedCoupleDeviceCommand(
     "ccd_setCenterWavelength",
     new Dictionary<string, object>
     {
         { "index", DeviceId },
+        { "monoIndex", MonoIndex },
         { "wavelength", Wavelength }
     })
 {
     public int DeviceId { get; } = DeviceId;
+    public int MonoIndex { get; } = MonoIndex;
     public float Wavelength { get; } = Wavelength;
 }
 

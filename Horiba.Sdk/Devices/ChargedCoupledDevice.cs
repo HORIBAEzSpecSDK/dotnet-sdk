@@ -3,6 +3,7 @@ using Horiba.Sdk.Commands;
 using Horiba.Sdk.Communication;
 using Horiba.Sdk.Enums;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Serilog;
 
 namespace Horiba.Sdk.Devices;
@@ -473,26 +474,50 @@ public sealed record ChargedCoupledDevice(
     /// <param name="wavelength">Center wavelength</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public Task SetCenterWavelengthAsync(float wavelength, CancellationToken cancellationToken = default)
+    public Task SetCenterWavelengthAsync(int monoIndex, float wavelength, CancellationToken cancellationToken = default)
     {
-        return Communicator.SendAsync(new CcdSetCenterWavelengthCommand(DeviceId, wavelength), cancellationToken);
+        return Communicator.SendAsync(new CcdSetCenterWavelengthCommand(DeviceId, monoIndex, wavelength), cancellationToken);
     }
 
-/// <summary>
-/// Finds the center wavelength positions based on the input range and pixel overlap.
-/// The following commands are prerequisites and should be called prior to using this command:
-/// <see cref="SetXAxisConversionTypeAsync"/>, <see cref="SetAcquisitionFormatAsync"/>, and <see cref="SetRegionOfInterestAsync"/>
-/// </summary>
-/// <param name="monoIndex">Used to identify which mono to target for the current grating density</param>
-/// <param name="startWavelength">Start wavelength</param>
-/// <param name="endWavelength">End wavelength</param>
-/// <param name="overlap">Number of overlapping pixels</param>
-/// <param name="cancellationToken"></param>
-/// <returns></returns>
-    public Task<Response> CalculateRangePositionsAsync(int monoIndex, float startWavelength, float endWavelength, float overlap, CancellationToken cancellationToken = default)
+    /// <summary>
+    /// Finds the center wavelength positions based on the input range and pixel overlap.
+    /// The following commands are prerequisites and should be called prior to using this command:
+    /// <see cref="SetXAxisConversionTypeAsync"/>, <see cref="SetAcquisitionFormatAsync"/>, and <see cref="SetRegionOfInterestAsync"/>
+    /// </summary>
+    /// <param name="monoIndex">Used to identify which mono to target for the current grating density</param>
+    /// <param name="startWavelength">Start wavelength</param>
+    /// <param name="endWavelength">End wavelength</param>
+    /// <param name="overlap">Number of overlapping pixels</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>A collection of wavelengths</returns>
+    public async Task<IEnumerable<CenterWavelength>> CalculateRangePositionsAsync(int monoIndex, float startWavelength, float endWavelength, float overlap, CancellationToken cancellationToken = default)
     {
-        return Communicator.SendWithResponseAsync(
+        var result = await Communicator.SendWithResponseAsync(
             new CcdCalculateRangeModePositionsCommand(DeviceId, monoIndex, startWavelength, endWavelength, overlap),
             cancellationToken);
+
+        return ToCenterWavelengths(result.Results);
+    }
+
+    private static IEnumerable<CenterWavelength> ToCenterWavelengths(Dictionary<string, object> commandResult)
+    {
+        if (!commandResult.TryGetValue("centerWavelengths", out var array))
+        {
+            throw new CommunicationException("Command result could not be parsed to a center wavelenghts.");
+        }
+
+        if (array is not JArray jArray)
+        {
+            throw new CommunicationException("Command result could not be parsed to a center wavelenghts.");
+        }
+
+        var floatArray = jArray.ToObject<float[]>();
+
+        if (floatArray is null)
+        {
+            throw new CommunicationException("Command result could not be parsed to a center wavelenghts.");
+        }
+
+        return floatArray.Select(w => new CenterWavelength(w));
     }
 }

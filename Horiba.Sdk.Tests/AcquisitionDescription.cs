@@ -27,6 +27,6 @@ public class AcquisitionDescription
         [JsonProperty("ySize")]
         public int YSize { get; set; }
         [JsonProperty("xyData")]
-        public List<List<int>> Data { get; set; }
+        public List<List<float>> Data { get; set; }
     }
 }

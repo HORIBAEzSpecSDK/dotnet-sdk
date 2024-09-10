@@ -205,6 +205,8 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
             data = await _fixture.Ccd.GetAcquisitionDataAsync();
         }
         
+        data.MatchSnapshot();
+
         var acquisition = data.GetValueOrDefault("acquisition");
         var timestamp = data.GetValueOrDefault("timestamp");
         var actualData = JsonConvert.DeserializeObject<List<AcquisitionDescription>>(acquisition.ToString());
