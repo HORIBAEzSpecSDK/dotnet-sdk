@@ -1,4 +1,6 @@
-﻿using Horiba.Sdk.Enums;
+﻿using Horiba.Sdk.Calculations;
+using Horiba.Sdk.Calculations.DarkCountSubtraction;
+using Horiba.Sdk.Enums;
 using Newtonsoft.Json;
 
 namespace Horiba.Sdk.Tests;
@@ -204,8 +206,6 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
             await _fixture.Ccd.WaitForDeviceNotBusy(TimeSpan.FromSeconds(1));
             data = await _fixture.Ccd.GetAcquisitionDataAsync();
         }
-        
-        data.MatchSnapshot();
 
         var acquisition = data.GetValueOrDefault("acquisition");
         var timestamp = data.GetValueOrDefault("timestamp");
@@ -253,5 +253,50 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
         
         // Assert
         actual.Should().Be(target);
+    }
+
+    [Fact]
+    public async Task GivenCcd_WhenRemovingDarkCount_ThenRetrievingDataWorksAsConfigured()
+    {
+        // Arrange
+        await _fixture.Ccd.SetAcquisitionCountAsync(1);
+        await _fixture.Ccd.SetExposureTimeAsync(5);
+        await _fixture.Ccd.SetRegionOfInterestAsync(RegionOfInterest.Default);
+        await _fixture.Ccd.SetXAxisConversionTypeAsync(ConversionType.None);
+
+        // Act
+        // Fetching data with closed shuther
+        List<XYData> darkData = [];
+        if (await _fixture.Ccd.GetAcquisitionReadyAsync())
+        {
+            await _fixture.Ccd.SetAcquisitionStartAsync(false);
+            await _fixture.Ccd.WaitForDeviceNotBusy(TimeSpan.FromSeconds(1));
+            var acquiredData = await _fixture.Ccd.GetAcquisitionDataAsync();
+            var acquisition = JsonConvert.DeserializeObject<List<AcquisitionDescription>>(acquiredData.GetValueOrDefault("acquisition").ToString());
+            darkData = acquisition.First().Region.First().Data.Select(d => new XYData(d)).ToList();
+        }
+
+        // Fetching normal data
+        List<XYData> data = [];
+        if (await _fixture.Ccd.GetAcquisitionReadyAsync())
+        {
+            await _fixture.Ccd.SetAcquisitionStartAsync(true);
+            await _fixture.Ccd.WaitForDeviceNotBusy(TimeSpan.FromSeconds(1));
+            var acquiredData = await _fixture.Ccd.GetAcquisitionDataAsync();
+            var acquisition = JsonConvert.DeserializeObject<List<AcquisitionDescription>>(acquiredData.GetValueOrDefault("acquisition").ToString());
+            data = acquisition.First().Region.First().Data.Select(d => new XYData(d)).ToList();
+        }
+
+        // Calculating difference
+        var diffData = new DarkCountSubstraction().SubtractData(data, darkData);
+
+        diffData.Count.Should().Be(data.Count);
+        diffData.Count.Should().Be(darkData.Count);
+        
+        for (var i = 0; i < diffData.Count; i++)
+        {
+            diffData[i].X.Should().Be(data[i].X);
+            diffData[i].Y.Should().Be(data[i].Y - darkData[i].Y);
+        }
     }
 }

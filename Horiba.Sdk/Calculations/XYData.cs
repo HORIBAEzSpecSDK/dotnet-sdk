@@ -1,4 +1,4 @@
-﻿namespace Horiba.Sdk.Stitching;
+﻿namespace Horiba.Sdk.Calculations;
 
 public record XYData
 {
@@ -10,7 +10,7 @@ public record XYData
 
     public XYData(List<float> data)
     {
-        if (data == null || data.Count != 2) 
+        if (data == null || data.Count != 2)
         {
             throw new ArgumentException("List must contain of exactly two elements to be converted to XYData");
         }

@@ -1,5 +1,6 @@
+using Horiba.Sdk.Calculations;
+using Horiba.Sdk.Calculations.Stitching;
 using Horiba.Sdk.Enums;
-using Horiba.Sdk.Stitching;
 using Newtonsoft.Json;
 
 namespace Horiba.Sdk.Tests;

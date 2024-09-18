@@ -1,4 +1,4 @@
-﻿namespace Horiba.Sdk.Stitching;
+﻿namespace Horiba.Sdk.Calculations.Stitching;
 
 public abstract class SpectraStitch(List<XYData>[] data)
 {

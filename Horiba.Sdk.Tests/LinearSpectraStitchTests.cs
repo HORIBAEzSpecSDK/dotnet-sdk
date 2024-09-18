@@ -1,4 +1,5 @@
-﻿using Horiba.Sdk.Stitching;
+﻿using Horiba.Sdk.Calculations;
+using Horiba.Sdk.Calculations.Stitching;
 
 namespace Horiba.Sdk.Tests;
 
