@@ -194,7 +194,7 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
     {
         // Arrange
         await _fixture.Ccd.SetAcquisitionCountAsync(1);
-        await _fixture.Ccd.SetExposureTimeAsync(5);
+        await _fixture.Ccd.SetExposureTimeAsync(100);
         await _fixture.Ccd.SetRegionOfInterestAsync(RegionOfInterest.Default);
         await _fixture.Ccd.SetXAxisConversionTypeAsync(ConversionType.None);
 
@@ -208,6 +208,7 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
         }
 
         var acquisition = data.GetValueOrDefault("acquisition");
+        acquisition.MatchSnapshot();
         var timestamp = data.GetValueOrDefault("timestamp");
         var actualData = JsonConvert.DeserializeObject<List<AcquisitionDescription>>(acquisition.ToString());
         

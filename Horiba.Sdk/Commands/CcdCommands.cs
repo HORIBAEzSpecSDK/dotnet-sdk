@@ -68,7 +68,7 @@ internal record CcdGetAcquisitionReadyCommand(int DeviceId)
 }
 
 internal record CcdSetAcquisitionStartCommand(int DeviceId, bool IsShutterOpened) : ChargedCoupleDeviceCommand(
-    "ccd_setAcquisitionStart",
+    "ccd_acquisitionStart",
     new Dictionary<string, object>
     {
         { "index", DeviceId },

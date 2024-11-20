@@ -73,6 +73,7 @@ public sealed class DeviceManager : IDisposable
             _isIclRunning = true;
         }
 
+        await Task.Delay(TimeSpan.FromSeconds(5));
         await Communicator.OpenConnectionAsync();
 
         if (enableBinaryMessages)
