@@ -44,6 +44,22 @@ internal record CcdSetSpeedCommand(int DeviceId, Speed Speed) : ChargedCoupleDev
     public Speed Speed { get; } = Speed;
 }
 
+internal record CcdGetParallelSpeedCommand(int DeviceId) : ChargedCoupleDeviceCommand("ccd_getParallelSpeed", DeviceId)
+{
+    public int DeviceId { get; } = DeviceId;
+}
+
+internal record CcdSetParallelSpeedCommand(int DeviceId, ParallelSpeed ParallelSpeed) : ChargedCoupleDeviceCommand("ccd_setParallelSpeed",
+    new Dictionary<string, object>
+    {
+        { "index", DeviceId },
+        { "token", (int)ParallelSpeed }
+    })
+{
+    public int DeviceId { get; } = DeviceId;
+    public ParallelSpeed ParallelSpeed { get; } = ParallelSpeed;
+}
+
 internal record CcdGetExposureTimeCommand(int DeviceId) : ChargedCoupleDeviceCommand("ccd_getExposureTime", DeviceId)
 {
     public int DeviceId { get; } = DeviceId;
