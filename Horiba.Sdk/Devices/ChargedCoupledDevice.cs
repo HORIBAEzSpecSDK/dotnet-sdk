@@ -395,9 +395,9 @@ public sealed record ChargedCoupledDevice(
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns>Task representing the communication between SDK and ICL</returns>
-    public Task SetAcquisitionAbortAsync(CancellationToken cancellationToken = default)
+    public Task AcquisitionAbortAsync(CancellationToken cancellationToken = default)
     {
-        return Communicator.SendAsync(new CcdSetAcquisitionAbortCommand(DeviceId), cancellationToken);
+        return Communicator.SendAsync(new CcdAcquisitionAbortCommand(DeviceId), cancellationToken);
     }
 
     /// <summary>

@@ -98,8 +98,8 @@ internal record CcdGetAcquisitionBusyCommand(int DeviceId)
     public int DeviceId { get; } = DeviceId;
 }
 
-internal record CcdSetAcquisitionAbortCommand(int DeviceId)
-    : ChargedCoupleDeviceCommand("ccd_setAcquisitionAbort", DeviceId)
+internal record CcdAcquisitionAbortCommand(int DeviceId)
+    : ChargedCoupleDeviceCommand("ccd_acquisitionAbort", DeviceId)
 {
     public int DeviceId { get; } = DeviceId;
 }
