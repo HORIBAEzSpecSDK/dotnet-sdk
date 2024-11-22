@@ -202,7 +202,7 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
         Dictionary<string, object> data = [];
         if (await _fixture.Ccd.GetAcquisitionReadyAsync())
         {
-            await _fixture.Ccd.SetAcquisitionStartAsync(true);
+            await _fixture.Ccd.AcquisitionStartAsync(true);
             await _fixture.Ccd.WaitForDeviceNotBusy(TimeSpan.FromSeconds(1));
             data = await _fixture.Ccd.GetAcquisitionDataAsync();
         }
@@ -270,7 +270,7 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
         List<XYData> darkData = [];
         if (await _fixture.Ccd.GetAcquisitionReadyAsync())
         {
-            await _fixture.Ccd.SetAcquisitionStartAsync(false);
+            await _fixture.Ccd.AcquisitionStartAsync(false);
             await _fixture.Ccd.WaitForDeviceNotBusy(TimeSpan.FromSeconds(1));
             var acquiredData = await _fixture.Ccd.GetAcquisitionDataAsync();
             var acquisition = JsonConvert.DeserializeObject<List<AcquisitionDescription>>(acquiredData.GetValueOrDefault("acquisition").ToString());
@@ -281,7 +281,7 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
         List<XYData> data = [];
         if (await _fixture.Ccd.GetAcquisitionReadyAsync())
         {
-            await _fixture.Ccd.SetAcquisitionStartAsync(true);
+            await _fixture.Ccd.AcquisitionStartAsync(true);
             await _fixture.Ccd.WaitForDeviceNotBusy(TimeSpan.FromSeconds(1));
             var acquiredData = await _fixture.Ccd.GetAcquisitionDataAsync();
             var acquisition = JsonConvert.DeserializeObject<List<AcquisitionDescription>>(acquiredData.GetValueOrDefault("acquisition").ToString());

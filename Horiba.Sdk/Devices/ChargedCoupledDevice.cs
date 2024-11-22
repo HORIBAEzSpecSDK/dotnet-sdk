@@ -183,9 +183,9 @@ public sealed record ChargedCoupledDevice(
     /// <param name="isShutterOpened">Controls the state of the shutter of the device</param>
     /// <param name="cancellationToken"></param>
     /// <returns>Task representing the communication between SDK and ICL</returns>
-    public Task SetAcquisitionStartAsync(bool isShutterOpened, CancellationToken cancellationToken = default)
+    public Task AcquisitionStartAsync(bool isShutterOpened, CancellationToken cancellationToken = default)
     {
-        return Communicator.SendAsync(new CcdSetAcquisitionStartCommand(DeviceId, isShutterOpened),
+        return Communicator.SendAsync(new CcdAcquisitionStartCommand(DeviceId, isShutterOpened),
             cancellationToken);
     }
 

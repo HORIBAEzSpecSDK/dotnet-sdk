@@ -36,7 +36,7 @@ public class CombinedDevicesTests : IClassFixture<CombinedDevicesTestFixture>
         Dictionary<string, object> data = [];
         if (await _fixture.Ccd.GetAcquisitionReadyAsync())
         {
-            await _fixture.Ccd.SetAcquisitionStartAsync(true);
+            await _fixture.Ccd.AcquisitionStartAsync(true);
             await _fixture.Ccd.WaitForDeviceNotBusy(TimeSpan.FromSeconds(1));
             data = await _fixture.Ccd.GetAcquisitionDataAsync();
         }
@@ -113,7 +113,7 @@ public class CombinedDevicesTests : IClassFixture<CombinedDevicesTestFixture>
 
             if (await _fixture.Ccd.GetAcquisitionReadyAsync())
             {
-                await _fixture.Ccd.SetAcquisitionStartAsync(true);
+                await _fixture.Ccd.AcquisitionStartAsync(true);
                 await _fixture.Ccd.WaitForDeviceNotBusy();
                 var acquiredData = await _fixture.Ccd.GetAcquisitionDataAsync();
                 var acquisition = acquiredData.GetValueOrDefault("acquisition");
