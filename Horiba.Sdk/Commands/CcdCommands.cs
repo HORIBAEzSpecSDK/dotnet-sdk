@@ -18,7 +18,7 @@ internal record CcdIsConnectionOpenedCommand(int DeviceId) : ChargedCoupleDevice
     public int DeviceId { get; } = DeviceId;
 }
 
-internal record CcdGetTemperatureCommand(int DeviceId) : ChargedCoupleDeviceCommand("ccd_getChipTemperature", DeviceId)
+internal record CcdGetChipTemperatureCommand(int DeviceId) : ChargedCoupleDeviceCommand("ccd_getChipTemperature", DeviceId)
 {
     public int DeviceId { get; } = DeviceId;
 }

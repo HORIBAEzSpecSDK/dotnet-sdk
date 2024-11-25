@@ -98,7 +98,7 @@ public sealed record ChargedCoupledDevice(
     public async Task<double> GetChipTemperatureAsync(CancellationToken cancellationToken = default)
     {
         var result =
-            await Communicator.SendWithResponseAsync(new CcdGetTemperatureCommand(DeviceId), cancellationToken);
+            await Communicator.SendWithResponseAsync(new CcdGetChipTemperatureCommand(DeviceId), cancellationToken);
         return double.Parse(result.Results["temperature"].ToString());
     }
 
