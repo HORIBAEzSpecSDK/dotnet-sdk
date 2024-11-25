@@ -256,6 +256,27 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
         actual.Should().Be(target);
     }
 
+    //Commented out this test because the ccd at Zuehlke doesn't have any parallel speed tokens in the configs
+    //[Fact]
+    //public async Task GivenCcd_WhenSettingParallelSpeed_ThenParallelSpeedIsProperlySet()
+    //{
+    //    // Arrange
+    //    int expectedParallelSpeedTokenBefore = 0;
+    //    int expectedParallelSpeedTokenAfter = 1;
+    //    await _fixture.Ccd.SetParallelSpeedAsync(new ParallelSpeed(expectedParallelSpeedTokenBefore));
+
+
+    //    // Act
+    //    int receivedParallelSpeedTokenBefore = (int)await _fixture.Ccd.GetParallelSpeedAsync();
+    //    await _fixture.Ccd.SetParallelSpeedAsync(new ParallelSpeed(expectedParallelSpeedTokenAfter));
+    //    int receivedParallelSpeedTokenAfter = (int)await _fixture.Ccd.GetParallelSpeedAsync();
+
+
+    //    // Assert
+    //    receivedParallelSpeedTokenBefore.Should().Be(expectedParallelSpeedTokenBefore);
+    //    receivedParallelSpeedTokenAfter.Should().Be(expectedParallelSpeedTokenAfter);
+    //}
+
     [Fact]
     public async Task GivenCcd_WhenRemovingDarkCount_ThenRetrievingDataWorksAsConfigured()
     {
