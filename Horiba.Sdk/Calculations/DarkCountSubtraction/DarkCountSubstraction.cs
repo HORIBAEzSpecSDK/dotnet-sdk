@@ -1,12 +1,14 @@
-﻿namespace Horiba.Sdk.Calculations.DarkCountSubtraction;
+﻿using Horiba.Sdk.Data;
+
+namespace Horiba.Sdk.Calculations.DarkCountSubtraction;
 
 public class DarkCountSubstraction
 {
-    public List<XYData> SubtractData(List<XYData> data, List<XYData> darkData)
+    public YData SubtractData(YData normalData, YData darkData)
     {
-        if (data == null) 
+        if (normalData == null) 
         {
-            throw new ArgumentNullException(nameof(data));
+            throw new ArgumentNullException(nameof(normalData));
         }
 
         if (darkData == null)
@@ -14,17 +16,25 @@ public class DarkCountSubstraction
             throw new ArgumentNullException(nameof(darkData));
         }
 
-        if (data.Count != darkData.Count)
+        if (normalData.Y.Count != darkData.Y.Count)
         {
             throw new ArgumentException("Data and dark data must be the same length.");
         }
 
-        var result = new List<XYData>();
-        for (var i = 0; i < data.Count; i++)
+        var result = new YData([[]]);
+        result.Y = [];
+
+        for (int i = 0; i < normalData.Y.Count; i++)
         {
-            result.Add(new XYData(data[i].X, data[i].Y - darkData[i].Y));
+            var row = new List<float>();
+            for (int j = 0; j < normalData.Y[i].Count; j++)
+            {
+                float difference = normalData.Y[i][j] - darkData.Y[i][j];
+                row.Add(difference);
+            }
+            result.Y.Add(row);
         }
 
-        return result;
+            return result;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Horiba.Sdk.Calculations;
 using Horiba.Sdk.Calculations.DarkCountSubtraction;
+using Horiba.Sdk.Data;
 using Horiba.Sdk.Enums;
 using Newtonsoft.Json;
 
@@ -295,37 +296,39 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
 
         // Act
         // Fetching data with closed shuther
-        List<XYData> darkData = [];
+        YData darkData = new YData([[]]);
         if (await _fixture.Ccd.GetAcquisitionReadyAsync())
         {
             await _fixture.Ccd.AcquisitionStartAsync(false);
             await _fixture.Ccd.WaitForDeviceNotBusy(TimeSpan.FromSeconds(1));
             var acquiredData = await _fixture.Ccd.GetAcquisitionDataAsync();
             var acquisition = JsonConvert.DeserializeObject<List<AcquisitionDescription>>(acquiredData.GetValueOrDefault("acquisition").ToString());
-            darkData = acquisition.First().Region.First().Data.Select(d => new XYData(d)).ToList();
+            darkData = acquisition.First().Region.First().YData;
         }
 
         // Fetching normal data
-        List<XYData> data = [];
+        YData normalData = new YData([[]]);
         if (await _fixture.Ccd.GetAcquisitionReadyAsync())
         {
             await _fixture.Ccd.AcquisitionStartAsync(true);
             await _fixture.Ccd.WaitForDeviceNotBusy(TimeSpan.FromSeconds(1));
             var acquiredData = await _fixture.Ccd.GetAcquisitionDataAsync();
             var acquisition = JsonConvert.DeserializeObject<List<AcquisitionDescription>>(acquiredData.GetValueOrDefault("acquisition").ToString());
-            data = acquisition.First().Region.First().Data.Select(d => new XYData(d)).ToList();
+            normalData = acquisition.First().Region.First().YData;
         }
 
         // Calculating difference
-        var diffData = new DarkCountSubstraction().SubtractData(data, darkData);
+        var diffData = new DarkCountSubstraction().SubtractData(normalData, darkData);
 
-        diffData.Count.Should().Be(data.Count);
-        diffData.Count.Should().Be(darkData.Count);
+        diffData.Y.Count.Should().Be(normalData.Y.Count);
+        diffData.Y.Count.Should().Be(darkData.Y.Count);
         
-        for (var i = 0; i < diffData.Count; i++)
+        for (var i = 0; i < diffData.Y.Count; i++)
         {
-            diffData[i].X.Should().Be(data[i].X);
-            diffData[i].Y.Should().Be(data[i].Y - darkData[i].Y);
+            for (int j = 0; j < normalData.Y[i].Count; j++)
+            {
+                diffData.Y[i][j].Should().Be(normalData.Y[i][j] - darkData.Y[i][j]);
+            }
         }
     }
 }

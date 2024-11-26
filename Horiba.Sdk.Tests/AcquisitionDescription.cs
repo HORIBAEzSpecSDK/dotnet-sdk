@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Horiba.Sdk.Data;
+using Newtonsoft.Json;
 
 namespace Horiba.Sdk.Tests;
 
@@ -9,7 +10,7 @@ public class AcquisitionDescription
         
     [JsonProperty("roi")]
     public List<RegionOfInterestDescription> Region { get; set; }
-        
+
     public class RegionOfInterestDescription
     {
         [JsonProperty("roiIndex")]
@@ -26,7 +27,9 @@ public class AcquisitionDescription
         public int YOrigin { get; set; }
         [JsonProperty("ySize")]
         public int YSize { get; set; }
-        [JsonProperty("xyData")]
-        public List<List<float>> Data { get; set; }
+        [JsonProperty("xData")]
+        public XData XData {get; set; }
+        [JsonProperty("yData")]
+        public YData YData { get; set; }
     }
 }
