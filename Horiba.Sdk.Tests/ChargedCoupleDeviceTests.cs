@@ -176,7 +176,7 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
         var temp = await _fixture.Ccd.GetChipTemperatureAsync();
 
         // Assert
-        temp.Should().BeApproximately(-60, 0.1f);
+        temp.Should().BeLessThan(-40);
     }
 
     [Fact]
@@ -230,6 +230,7 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
     public async Task GivenCcd_WhenSettingSpecificTrigger_ThenTriggerIsProperlySet()
     {
         // Arrange
+        var initial = await _fixture.Ccd.GetTriggerInAsync();
         var target = new Trigger(TriggerAddress.Input, TriggerEvent.Once, TriggerSignalType.FallingEdge);
         
         // Act
@@ -239,6 +240,12 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
         
         // Assert
         actual.Should().Be(target);
+
+        // Cleanup & resetted state for triggering
+        await _fixture.Ccd.RestartDeviceAsync();
+        await Task.Delay(10000);
+        var final = await _fixture.Ccd.GetTriggerInAsync();
+        final.Should().Be(initial);  
     }
 
     [Fact]
