@@ -121,7 +121,7 @@ public sealed record ChargedCoupledDevice(
     public async Task<Speed> GetSpeedAsync(CancellationToken cancellationToken = default)
     {
         var result = await Communicator.SendWithResponseAsync(new CcdGetSpeedCommand(DeviceId), cancellationToken);
-        return GetDeviceSpecificSpeed(int.Parse(result.Results["token"].ToString()));
+        return new Speed((int)result.Results["token"]);
     }
 
     /// <summary>
