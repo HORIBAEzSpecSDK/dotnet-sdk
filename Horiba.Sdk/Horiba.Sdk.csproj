@@ -14,11 +14,12 @@
         <Company>HORIBA</Company>
         <RepositoryType>git</RepositoryType>
         <AssemblyVersion>1.0.1</AssemblyVersion>
-        <PackageTags>1.0.1</PackageTags>
-        <Version>1.0.1</Version>
+        <PackageTags>0.1.0</PackageTags>
+        <Version>0.1.0</Version>
         <PackageReleaseNotes>Initial pipeline deployment</PackageReleaseNotes>
         <TargetFrameworks>netstandard2.1;net7.0;net8.0</TargetFrameworks>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     </PropertyGroup>
 
     <ItemGroup>
