@@ -303,10 +303,10 @@ public sealed record ChargedCoupledDevice(
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<Gain> GetGainAsync(CancellationToken cancellationToken = default)
+    public async Task<int> GetGainAsync(CancellationToken cancellationToken = default)
     {
         var result = await Communicator.SendWithResponseAsync(new CcdGetGainCommand(DeviceId), cancellationToken);
-        return new Gain((int)result.Results["token"]);
+        return int.Parse(result.Results["token"].ToString());
     }
 
     /// <summary>
@@ -315,7 +315,7 @@ public sealed record ChargedCoupledDevice(
     /// <param name="gain"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>Task representing the communication between SDK and ICL</returns>
-    public Task SetGainAsync(Gain gain, CancellationToken cancellationToken = default)
+    public Task SetGainAsync(int gain, CancellationToken cancellationToken = default)
     {
         return Communicator.SendAsync(new CcdSetGainCommand(DeviceId, gain), cancellationToken);
     }

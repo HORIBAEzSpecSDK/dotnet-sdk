@@ -14,25 +14,23 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
     {
         _fixture = fixture;
     }
-    
+
     [Fact]
-    public async Task GivenCcd_WhenSettingSyncerityOEGain_ThenGainIsSet()
+    public async Task GivenCcd_WhenSettingGain_ThenGainIsSet()
     {
         // Arrange
-        SyncerityOEGain[] expectedSettings =
-            [SyncerityOEGain.HighSensitivity, SyncerityOEGain.BestDynamicRange, SyncerityOEGain.HighLight];
-        
-        foreach (var expectedSetting in expectedSettings)
-        {
-            // Act
-            await _fixture.Ccd.SetGainAsync(expectedSetting);
-            var actualSetting = await _fixture.Ccd.GetGainAsync();
-            
-            // Assert
-            actualSetting.Should().Be(expectedSetting);
-            
-            await _fixture.Ccd.WaitForDeviceNotBusy(TimeSpan.FromMilliseconds(550));
-        }
+        int expectedGainTokenBefore = 0;
+        int expectedGainTokenAfter = 1;
+
+        // Act
+        await _fixture.Ccd.SetGainAsync(expectedGainTokenBefore);
+        int returnedGainTokenBefore = await _fixture.Ccd.GetGainAsync();
+        await _fixture.Ccd.SetGainAsync(expectedGainTokenAfter);
+        int returnedGainTokenAfter = await _fixture.Ccd.GetGainAsync();
+
+        // Assert
+        returnedGainTokenBefore.Should().Be(expectedGainTokenBefore);
+        returnedGainTokenAfter.Should().Be(expectedGainTokenAfter);
     }
 
     [Fact(Skip = "Description of the parameters is missing. Not sure how to test this")]
@@ -75,10 +73,11 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
     [Fact]
     public async Task GivenCcd_WhenSettingSpeed_ThenSpeedIsUpdated()
     {
-        // Act
+        // Arrange
         int expectedSpeedTokenBefore = 0;
         int expectedSpeedTokenAfter = 1;
-        //var targetSpeed = new Speed(expectedSpeedTokenBefore);
+
+        // Act
         await _fixture.Ccd.SetSpeedAsync(expectedSpeedTokenBefore);
         int returnedSpeedTokenBefore = await _fixture.Ccd.GetSpeedAsync();
         await _fixture.Ccd.SetSpeedAsync(expectedSpeedTokenAfter);
