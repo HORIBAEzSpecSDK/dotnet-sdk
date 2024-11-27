@@ -142,21 +142,21 @@ public sealed record ChargedCoupledDevice(
     /// Retrieves the current parallel speed of the CCD by sending the ccd_getParallelSpeed command
     /// </summary>
     /// <param name="cancellationToken"></param>
-    /// <returns><see cref="ParallelSpeed"/></returns>
-    public async Task<ParallelSpeed> GetParallelSpeedAsync(CancellationToken cancellationToken = default)
+    /// <returns><see cref="int"/></returns>
+    public async Task<int> GetParallelSpeedAsync(CancellationToken cancellationToken = default)
     {
         var result = await Communicator.SendWithResponseAsync(new CcdGetParallelSpeedCommand(DeviceId), cancellationToken);
         //return $"Current parallel speed token: {result.Results["token"]}";
-        return new ParallelSpeed((int)result.Results["token"]);
+        return int.Parse(result.Results["token"].ToString());
     }
 
     /// <summary>
     /// Sets the parallel speed of the CCD by sending the ccd_setParallelSpeed command
     /// </summary>
-    /// <param name="parallelSpeed">The <see cref="ParallelSpeed"/> to be set</param>
+    /// <param name="parallelSpeed">The <see cref="int"/> to be set</param>
     /// <param name="cancellationToken"></param>
     /// <returns>Task representing the communication between SDK and ICL</returns>
-    public Task SetParallelSpeedAsync(ParallelSpeed parallelSpeed, CancellationToken cancellationToken = default)
+    public Task SetParallelSpeedAsync(int parallelSpeed, CancellationToken cancellationToken = default)
     {
         return Communicator.SendAsync(new CcdSetParallelSpeedCommand(DeviceId, parallelSpeed), cancellationToken);
     }

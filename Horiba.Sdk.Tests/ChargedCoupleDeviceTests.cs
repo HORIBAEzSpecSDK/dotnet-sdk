@@ -275,18 +275,16 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
     //    // Arrange
     //    int expectedParallelSpeedTokenBefore = 0;
     //    int expectedParallelSpeedTokenAfter = 1;
-    //    await _fixture.Ccd.SetParallelSpeedAsync(new ParallelSpeed(expectedParallelSpeedTokenBefore));
-
 
     //    // Act
-    //    int receivedParallelSpeedTokenBefore = (int)await _fixture.Ccd.GetParallelSpeedAsync();
-    //    await _fixture.Ccd.SetParallelSpeedAsync(new ParallelSpeed(expectedParallelSpeedTokenAfter));
-    //    int receivedParallelSpeedTokenAfter = (int)await _fixture.Ccd.GetParallelSpeedAsync();
-
+    //    await _fixture.Ccd.SetParallelSpeedAsync(expectedParallelSpeedTokenBefore);
+    //    int returnedParallelSpeedTokenBefore = await _fixture.Ccd.GetParallelSpeedAsync();
+    //    await _fixture.Ccd.SetParallelSpeedAsync(expectedParallelSpeedTokenAfter);
+    //    int returnedParallelSpeedTokenAfter = await _fixture.Ccd.GetParallelSpeedAsync();
 
     //    // Assert
-    //    receivedParallelSpeedTokenBefore.Should().Be(expectedParallelSpeedTokenBefore);
-    //    receivedParallelSpeedTokenAfter.Should().Be(expectedParallelSpeedTokenAfter);
+    //    returnedParallelSpeedTokenBefore.Should().Be(expectedParallelSpeedTokenBefore);
+    //    returnedParallelSpeedTokenAfter.Should().Be(expectedParallelSpeedTokenAfter);
     //}
 
     [Fact]
