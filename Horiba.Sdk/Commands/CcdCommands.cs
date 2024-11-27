@@ -33,15 +33,26 @@ internal record CcdGetSpeedCommand(int DeviceId) : ChargedCoupleDeviceCommand("c
     public int DeviceId { get; } = DeviceId;
 }
 
-internal record CcdSetSpeedCommand(int DeviceId, Speed Speed) : ChargedCoupleDeviceCommand("ccd_setSpeed",
+//internal record CcdSetSpeedCommand(int DeviceId, Speed Speed) : ChargedCoupleDeviceCommand("ccd_setSpeed",
+//    new Dictionary<string, object>
+//    {
+//        { "index", DeviceId },
+//        { "token", (int)Speed }
+//    })
+//{
+//    public int DeviceId { get; } = DeviceId;
+//    public Speed Speed { get; } = Speed;
+//}
+
+internal record CcdSetSpeedCommand(int DeviceId, int SpeedToken) : ChargedCoupleDeviceCommand("ccd_setSpeed",
     new Dictionary<string, object>
     {
         { "index", DeviceId },
-        { "token", (int)Speed }
+        { "token", SpeedToken }
     })
 {
     public int DeviceId { get; } = DeviceId;
-    public Speed Speed { get; } = Speed;
+    public int SpeedToken { get; } = SpeedToken;
 }
 
 internal record CcdGetParallelSpeedCommand(int DeviceId) : ChargedCoupleDeviceCommand("ccd_getParallelSpeed", DeviceId)

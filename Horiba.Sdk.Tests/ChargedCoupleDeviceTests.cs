@@ -76,12 +76,17 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
     public async Task GivenCcd_WhenSettingSpeed_ThenSpeedIsUpdated()
     {
         // Act
-        var targetSpeed = SyncerityOESpeed.kHz45;
-        await _fixture.Ccd.SetSpeedAsync(targetSpeed);
-        var speed = await _fixture.Ccd.GetSpeedAsync();
+        int expectedSpeedTokenBefore = 0;
+        int expectedSpeedTokenAfter = 1;
+        //var targetSpeed = new Speed(expectedSpeedTokenBefore);
+        await _fixture.Ccd.SetSpeedAsync(expectedSpeedTokenBefore);
+        int returnedSpeedTokenBefore = await _fixture.Ccd.GetSpeedAsync();
+        await _fixture.Ccd.SetSpeedAsync(expectedSpeedTokenAfter);
+        int returnedSpeedTokenAfter = await _fixture.Ccd.GetSpeedAsync();
 
         // Assert
-        speed.Should().Be(targetSpeed);
+        returnedSpeedTokenBefore.Should().Be(expectedSpeedTokenBefore);
+        returnedSpeedTokenAfter.Should().Be(expectedSpeedTokenAfter);
     }
 
     [Fact]
@@ -217,7 +222,7 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
         actualData.Should().NotBeNull();
         actualData.Count.Should().Be(1);
         actualData[0].Region.Count.Should().Be(1);
-        actualData[0].Region[0].Data.Count.Should().Be(1024);
+        actualData[0].Region[0].XData.X.Count.Should().Be(1024);
         actualData[0].Region[0].Index.Should().Be(1);
         actualData[0].Region[0].XBinning.Should().Be(1);
         actualData[0].Region[0].XOrigin.Should().Be(0);
