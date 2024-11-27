@@ -303,7 +303,7 @@ public sealed record ChargedCoupledDevice(
     public async Task<Gain> GetGainAsync(CancellationToken cancellationToken = default)
     {
         var result = await Communicator.SendWithResponseAsync(new CcdGetGainCommand(DeviceId), cancellationToken);
-        return GetDeviceSpecificGain(int.Parse(result.Results["token"].ToString()));
+        return new Gain((int)result.Results["token"]);
     }
 
     /// <summary>

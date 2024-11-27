@@ -28,26 +28,4 @@ public abstract record Device(int DeviceId, string DeviceType, string SerialNumb
     public abstract Task CloseConnectionAsync(CancellationToken cancellationToken = default);
     public abstract Task WaitForDeviceNotBusy(int initialWaitInMs, int waitIntervalInMs, 
         CancellationToken cancellationToken = default);
-
-    protected Gain GetDeviceSpecificGain(int gainToken)
-    {
-        return DeviceType switch 
-        {
-            // Syncerity devices
-            SyncerityOE_DeviceType => (SyncerityOEGain)gainToken,
-            SyncerityNIR_DeviceType => (SyncerityNIRGain)gainToken,
-            SyncerityUVVis_DeviceType => (SyncerityUVVisGain)gainToken,
-            
-            // Synapse devices
-            SynapseCCD_DeviceType => (SynapseCCDGain)gainToken,
-            SynapseIGA_DeviceType => (SynapseIGAGain)gainToken,
-            SynapsePlus_DeviceType => (SynapsePlusGain)gainToken,
-            SynapseEM_DeviceType => (SynapseEMGain)gainToken,
-            
-            // Symphony2 devices
-            Symphony2IGA_DeviceType => (Symphony2IGAGain)gainToken,
-            Symphony2CCD_DeviceType => (Symphony2CCDGain)gainToken,
-            _ => throw new ArgumentOutOfRangeException(nameof(DeviceType), DeviceType, null)
-        };
-    }
 }
