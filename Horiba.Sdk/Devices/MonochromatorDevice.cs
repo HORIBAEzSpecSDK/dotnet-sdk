@@ -240,33 +240,7 @@ public sealed record MonochromatorDevice(
         return Communicator.SendAsync(new MonoMoveSlitMMCommand(DeviceId, slit, position), cancellationToken);
     }
 
-    /// <summary>
-    /// Retrieves the slit step position by sending the mono_getSlitStepPosition command
-    /// </summary>
-    /// <param name="slit"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    public async Task<SlitStepPosition> GetSlitStepPositionAsync(Slit slit, CancellationToken cancellationToken = default)
-    {
-        var response =
-            await Communicator.SendWithResponseAsync(new MonoGetSlitStepPositionCommand(DeviceId, slit),
-                cancellationToken);
-        return (SlitStepPosition)int.Parse(response.Results["position"].ToString());
-    }
-
-    /// <summary>
-    /// Sets the slit step position by sending the mono_moveSlit command
-    /// </summary>
-    /// <param name="slit"></param>
-    /// <param name="stepPosition"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>Task representing the communication between SDK and ICL</returns>
-    public Task SetSlitStepPositionAsync(Slit slit, SlitStepPosition stepPosition,
-        CancellationToken cancellationToken = default)
-    {
-        return Communicator.SendAsync(new MonoMoveSlitCommand(DeviceId, slit, stepPosition), cancellationToken);
-    }
-
+   
     /// <summary>
     /// Opens the shutter by sending the mono_shutterOpen command
     /// </summary>
