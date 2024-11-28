@@ -57,7 +57,7 @@ public sealed record MonochromatorDevice(
         Task.Delay(initialWaitInMs, cancellationToken).Wait(cancellationToken);
         while (await IsDeviceBusyAsync(cancellationToken))
         {
-            Log.Information("CCD: Waiting for device operation to complete");
+            Log.Information("Mono: Waiting for device operation to complete");
             Task.Delay(waitIntervalInMs, cancellationToken).Wait(cancellationToken);
         }
     }
