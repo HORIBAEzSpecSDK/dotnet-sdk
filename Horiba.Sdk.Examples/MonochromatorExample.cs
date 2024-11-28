@@ -1,31 +1,35 @@
-﻿using System.Threading.Tasks;
-using Horiba.Sdk.Devices;
+﻿using Horiba.Sdk.Devices;
 namespace Horiba.Sdk.Examples;
 
 
 
 class Program
+
 {
-    static async void Main()
+
+    static async Task MonoExample()
     {
-        var Dm = new DeviceManager();
-        Dm.StartAsync().Wait();
+        DeviceManager Dm = new DeviceManager();
+        await Dm.StartAsync();
         var Mono = Dm.Monochromators.First();
-        Mono.OpenConnectionAsync().Wait();
-        Mono.HomeAsync().Wait();
-        Mono.WaitForDeviceNotBusy().Wait();
-        Task.Delay(TimeSpan.FromSeconds(10)).Wait();
-        Console.WriteLine(Mono.GetCurrentWavelengthAsync());
+        await Mono.OpenConnectionAsync();
+        await Mono.HomeAsync();
+        await Mono.WaitForDeviceNotBusy();
 
-        bool monoIsBusy = true;
-        while (monoIsBusy)
-        {
-            await Task.Delay(100);
-            monoIsBusy = await Mono.IsDeviceBusyAsync();
-        }
-        Console.WriteLine(Mono.GetCurrentWavelengthAsync());
+        Console.WriteLine(await Mono.GetCurrentWavelengthAsync());
+        await Mono.MoveToWavelengthAsync(200);
+        await Mono.WaitForDeviceNotBusy();
+        Console.WriteLine(await Mono.GetCurrentWavelengthAsync());
 
-        Mono.CloseConnectionAsync().Wait();
-        Dm.StopAsync().Wait();
+        await Mono.SetMirrorPositionAsync(Enums.Mirror.Entrance, Enums.MirrorPosition.Axial);
+        await Mono.WaitForDeviceNotBusy();
+
+        await Mono.CloseConnectionAsync();
+        await Dm.StopAsync();
+    }
+
+    static async Task Main()
+    {
+        await MonoExample();
     }
 }
