@@ -8,12 +8,12 @@ public static class RegionOfInterestExtensions
         {
             { "index", deviceId },
             { "roiIndex", region.RoiIndex },
-            { "xOrigin", region.Origin.X },
-            { "yOrigin", region.Origin.Y },
-            { "xSize", region.Size.Width },
-            { "ySize", region.Size.Height },
-            { "xBin", region.Bin.X },
-            { "yBin", region.Bin.Y }
+            { "xOrigin", region.XOrigin },
+            { "yOrigin", region.YOrigin },
+            { "xSize", region.XSize },
+            { "ySize", region.YSize },
+            { "xBin", region.XBin },
+            { "yBin", region.YBin }
         };
     }
 }
@@ -25,15 +25,19 @@ public static class RegionOfInterestExtensions
 /// <param name="Origin">X,Y coordinates setting the starting point of the region</param>
 /// <param name="Bin"></param>
 /// <param name="Size">Width,Height of the region</param>
-public record RegionOfInterest(int RoiIndex, (int X, int Y) Origin, (int X, int Y) Bin, (int Width, int Height) Size)
+public record RegionOfInterest(int RoiIndex, int XOrigin, int YOrigin, int XSize, int YSize, int XBin, int YBin)
 {
     /// <summary>
     /// Defines a region which covers the entire chip and create a histogram
     /// </summary>
-    public static readonly RegionOfInterest Default = new RegionOfInterest(1, (0, 0), (1, 256), (1024, 256));
+    public static readonly RegionOfInterest Default = new RegionOfInterest(1, 0, 0, 1024, 256, 1, 256);
     
     public int RoiIndex { get; } = RoiIndex;
-    public (int X, int Y) Origin { get; } = Origin;
-    public (int X, int Y) Bin { get; } = Bin;
-    public (int Width, int Height) Size { get; } = Size;
+    public int XOrigin { get; } = XOrigin;
+    public int YOrigin { get; } = YOrigin;
+    public int XSize { get; } = XSize;
+    public int YSize { get; } = YSize;
+    public int XBin { get; } = XBin;
+    public int YBin { get; } = YBin;
+
 }

@@ -23,7 +23,7 @@ class Program
 
         await Mono.SetMirrorPositionAsync(Enums.Mirror.Entrance, Enums.MirrorPosition.Axial);
         await Mono.WaitForDeviceNotBusy();
-
+            
         await Mono.CloseConnectionAsync();
         await Dm.StopAsync();
     }

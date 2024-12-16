@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Horiba.Sdk.Commands;
 using Horiba.Sdk.Communication;
+using Horiba.Sdk.Data;
 using Horiba.Sdk.Enums;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -233,11 +234,13 @@ public sealed record ChargedCoupledDevice(
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns>Dictionary containing the raw data of the device</returns>
-    public async Task<Dictionary<string, object>> GetAcquisitionDataAsync(CancellationToken cancellationToken = default)
+    public async Task<CcdData> GetAcquisitionDataAsync(CancellationToken cancellationToken = default)
     {
         var result =
             await Communicator.SendWithResponseAsync(new CcdGetAcquisitionDataCommand(DeviceId), cancellationToken);
-        return result.Results;
+        string json = JsonConvert.SerializeObject(result.Results, Formatting.None);
+        CcdData output = JsonConvert.DeserializeObject<CcdData>(json);
+        return output;
     }
 
     /// <summary>

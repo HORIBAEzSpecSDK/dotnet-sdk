@@ -2,7 +2,9 @@
 using Horiba.Sdk.Calculations.DarkCountSubtraction;
 using Horiba.Sdk.Data;
 using Horiba.Sdk.Enums;
+using Horiba.Sdk.Data;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace Horiba.Sdk.Tests;
 
@@ -197,38 +199,47 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
     [Fact]
     public async Task GivenCcd_WhenReadingDataFromDevice_ThenRetrievingDataWorksAsConfigured()
     {
+        Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Debug()
+            .WriteTo.Console()
+            .CreateLogger();
         // Arrange
+        RegionOfInterest myRegion = new RegionOfInterest(1,0,0,16,4,1,4);
         await _fixture.Ccd.SetAcquisitionCountAsync(1);
         await _fixture.Ccd.SetExposureTimeAsync(100);
-        await _fixture.Ccd.SetRegionOfInterestAsync(RegionOfInterest.Default);
+        await _fixture.Ccd.SetRegionOfInterestAsync(myRegion);
         await _fixture.Ccd.SetXAxisConversionTypeAsync(ConversionType.None);
+        List<List<float>> fixedYdata = new List<List<float>>
+        {
+            new List<float> { 1, 2, 3, 4 },
+        };
 
         // Act
-        Dictionary<string, object> data = [];
+        CcdData returnedCcDData = null;
         if (await _fixture.Ccd.GetAcquisitionReadyAsync())
         {
             await _fixture.Ccd.AcquisitionStartAsync(true);
             await _fixture.Ccd.WaitForDeviceNotBusy(TimeSpan.FromSeconds(1));
-            data = await _fixture.Ccd.GetAcquisitionDataAsync();
+            returnedCcDData = await _fixture.Ccd.GetAcquisitionDataAsync();
+
         }
 
-        var acquisition = data.GetValueOrDefault("acquisition");
-        acquisition.MatchSnapshot();
-        var timestamp = data.GetValueOrDefault("timestamp");
-        var actualData = JsonConvert.DeserializeObject<List<AcquisitionDescription>>(acquisition.ToString());
+        returnedCcDData.Acquisition[0].Region[0].YData = fixedYdata;
+        returnedCcDData.Timestamp = "replacedWithStaticString";
+        returnedCcDData.MatchSnapshot();
         
         // Assert
-        actualData.Should().NotBeNull();
-        actualData.Count.Should().Be(1);
-        actualData[0].Region.Count.Should().Be(1);
-        actualData[0].Region[0].XData.X.Count.Should().Be(1024);
-        actualData[0].Region[0].Index.Should().Be(1);
-        actualData[0].Region[0].XBinning.Should().Be(1);
-        actualData[0].Region[0].XOrigin.Should().Be(0);
-        actualData[0].Region[0].XSize.Should().Be(1024);
-        actualData[0].Region[0].YBinning.Should().Be(256);
-        actualData[0].Region[0].YOrigin.Should().Be(0);
-        actualData[0].Region[0].YSize.Should().Be(256);
+        returnedCcDData.Should().NotBeNull();
+        returnedCcDData.Acquisition.Count.Should().Be(1);
+        returnedCcDData.Acquisition[0].Region.Count.Should().Be(1);
+        returnedCcDData.Acquisition[0].Region[0].XData.Count.Should().Be(16);
+        returnedCcDData.Acquisition[0].Region[0].Index.Should().Be(1);
+        returnedCcDData.Acquisition[0].Region[0].XBinning.Should().Be(1);
+        returnedCcDData.Acquisition[0].Region[0].XOrigin.Should().Be(0);
+        returnedCcDData.Acquisition[0].Region[0].XSize.Should().Be(16);
+        returnedCcDData.Acquisition[0].Region[0].YBinning.Should().Be(4);
+        returnedCcDData.Acquisition[0].Region[0].YOrigin.Should().Be(0);
+        returnedCcDData.Acquisition[0].Region[0].YSize.Should().Be(4);
     }
 
     [Fact]
@@ -298,39 +309,64 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
 
         // Act
         // Fetching data with closed shuther
-        YData darkData = new YData([[]]);
+        List<List<float>> darkData = new List<List<float>>();
         if (await _fixture.Ccd.GetAcquisitionReadyAsync())
         {
             await _fixture.Ccd.AcquisitionStartAsync(false);
             await _fixture.Ccd.WaitForDeviceNotBusy(TimeSpan.FromSeconds(1));
-            var acquiredData = await _fixture.Ccd.GetAcquisitionDataAsync();
-            var acquisition = JsonConvert.DeserializeObject<List<AcquisitionDescription>>(acquiredData.GetValueOrDefault("acquisition").ToString());
-            darkData = acquisition.First().Region.First().YData;
+            CcdData acquiredData = await _fixture.Ccd.GetAcquisitionDataAsync();
+            darkData = acquiredData.Acquisition[0].Region[0].YData;
         }
 
         // Fetching normal data
-        YData normalData = new YData([[]]);
+        List<List<float>> normalData = new List<List<float>>();
         if (await _fixture.Ccd.GetAcquisitionReadyAsync())
         {
             await _fixture.Ccd.AcquisitionStartAsync(true);
             await _fixture.Ccd.WaitForDeviceNotBusy(TimeSpan.FromSeconds(1));
-            var acquiredData = await _fixture.Ccd.GetAcquisitionDataAsync();
-            var acquisition = JsonConvert.DeserializeObject<List<AcquisitionDescription>>(acquiredData.GetValueOrDefault("acquisition").ToString());
-            normalData = acquisition.First().Region.First().YData;
+            CcdData acquiredData = await _fixture.Ccd.GetAcquisitionDataAsync();
+            normalData = acquiredData.Acquisition[0].Region[0].YData;
         }
 
         // Calculating difference
         var diffData = new DarkCountSubstraction().SubtractData(normalData, darkData);
 
-        diffData.Y.Count.Should().Be(normalData.Y.Count);
-        diffData.Y.Count.Should().Be(darkData.Y.Count);
+        diffData.Count.Should().Be(normalData.Count);
+        diffData.Count.Should().Be(darkData.Count);
         
-        for (var i = 0; i < diffData.Y.Count; i++)
+        for (var i = 0; i < diffData.Count; i++)
         {
-            for (int j = 0; j < normalData.Y[i].Count; j++)
+            for (int j = 0; j < normalData[i].Count; j++)
             {
-                diffData.Y[i][j].Should().Be(normalData.Y[i][j] - darkData.Y[i][j]);
+                diffData[i][j].Should().Be(normalData[i][j] - darkData[i][j]);
             }
         }
+    }
+    [Fact]
+    public void GivenJsonString_WhenDeserializing_ThenReturnsCcdDataObject()
+    {
+        // Arrange
+        var jsonString = "{\"acquisition\":[{\"acqIndex\":1,\"roi\":[{\"roiIndex\":1,\"xBinning\":1,\"xData\":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],\"xOrigin\":0,\"xSize\":16,\"yBinning\":4,\"yData\":[[602,601,602,604,602,599,602,603,603,602,600,602,602,601,602,602]],\"yOrigin\":0,\"ySize\":4}]}],\"timestamp\":\"2024.12.16 11:32:10.033\"}";
+
+        // Act
+        var ccdData = JsonConvert.DeserializeObject<CcdData>(jsonString);
+
+        // Assert
+        Assert.NotNull(ccdData);
+        Assert.Equal("2024.12.16 11:32:10.033", ccdData.Timestamp);
+        Assert.Single(ccdData.Acquisition);
+        var acquisition = ccdData.Acquisition.First();
+        Assert.Equal("1", acquisition.Index);
+        Assert.Single(acquisition.Region);
+        var region = acquisition.Region.First();
+        Assert.Equal(1, region.Index);
+        Assert.Equal(1, region.XBinning);
+        Assert.Equal(0, region.XOrigin);
+        Assert.Equal(16, region.XSize);
+        Assert.Equal(4, region.YBinning);
+        Assert.Equal(0, region.YOrigin);
+        Assert.Equal(4, region.YSize);
+        Assert.Equal(16, region.XData.Count);
+        Assert.Equal(16, region.YData.First().Count);
     }
 }
