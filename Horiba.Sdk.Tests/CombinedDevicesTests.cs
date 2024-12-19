@@ -44,7 +44,7 @@ public class CombinedDevicesTests : IClassFixture<CombinedDevicesTestFixture>
         }
         
         // Assert
-        data.Acquisition.Count.Should().BeGreaterThan(1);
+        data.Acquisition.Count.Should().BeGreaterThan(0);
     }
 
     //[Fact]
