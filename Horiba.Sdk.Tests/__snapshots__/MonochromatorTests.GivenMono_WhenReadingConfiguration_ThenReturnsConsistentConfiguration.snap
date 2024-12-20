@@ -1,0 +1,47 @@
+﻿{
+  "configuration": {
+    "filterWheels": [],
+    "gratings": [
+      {
+        "blaze": 0,
+        "grooveDensity": 1800,
+        "positionIndex": 0
+      },
+      {
+        "blaze": 0,
+        "grooveDensity": 1200,
+        "positionIndex": 1
+      },
+      {
+        "blaze": 0,
+        "grooveDensity": 300,
+        "positionIndex": 2
+      }
+    ],
+    "mirrors": [
+      {
+        "locationId": 1
+      },
+      {
+        "locationId": 2
+      }
+    ],
+    "model": "iHR320",
+    "ports": [
+      {
+        "locationId": 1,
+        "slitType": 1
+      },
+      {
+        "locationId": 2,
+        "slitType": 1
+      },
+      {
+        "locationId": 4,
+        "slitType": 1
+      }
+    ],
+    "productId": "257",
+    "serialNumber": "1745B-2017-iHR320"
+  }
+}

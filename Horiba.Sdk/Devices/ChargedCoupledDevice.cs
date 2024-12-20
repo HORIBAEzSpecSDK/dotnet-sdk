@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Horiba.Sdk.Commands;
 using Horiba.Sdk.Communication;
+using Horiba.Sdk.Data;
 using Horiba.Sdk.Enums;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -98,7 +99,7 @@ public sealed record ChargedCoupledDevice(
     public async Task<double> GetChipTemperatureAsync(CancellationToken cancellationToken = default)
     {
         var result =
-            await Communicator.SendWithResponseAsync(new CcdGetTemperatureCommand(DeviceId), cancellationToken);
+            await Communicator.SendWithResponseAsync(new CcdGetChipTemperatureCommand(DeviceId), cancellationToken);
         return double.Parse(result.Results["temperature"].ToString());
     }
 
@@ -117,23 +118,50 @@ public sealed record ChargedCoupledDevice(
     /// Retrieves the current speed of the CCD by sending the ccd_getSpeed command
     /// </summary>
     /// <param name="cancellationToken"></param>
-    /// <returns><see cref="Speed"/></returns>
-    public async Task<Speed> GetSpeedAsync(CancellationToken cancellationToken = default)
+    /// <returns><see cref="int"/></returns>
+    public async Task<int> GetSpeedAsync(CancellationToken cancellationToken = default)
+    //public async Task<Speed> GetSpeedAsync(CancellationToken cancellationToken = default)
+
     {
         var result = await Communicator.SendWithResponseAsync(new CcdGetSpeedCommand(DeviceId), cancellationToken);
-        return GetDeviceSpecificSpeed(int.Parse(result.Results["token"].ToString()));
+        //return new Speed((int)result.Results["token"]);
+        return int.Parse(result.Results["token"].ToString());
     }
 
     /// <summary>
     /// Sets the speed of the CCD by sending the ccd_setSpeed command
     /// </summary>
-    /// <param name="speed">The <see cref="Speed"/> to be set</param>
+    /// <param name="speed">The <see cref="int"/> to be set</param>
     /// <param name="cancellationToken"></param>
     /// <returns>Task representing the communication between SDK and ICL</returns>
-    public Task SetSpeedAsync(Speed speed, CancellationToken cancellationToken = default)
+    public Task SetSpeedAsync(int speed, CancellationToken cancellationToken = default)
     {
         return Communicator.SendAsync(new CcdSetSpeedCommand(DeviceId, speed), cancellationToken);
     }
+
+    /// <summary>
+    /// Retrieves the current parallel speed of the CCD by sending the ccd_getParallelSpeed command
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns><see cref="int"/></returns>
+    public async Task<int> GetParallelSpeedAsync(CancellationToken cancellationToken = default)
+    {
+        var result = await Communicator.SendWithResponseAsync(new CcdGetParallelSpeedCommand(DeviceId), cancellationToken);
+        //return $"Current parallel speed token: {result.Results["token"]}";
+        return int.Parse(result.Results["token"].ToString());
+    }
+
+    /// <summary>
+    /// Sets the parallel speed of the CCD by sending the ccd_setParallelSpeed command
+    /// </summary>
+    /// <param name="parallelSpeed">The <see cref="int"/> to be set</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>Task representing the communication between SDK and ICL</returns>
+    public Task SetParallelSpeedAsync(int parallelSpeed, CancellationToken cancellationToken = default)
+    {
+        return Communicator.SendAsync(new CcdSetParallelSpeedCommand(DeviceId, parallelSpeed), cancellationToken);
+    }
+
 
     /// <summary>
     /// Retrieves the exposure time of the CCD by sending the ccd_getExposureTime command
@@ -183,9 +211,9 @@ public sealed record ChargedCoupledDevice(
     /// <param name="isShutterOpened">Controls the state of the shutter of the device</param>
     /// <param name="cancellationToken"></param>
     /// <returns>Task representing the communication between SDK and ICL</returns>
-    public Task SetAcquisitionStartAsync(bool isShutterOpened, CancellationToken cancellationToken = default)
+    public Task AcquisitionStartAsync(bool isShutterOpened, CancellationToken cancellationToken = default)
     {
-        return Communicator.SendAsync(new CcdSetAcquisitionStartCommand(DeviceId, isShutterOpened),
+        return Communicator.SendAsync(new CcdAcquisitionStartCommand(DeviceId, isShutterOpened),
             cancellationToken);
     }
 
@@ -206,11 +234,13 @@ public sealed record ChargedCoupledDevice(
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns>Dictionary containing the raw data of the device</returns>
-    public async Task<Dictionary<string, object>> GetAcquisitionDataAsync(CancellationToken cancellationToken = default)
+    public async Task<CcdData> GetAcquisitionDataAsync(CancellationToken cancellationToken = default)
     {
         var result =
             await Communicator.SendWithResponseAsync(new CcdGetAcquisitionDataCommand(DeviceId), cancellationToken);
-        return result.Results;
+        string json = JsonConvert.SerializeObject(result.Results, Formatting.None);
+        CcdData output = JsonConvert.DeserializeObject<CcdData>(json);
+        return output;
     }
 
     /// <summary>
@@ -276,10 +306,10 @@ public sealed record ChargedCoupledDevice(
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<Gain> GetGainAsync(CancellationToken cancellationToken = default)
+    public async Task<int> GetGainAsync(CancellationToken cancellationToken = default)
     {
         var result = await Communicator.SendWithResponseAsync(new CcdGetGainCommand(DeviceId), cancellationToken);
-        return GetDeviceSpecificGain(int.Parse(result.Results["token"].ToString()));
+        return int.Parse(result.Results["token"].ToString());
     }
 
     /// <summary>
@@ -288,7 +318,7 @@ public sealed record ChargedCoupledDevice(
     /// <param name="gain"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>Task representing the communication between SDK and ICL</returns>
-    public Task SetGainAsync(Gain gain, CancellationToken cancellationToken = default)
+    public Task SetGainAsync(int gain, CancellationToken cancellationToken = default)
     {
         return Communicator.SendAsync(new CcdSetGainCommand(DeviceId, gain), cancellationToken);
     }
@@ -395,9 +425,9 @@ public sealed record ChargedCoupledDevice(
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns>Task representing the communication between SDK and ICL</returns>
-    public Task SetAcquisitionAbortAsync(CancellationToken cancellationToken = default)
+    public Task AcquisitionAbortAsync(CancellationToken cancellationToken = default)
     {
-        return Communicator.SendAsync(new CcdSetAcquisitionAbortCommand(DeviceId), cancellationToken);
+        return Communicator.SendAsync(new CcdAcquisitionAbortCommand(DeviceId), cancellationToken);
     }
 
     /// <summary>

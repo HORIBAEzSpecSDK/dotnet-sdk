@@ -1,5 +1,7 @@
 using System.ComponentModel;
 using Newtonsoft.Json;
+using Horiba.Sdk.Data;
+
 
 namespace Horiba.Sdk.Tests;
 

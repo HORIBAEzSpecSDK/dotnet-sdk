@@ -18,7 +18,7 @@ internal record CcdIsConnectionOpenedCommand(int DeviceId) : ChargedCoupleDevice
     public int DeviceId { get; } = DeviceId;
 }
 
-internal record CcdGetTemperatureCommand(int DeviceId) : ChargedCoupleDeviceCommand("ccd_getChipTemperature", DeviceId)
+internal record CcdGetChipTemperatureCommand(int DeviceId) : ChargedCoupleDeviceCommand("ccd_getChipTemperature", DeviceId)
 {
     public int DeviceId { get; } = DeviceId;
 }
@@ -33,15 +33,31 @@ internal record CcdGetSpeedCommand(int DeviceId) : ChargedCoupleDeviceCommand("c
     public int DeviceId { get; } = DeviceId;
 }
 
-internal record CcdSetSpeedCommand(int DeviceId, Speed Speed) : ChargedCoupleDeviceCommand("ccd_setSpeed",
+internal record CcdSetSpeedCommand(int DeviceId, int SpeedToken) : ChargedCoupleDeviceCommand("ccd_setSpeed",
     new Dictionary<string, object>
     {
         { "index", DeviceId },
-        { "token", (int)Speed }
+        { "token", SpeedToken }
     })
 {
     public int DeviceId { get; } = DeviceId;
-    public Speed Speed { get; } = Speed;
+    public int SpeedToken { get; } = SpeedToken;
+}
+
+internal record CcdGetParallelSpeedCommand(int DeviceId) : ChargedCoupleDeviceCommand("ccd_getParallelSpeed", DeviceId)
+{
+    public int DeviceId { get; } = DeviceId;
+}
+
+internal record CcdSetParallelSpeedCommand(int DeviceId, int ParallelSpeed) : ChargedCoupleDeviceCommand("ccd_setParallelSpeed",
+    new Dictionary<string, object>
+    {
+        { "index", DeviceId },
+        { "token", ParallelSpeed }
+    })
+{
+    public int DeviceId { get; } = DeviceId;
+    public int ParallelSpeed { get; } = ParallelSpeed;
 }
 
 internal record CcdGetExposureTimeCommand(int DeviceId) : ChargedCoupleDeviceCommand("ccd_getExposureTime", DeviceId)
@@ -67,7 +83,7 @@ internal record CcdGetAcquisitionReadyCommand(int DeviceId)
     public int DeviceId { get; } = DeviceId;
 }
 
-internal record CcdSetAcquisitionStartCommand(int DeviceId, bool IsShutterOpened) : ChargedCoupleDeviceCommand(
+internal record CcdAcquisitionStartCommand(int DeviceId, bool IsShutterOpened) : ChargedCoupleDeviceCommand(
     "ccd_acquisitionStart",
     new Dictionary<string, object>
     {
@@ -98,8 +114,8 @@ internal record CcdGetAcquisitionBusyCommand(int DeviceId)
     public int DeviceId { get; } = DeviceId;
 }
 
-internal record CcdSetAcquisitionAbortCommand(int DeviceId)
-    : ChargedCoupleDeviceCommand("ccd_setAcquisitionAbort", DeviceId)
+internal record CcdAcquisitionAbortCommand(int DeviceId)
+    : ChargedCoupleDeviceCommand("ccd_acquisitionAbort", DeviceId)
 {
     public int DeviceId { get; } = DeviceId;
 }
@@ -137,15 +153,15 @@ internal record CcdGetGainCommand(int DeviceId) : ChargedCoupleDeviceCommand("cc
     public int DeviceId { get; } = DeviceId;
 }
 
-internal record CcdSetGainCommand(int DeviceId, Gain Gain) : ChargedCoupleDeviceCommand("ccd_setGain",
+internal record CcdSetGainCommand(int DeviceId, int Gain) : ChargedCoupleDeviceCommand("ccd_setGain",
     new Dictionary<string, object>
     {
         { "index", DeviceId },
-        { "token", (int)Gain }
+        { "token", Gain }
     })
 {
     public int DeviceId { get; } = DeviceId;
-    public Gain Gain { get; } = Gain;
+    public int Gain { get; } = Gain;
 }
 
 internal record CcdGetFitParametersCommand(int DeviceId) : ChargedCoupleDeviceCommand("ccd_getFitParams", DeviceId)

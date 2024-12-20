@@ -147,30 +147,6 @@ internal record MonoMoveSlitMMCommand(int DeviceId, Slit Slit, float PositionInM
     public float PositionInMM { get; } = PositionInMM;
 }
 
-internal record MonoGetSlitStepPositionCommand(int DeviceId, Slit Slit) : MonochromatorDeviceCommand(
-    "mono_getSlitStepPosition", new Dictionary<string, object>
-    {
-        { "index", DeviceId },
-        { "locationId", (int)Slit }
-    })
-{
-    public int DeviceId { get; } = DeviceId;
-    public Slit Slit { get; } = Slit;
-}
-
-internal record MonoMoveSlitCommand(int DeviceId, Slit Slit, SlitStepPosition Position) : MonochromatorDeviceCommand(
-    "mono_moveSlit", new Dictionary<string, object>
-    {
-        { "index", DeviceId },
-        { "locationId", (int)Slit },
-        { "position", (int)Position }
-    })
-{
-    public int DeviceId { get; } = DeviceId;
-    public Slit Slit { get; } = Slit;
-    public SlitStepPosition Position { get; } = Position;
-}
-
 internal record MonoShutterOpenCommand(int DeviceId) : MonochromatorDeviceCommand("mono_shutterOpen", DeviceId)
 {
     public int DeviceId { get; } = DeviceId;

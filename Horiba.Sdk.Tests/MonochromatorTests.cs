@@ -126,30 +126,30 @@ public class MonochromatorTests : IClassFixture<MonochromatorTestFixture>
     }
 
     [Theory]
-    [InlineData(Slit.A, SlitStepPosition.A)]
-    [InlineData(Slit.A, SlitStepPosition.B)]
-    [InlineData(Slit.A, SlitStepPosition.C)]
-    [InlineData(Slit.A, SlitStepPosition.D)]
-    [InlineData(Slit.B, SlitStepPosition.A)]
-    [InlineData(Slit.B, SlitStepPosition.B)]
-    [InlineData(Slit.B, SlitStepPosition.C)]
-    [InlineData(Slit.B, SlitStepPosition.D)]
-    [InlineData(Slit.C, SlitStepPosition.A, Skip = "This slit is missing on the device")]
-    [InlineData(Slit.C, SlitStepPosition.B, Skip = "This slit is missing on the device")]
-    [InlineData(Slit.C, SlitStepPosition.C, Skip = "This slit is missing on the device")]
-    [InlineData(Slit.C, SlitStepPosition.D, Skip = "This slit is missing on the device")]
-    [InlineData(Slit.D, SlitStepPosition.A)]
-    [InlineData(Slit.D, SlitStepPosition.B)]
-    [InlineData(Slit.D, SlitStepPosition.C)]
-    [InlineData(Slit.D, SlitStepPosition.D)]
-    public async Task GivenMonoDevice_WhenMovingSlitStepPosition_ThenSlitStepPositionIsUpdated(Slit slit, SlitStepPosition targetPosition)
+    [InlineData(Slit.A, 0.0)]
+    [InlineData(Slit.A, 3.3)]
+    [InlineData(Slit.A, 5.5)]
+    [InlineData(Slit.A, 7.0)]
+    [InlineData(Slit.B, 0.0)]
+    [InlineData(Slit.B, 3.3)]
+    [InlineData(Slit.B, 5.5)]
+    [InlineData(Slit.B, 7.0)]
+    [InlineData(Slit.C, 0.0, Skip = "This slit is missing on the device")]
+    [InlineData(Slit.C, 3.3, Skip = "This slit is missing on the device")]
+    [InlineData(Slit.C, 5.5, Skip = "This slit is missing on the device")]
+    [InlineData(Slit.C, 7.0, Skip = "This slit is missing on the device")]
+    [InlineData(Slit.D, 0.0)]
+    [InlineData(Slit.D, 3.3)]
+    [InlineData(Slit.D, 5.5)]
+    [InlineData(Slit.D, 7.0)]
+    public async Task GivenMonoDevice_WhenMovingSlitStepPosition_ThenSlitStepPositionIsUpdated(Slit slit, float targetPosition)
     {
         Task.Delay(TimeSpan.FromMicroseconds(100)).Wait();
         
         // Act
-        await _fixture.Mono.SetSlitStepPositionAsync(slit, targetPosition);
+        await _fixture.Mono.SetSlitPositionAsync(slit, targetPosition);
         await _fixture.Mono.WaitForDeviceNotBusy(7000);
-        var actual = await _fixture.Mono.GetSlitStepPositionAsync(slit);
+        var actual = await _fixture.Mono.GetSlitPositionInMMAsync(slit);
 
         // Assert
         actual.Should().Be(targetPosition);
