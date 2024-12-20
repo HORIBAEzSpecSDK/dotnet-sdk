@@ -1,13 +1,14 @@
 ﻿using Horiba.Sdk.Devices;
+using Serilog.Core;
 namespace Horiba.Sdk.Examples;
 
 
 
-class Program
+class MonoProgram
 
 {
 
-    static async Task MonoExample()
+    public static async Task MonoExample()
     {
         DeviceManager Dm = new DeviceManager();
         await Dm.StartAsync();
@@ -28,8 +29,4 @@ class Program
         await Dm.StopAsync();
     }
 
-    static async Task Main()
-    {
-        await MonoExample();
-    }
 }

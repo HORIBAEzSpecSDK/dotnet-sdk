@@ -22,12 +22,6 @@ public sealed class DeviceManager : IDisposable
     /// <param name="port">The port on which the ICL process is running. Defaults to 25010</param>
     public DeviceManager(string? iclExePath = null, IPAddress? ipAddress = null, int? port = null)
     {
-        Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Verbose()
-            .WriteTo.Console()
-            .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
-            .CreateLogger();
-        
         Communicator = new WebSocketCommunicator(ipAddress ?? IPAddress.Loopback, port ?? 25010);
         
         IclProcess.StartInfo.FileName = iclExePath ??
