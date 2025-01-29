@@ -121,45 +121,70 @@ dotnet add package Horiba.Sdk
 * Open the Program.cs file and update the implementation
 
 ```csh
+using Horiba.Sdk.Data;
 using Horiba.Sdk.Devices;
 using Horiba.Sdk.Enums;
+namespace Example;
 
-using var deviceManager = new DeviceManager();
-await deviceManager.StartAsync();
-var ccd = deviceManager.ChargedCoupledDevices.First();
-await ccd.OpenConnectionAsync();
-
-await ccd.SetAcquisitionCountAsync(1);
-await ccd.SetExposureTimeAsync(1500);
-await ccd.SetRegionOfInterestAsync(RegionOfInterest.Default);
-await ccd.SetXAxisConversionTypeAsync(ConversionType.None);
-
-Dictionary<string, object> data = [];
-if (await ccd.GetAcquisitionReadyAsync())
+public class Example
 {
-    await ccd.SetAcquisitionStartAsync(true);
-    
-    // This method will start a polling procedure after 1s initial delay
-    // this initial delay is needed to allow the device to start the acquisition.
-    // The interval of the polling procedure is set to be 300ms
-    // every iteration of the polling procedure will check if the device is busy
-    // by sending a request to the device.
-    // The method will return when the device is not busy anymore
-    await ccd.WaitForDeviceNotBusy(TimeSpan.FromSeconds(1), TimeSpan.FromMilliseconds(300));
-    
-    data = await ccd.GetAcquisitionDataAsync();
+	public static async Task homepageExample()
+	{
+        using var deviceManager = new DeviceManager();
+        await deviceManager.StartAsync();
+        var ccd = deviceManager.ChargedCoupledDevices.First();
+        await ccd.OpenConnectionAsync();
+        var chipSize = await ccd.GetChipSizeAsync();
+
+        await ccd.SetAcquisitionCountAsync(1);
+        await ccd.SetExposureTimeAsync(1000);
+        await ccd.SetXAxisConversionTypeAsync(ConversionType.None);
+
+
+        //Set region of interest to full chip based on chip size
+        RegionOfInterest ROI = new RegionOfInterest(1, 0, 0, chipSize.Width, chipSize.Height, 1, chipSize.Height);
+        await ccd.SetRegionOfInterestAsync(ROI);
+
+
+        CcdData data = new CcdData();
+        AcquisitionDescription details = new AcquisitionDescription();
+
+        if (await ccd.GetAcquisitionReadyAsync())
+        {
+            await ccd.AcquisitionStartAsync(true);
+
+            // This method will start a polling procedure after 1s initial delay
+            // this initial delay is needed to allow the device to start the acquisition.
+            // The interval of the polling procedure is set to be 300ms
+            // every iteration of the polling procedure will check if the device is busy
+            // by sending a request to the device.
+            // The method will return when the device is not busy anymore
+            await ccd.WaitForDeviceNotBusy(TimeSpan.FromSeconds(1), TimeSpan.FromMilliseconds(300));
+
+
+            data = await ccd.GetAcquisitionDataAsync();
+        }
+
+
+
+        details = data.Acquisition[0];
+
+        Console.WriteLine("The following xData was retrieved");
+        foreach (var xData in data.Acquisition[0].Region[0].XData)
+        {
+            Console.Write($"{xData.ToString()} ");
+        }
+
+        Console.WriteLine("\nThe following yData was retrieved");
+        foreach (var yData in data.Acquisition[0].Region[0].YData[0])
+        {
+            Console.Write($"{yData.ToString()} ");
+        }
+
+
+    }
 }
-        
-var acquisitionRawData = data.GetValueOrDefault("acquisition");
-var timestamp = data.GetValueOrDefault("timestamp");
-```
 
-The raw data will be in the shape of **Dictionary<string, object>** you will be able to extract the interesting data as per your needs.
-
-However, if you need to use JSON deserialization functionality to work with typed objects, you can take a look at the [**Horiba.Sdk.Tests.AcquisitionDescription.cs**](https://github.com/ThatsTheEnd/horiba-dotnet-sdk/blob/main/Horiba.Sdk.Tests/AcquisitionDescription.cs) class and use it to deserialize the data into.
-
-```csh
-var parsedData = JsonConvert.DeserializeObject<List<AcquisitionDescription>>(acquisitionRawData.ToString());
 ```
 
 ---
