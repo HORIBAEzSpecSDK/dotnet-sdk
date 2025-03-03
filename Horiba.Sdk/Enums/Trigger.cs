@@ -86,3 +86,10 @@ public enum TriggerAddress
     Input = 0,
     Output = 1
 }
+
+public enum InTriggerMode
+{
+    TtlInput = 0,
+    EventMarkerInput = 1,
+    HardwareTriggerInput = 2
+}
