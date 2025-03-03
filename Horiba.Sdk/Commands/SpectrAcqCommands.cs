@@ -23,6 +23,11 @@ internal record SaqIsBusyCommand(int DeviceId) : SpectrAcqDeviceCommand("saq3_is
     public int DeviceId { get; } = DeviceId;
 }
 
+internal record SaqGetFirmwareVersionCommand(int DeviceId) : SpectrAcqDeviceCommand("saq3_getFirmwareVersion", DeviceId)
+{
+    public int DeviceId { get; } = DeviceId;
+}
+
 internal record SaqGetFpgaVersionCommand(int DeviceId) : SpectrAcqDeviceCommand("saq3_getFPGAVersion", DeviceId)
 {
     public int DeviceId { get; } = DeviceId;
