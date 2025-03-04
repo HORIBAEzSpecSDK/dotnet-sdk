@@ -64,4 +64,59 @@ public sealed record SpectrAcqDevice(
         var wait = initialWait ?? TimeSpan.FromMilliseconds(250);
         return WaitForDeviceNotBusy(init.Milliseconds, wait.Milliseconds, cancellationToken);
     }
+
+    public async Task<string> GetFirmwareVersionAsync(CancellationToken cancellationToken = default)
+    {
+        var result = await Communicator.SendWithResponseAsync(new SaqGetFirmwareVersionCommand(DeviceId), cancellationToken);
+        return (string)result.Results["firmwareVersion"];
+    }
+    
+    public async Task<string> GetFpgaVersionAsync(CancellationToken cancellationToken = default)
+    {
+        var result = await Communicator.SendWithResponseAsync(new SaqGetFpgaVersionCommand(DeviceId), cancellationToken);
+        return (string)result.Results["FpgaVersion"];
+    }
+    
+    public async Task<char> GetBordRevisionAsync(CancellationToken cancellationToken = default)
+    {
+        var result = await Communicator.SendWithResponseAsync(new SaqGetBoardRevisionCommand(DeviceId), cancellationToken);
+        return (char)result.Results["boardRevision"];
+    }
+        
+    public async Task<string> GetSerialNumberAsync(CancellationToken cancellationToken = default)
+    {
+        var result = await Communicator.SendWithResponseAsync(new SaqGetSerialNumberCommand(DeviceId), cancellationToken);
+        return (string)result.Results["serialNumber"];
+    }
+    
+    public Task SetIntegrationTimeAsync(int integtrationTimeInSec, CancellationToken cancellationToken = default)
+    {
+        return Communicator.SendAsync(new SaqSetIntegrationTimeCommand(DeviceId, integtrationTimeInSec), cancellationToken);
+    }
+    
+    public async Task<int> GetIntegrationTimeAsync(CancellationToken cancellationToken = default)
+    {
+        var result = await Communicator.SendWithResponseAsync(new SaqGetIntegrationTimeCommand(DeviceId), cancellationToken);
+        return (int)result.Results["integrationTime"];
+    }
+    public Task SetHvBiasVoltageAsync(int biasVoltage, CancellationToken cancellationToken = default)
+    {
+        return Communicator.SendAsync(new SaqSetHvBiasVoltageCommand(DeviceId, biasVoltage), cancellationToken);
+    }
+    public async Task<int> GetHvBiasVoltageAsync(CancellationToken cancellationToken = default)
+    {
+        var result = await Communicator.SendWithResponseAsync(new SaqGetHvBiasVoltageCommand(DeviceId), cancellationToken);
+        return (int)result.Results["biasVoltage"];
+    }
+    
+    public async Task<int> GetMaxHvVoltageAllowedAsync(CancellationToken cancellationToken = default)
+    {
+        var result = await Communicator.SendWithResponseAsync(new SaqGetMaxHvVoltageAllowedCommand(DeviceId), cancellationToken);
+        return (int)result.Results["biasVoltage"];
+    }
+    
+    public Task DefineAcqSetAsync(int scanCount, int timeStep, int integrationTime, int externalParam , CancellationToken cancellationToken = default)
+    {
+        return Communicator.SendAsync(new SaqDefineAcqSetCommand(DeviceId, scanCount, timeStep, integrationTime, externalParam), cancellationToken);
+    }
 }

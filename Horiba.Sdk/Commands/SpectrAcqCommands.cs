@@ -75,7 +75,7 @@ internal record SaqGetHvBiasVoltageCommand(int DeviceId) : SpectrAcqDeviceComman
     public int DeviceId { get; } = DeviceId;
 }
 
-internal record SaqGetMaxHVVoltageAllowedCommand(int DeviceId)
+internal record SaqGetMaxHvVoltageAllowedCommand(int DeviceId)
     : SpectrAcqDeviceCommand("saq3_getMaxHVVoltageAllowed", DeviceId)
 {
     public int DeviceId { get; } = DeviceId;
