@@ -167,7 +167,7 @@ internal record SaqGetTriggerModeCommand(int DeviceId)
     public int DeviceId { get; } = DeviceId;
 }
 
-internal record SaqGetLastErrorModeCommand(int DeviceId)
+internal record SaqGetLastErrorCommand(int DeviceId)
     : SpectrAcqDeviceCommand("saq3_getLastError", DeviceId)
 {
     public int DeviceId { get; } = DeviceId;

@@ -1,5 +1,6 @@
 ﻿using Horiba.Sdk.Commands;
 using Horiba.Sdk.Communication;
+using Horiba.Sdk.Enums;
 using Serilog;
 
 namespace Horiba.Sdk.Devices;
@@ -45,7 +46,7 @@ public sealed record SpectrAcqDevice(
             await Communicator.SendWithResponseAsync(new SaqIsBusyCommand(DeviceId), cancellationToken);
         return (bool)result.Results["isBusy"];
     }
-    
+
     public override async Task WaitForDeviceNotBusy(int initialWaitInMs, int waitIntervalInMs,
         CancellationToken cancellationToken = default)
     {
@@ -56,7 +57,7 @@ public sealed record SpectrAcqDevice(
             Task.Delay(waitIntervalInMs, cancellationToken).Wait(cancellationToken);
         }
     }
-    
+
     public Task WaitForDeviceNotBusy(TimeSpan? initialWait = null, TimeSpan? waitInterval = null,
         CancellationToken cancellationToken = default)
     {
@@ -67,56 +68,139 @@ public sealed record SpectrAcqDevice(
 
     public async Task<string> GetFirmwareVersionAsync(CancellationToken cancellationToken = default)
     {
-        var result = await Communicator.SendWithResponseAsync(new SaqGetFirmwareVersionCommand(DeviceId), cancellationToken);
+        var result =
+            await Communicator.SendWithResponseAsync(new SaqGetFirmwareVersionCommand(DeviceId), cancellationToken);
         return (string)result.Results["firmwareVersion"];
     }
-    
+
     public async Task<string> GetFpgaVersionAsync(CancellationToken cancellationToken = default)
     {
-        var result = await Communicator.SendWithResponseAsync(new SaqGetFpgaVersionCommand(DeviceId), cancellationToken);
+        var result =
+            await Communicator.SendWithResponseAsync(new SaqGetFpgaVersionCommand(DeviceId), cancellationToken);
         return (string)result.Results["FpgaVersion"];
     }
-    
+
     public async Task<char> GetBordRevisionAsync(CancellationToken cancellationToken = default)
     {
-        var result = await Communicator.SendWithResponseAsync(new SaqGetBoardRevisionCommand(DeviceId), cancellationToken);
+        var result =
+            await Communicator.SendWithResponseAsync(new SaqGetBoardRevisionCommand(DeviceId), cancellationToken);
         return (char)result.Results["boardRevision"];
     }
-        
+
     public async Task<string> GetSerialNumberAsync(CancellationToken cancellationToken = default)
     {
-        var result = await Communicator.SendWithResponseAsync(new SaqGetSerialNumberCommand(DeviceId), cancellationToken);
+        var result =
+            await Communicator.SendWithResponseAsync(new SaqGetSerialNumberCommand(DeviceId), cancellationToken);
         return (string)result.Results["serialNumber"];
     }
-    
+
     public Task SetIntegrationTimeAsync(int integtrationTimeInSec, CancellationToken cancellationToken = default)
     {
-        return Communicator.SendAsync(new SaqSetIntegrationTimeCommand(DeviceId, integtrationTimeInSec), cancellationToken);
+        return Communicator.SendAsync(new SaqSetIntegrationTimeCommand(DeviceId, integtrationTimeInSec),
+            cancellationToken);
     }
-    
+
     public async Task<int> GetIntegrationTimeAsync(CancellationToken cancellationToken = default)
     {
-        var result = await Communicator.SendWithResponseAsync(new SaqGetIntegrationTimeCommand(DeviceId), cancellationToken);
+        var result =
+            await Communicator.SendWithResponseAsync(new SaqGetIntegrationTimeCommand(DeviceId), cancellationToken);
         return (int)result.Results["integrationTime"];
     }
+
     public Task SetHvBiasVoltageAsync(int biasVoltage, CancellationToken cancellationToken = default)
     {
         return Communicator.SendAsync(new SaqSetHvBiasVoltageCommand(DeviceId, biasVoltage), cancellationToken);
     }
+
     public async Task<int> GetHvBiasVoltageAsync(CancellationToken cancellationToken = default)
     {
-        var result = await Communicator.SendWithResponseAsync(new SaqGetHvBiasVoltageCommand(DeviceId), cancellationToken);
+        var result =
+            await Communicator.SendWithResponseAsync(new SaqGetHvBiasVoltageCommand(DeviceId), cancellationToken);
         return (int)result.Results["biasVoltage"];
     }
-    
+
     public async Task<int> GetMaxHvVoltageAllowedAsync(CancellationToken cancellationToken = default)
     {
-        var result = await Communicator.SendWithResponseAsync(new SaqGetMaxHvVoltageAllowedCommand(DeviceId), cancellationToken);
+        var result =
+            await Communicator.SendWithResponseAsync(new SaqGetMaxHvVoltageAllowedCommand(DeviceId), cancellationToken);
         return (int)result.Results["biasVoltage"];
     }
-    
-    public Task DefineAcqSetAsync(int scanCount, int timeStep, int integrationTime, int externalParam , CancellationToken cancellationToken = default)
+
+    public Task DefineAcqSetAsync(int scanCount, int timeStep, int integrationTime, int externalParam,
+        CancellationToken cancellationToken = default)
     {
-        return Communicator.SendAsync(new SaqDefineAcqSetCommand(DeviceId, scanCount, timeStep, integrationTime, externalParam), cancellationToken);
+        return Communicator.SendAsync(
+            new SaqDefineAcqSetCommand(DeviceId, scanCount, timeStep, integrationTime, externalParam),
+            cancellationToken);
     }
+
+    public async Task<string> GetAcqSetAsync(CancellationToken cancellationToken = default)
+    {
+        var result = await Communicator.SendWithResponseAsync(new SaqGetAcqSetCommand(DeviceId), cancellationToken);
+        return
+            $"scanCount: {result.Results["scanCount"]}, timeStep: {result.Results["timeStep"]}, integrationTime: {result.Results["integrationTime"]}, externalParam: {result.Results["externalParam"]}";
+    }
+
+    public Task StartAcquisitionAsync(CancellationToken cancellationToken = default)
+    {
+        return Communicator.SendAsync(new SaqAcqStartCommand(DeviceId), cancellationToken);
+    }
+
+    public Task StopAcquisitionAsync(CancellationToken cancellationToken = default)
+    {
+        return Communicator.SendAsync(new SaqAcqStopCommand(DeviceId), cancellationToken);
+    }
+
+    public Task PauseAcquisitionAsync(CancellationToken cancellationToken = default)
+    {
+        return Communicator.SendAsync(new SaqAcqPauseCommand(DeviceId), cancellationToken);
+    }
+
+    public Task ContinueAcquisitionAsync(CancellationToken cancellationToken = default)
+    {
+        return Communicator.SendAsync(new SaqAcqContinueCommand(DeviceId), cancellationToken);
+    }
+
+    public async Task<bool> GetIsDataAvailableAsync(CancellationToken cancellationToken = default)
+    {
+        var result =
+            await Communicator.SendWithResponseAsync(new SaqIsDataAvailableCommand(DeviceId), cancellationToken);
+        return (bool)result.Results["isDataAvailable"];
+    }
+
+    public async Task<List<Dictionary<string, object>>> GetAvailableDataAsync(
+        CancellationToken cancellationToken = default)
+    {
+        var result =
+            await Communicator.SendWithResponseAsync(new SaqIsDataAvailableCommand(DeviceId), cancellationToken);
+        return (List<Dictionary<string, object>>)result.Results["data"];
+    }
+    
+    public Task ForceTriggerAsync(CancellationToken cancellationToken = default)
+    {
+        return Communicator.SendAsync(new SaqForceTriggerCommand(DeviceId), cancellationToken);
+    }
+    
+    public Task SetInTriggerModeAsync(InTriggerMode inTriggerMode, CancellationToken cancellationToken = default)
+    {
+       return Communicator.SendAsync(new SaqSetInTriggerModeCommand(DeviceId, inTriggerMode), cancellationToken);
+    }
+    
+    public async Task<Dictionary<string, object>> GetTriggerModeAsync(
+        CancellationToken cancellationToken = default)
+    {
+        var result =
+            await Communicator.SendWithResponseAsync(new SaqGetTriggerModeCommand(DeviceId), cancellationToken);
+        return (Dictionary<string, object>)result.Results["results"];
+    }
+    
+        public async Task<string> GetLastErrorAsync(
+        CancellationToken cancellationToken = default)
+    {
+        var result =
+            await Communicator.SendWithResponseAsync(new SaqGetLastErrorCommand(DeviceId), cancellationToken);
+        return (string)result.Results["error"];
+    }
+    
+    
 }
