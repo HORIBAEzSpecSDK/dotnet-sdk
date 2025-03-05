@@ -175,17 +175,17 @@ public sealed record SpectrAcqDevice(
             await Communicator.SendWithResponseAsync(new SaqIsDataAvailableCommand(DeviceId), cancellationToken);
         return (List<Dictionary<string, object>>)result.Results["data"];
     }
-    
+
     public Task ForceTriggerAsync(CancellationToken cancellationToken = default)
     {
         return Communicator.SendAsync(new SaqForceTriggerCommand(DeviceId), cancellationToken);
     }
-    
+
     public Task SetInTriggerModeAsync(InTriggerMode inTriggerMode, CancellationToken cancellationToken = default)
     {
-       return Communicator.SendAsync(new SaqSetInTriggerModeCommand(DeviceId, inTriggerMode), cancellationToken);
+        return Communicator.SendAsync(new SaqSetInTriggerModeCommand(DeviceId, inTriggerMode), cancellationToken);
     }
-    
+
     public async Task<Dictionary<string, object>> GetTriggerModeAsync(
         CancellationToken cancellationToken = default)
     {
@@ -193,14 +193,25 @@ public sealed record SpectrAcqDevice(
             await Communicator.SendWithResponseAsync(new SaqGetTriggerModeCommand(DeviceId), cancellationToken);
         return (Dictionary<string, object>)result.Results["results"];
     }
-    
-        public async Task<string> GetLastErrorAsync(
+
+    public async Task<string> GetLastErrorAsync(
         CancellationToken cancellationToken = default)
     {
         var result =
             await Communicator.SendWithResponseAsync(new SaqGetLastErrorCommand(DeviceId), cancellationToken);
         return (string)result.Results["error"];
     }
+
+    public async Task<string> GetErrorLogAsync(
+        CancellationToken cancellationToken = default)
+    {
+        var result =
+            await Communicator.SendWithResponseAsync(new SaqGetErrorLogCommand(DeviceId), cancellationToken);
+        return (string)result.Results["errors"];
+    }
     
-    
+    public Task ClearErrorLogAsync(CancellationToken cancellationToken = default)
+    {
+        return Communicator.SendAsync(new SaqClearErrorLogCommand(DeviceId), cancellationToken);
+    }
 }
