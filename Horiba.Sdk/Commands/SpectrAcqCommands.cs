@@ -108,10 +108,15 @@ internal record SaqGetAcqSetCommand(int DeviceId)
     public int DeviceId { get; } = DeviceId;
 }
 
-internal record SaqAcqStartCommand(int DeviceId)
-    : SpectrAcqDeviceCommand("saq3_acqStart", DeviceId)
+internal record SaqAcqStartCommand(int DeviceId, TriggerMode Mode)
+    : SpectrAcqDeviceCommand("saq3_acqStart", new Dictionary<string, object>
+    {
+        { "index", DeviceId },
+        { "trigger", Mode }
+    })
 {
     public int DeviceId { get; } = DeviceId;
+    public TriggerMode Mode { get; } = Mode;
 }
 
 internal record SaqAcqStopCommand(int DeviceId)

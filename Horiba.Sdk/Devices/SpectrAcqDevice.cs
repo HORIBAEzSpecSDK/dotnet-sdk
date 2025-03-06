@@ -40,7 +40,7 @@ public sealed record SpectrAcqDevice(
         return Communicator.SendAsync(new SaqCloseCommand(DeviceId), cancellationToken);
     }
 
-    public async Task<bool> GetAcquisitionBusyAsync(CancellationToken cancellationToken = default)
+    public async Task<bool> GetIsBusyAsync(CancellationToken cancellationToken = default)
     {
         var result =
             await Communicator.SendWithResponseAsync(new SaqIsBusyCommand(DeviceId), cancellationToken);
@@ -51,7 +51,7 @@ public sealed record SpectrAcqDevice(
         CancellationToken cancellationToken = default)
     {
         Task.Delay(initialWaitInMs, cancellationToken).Wait(cancellationToken);
-        while (await GetAcquisitionBusyAsync(cancellationToken))
+        while (await GetIsBusyAsync(cancellationToken))
         {
             Log.Information("Saq: Waiting for device operation to complete");
             Task.Delay(waitIntervalInMs, cancellationToken).Wait(cancellationToken);
@@ -140,9 +140,9 @@ public sealed record SpectrAcqDevice(
         return result.Results;
     }
 
-    public Task StartAcquisitionAsync(CancellationToken cancellationToken = default)
+    public Task StartAcquisitionAsync(TriggerMode triggerMode, CancellationToken cancellationToken = default)
     {
-        return Communicator.SendAsync(new SaqAcqStartCommand(DeviceId), cancellationToken);
+        return Communicator.SendAsync(new SaqAcqStartCommand(DeviceId, triggerMode), cancellationToken);
     }
 
     public Task StopAcquisitionAsync(CancellationToken cancellationToken = default)
