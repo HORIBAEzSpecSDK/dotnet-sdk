@@ -36,6 +36,8 @@ public sealed class DeviceManager : IDisposable
     public WebSocketCommunicator Communicator { get; }
     public List<MonochromatorDevice> Monochromators { get; private set; } = [];
     public List<ChargedCoupledDevice> ChargedCoupledDevices { get; private set; } = [];
+    
+    public List<SpectrAcqDevice> SpectrAcqDevices { get; private set; } = [];
 
     public void Dispose()
     {
@@ -100,6 +102,7 @@ public sealed class DeviceManager : IDisposable
     {
         Monochromators = await new MonochromatorDeviceDiscovery(Communicator).DiscoverDevicesAsync(cancellationToken);
         ChargedCoupledDevices = await new ChargedCoupleDeviceDiscovery(Communicator).DiscoverDevicesAsync(cancellationToken);
+        SpectrAcqDevices = await new SpectrAcqDeviceDiscovery(Communicator).DiscoverDevicesAsync(cancellationToken);
     }
 
     /// <summary>
@@ -136,6 +139,20 @@ public sealed class DeviceManager : IDisposable
         var result = await Communicator.SendWithResponseAsync(new IclCcdListCountCommand(), cancellationToken);
         return (long)result.Results["count"];
     }
+    
+        /// <summary>
+    /// Retrieves the number of SpectrAcq3 Devices by sending the saq3_listCount command.
+    /// This command will return result only after completing discovery process.
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public async Task<long> GetSaqCountAsync(CancellationToken cancellationToken = default)
+    {
+        var result = await Communicator.SendWithResponseAsync(new IclSpectrAcqListCountCommand(), cancellationToken);
+        return (long)result.Results["count"];
+    }
+    
+    
 
     private void IclProcessOnExited(object sender, EventArgs e)
     {
