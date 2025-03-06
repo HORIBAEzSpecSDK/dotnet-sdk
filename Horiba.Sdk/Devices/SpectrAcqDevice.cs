@@ -3,7 +3,6 @@ using Horiba.Sdk.Communication;
 using Horiba.Sdk.Data;
 using Horiba.Sdk.Enums;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Serilog;
 
 namespace Horiba.Sdk.Devices;
