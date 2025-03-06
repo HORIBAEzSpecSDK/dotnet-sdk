@@ -1,6 +1,8 @@
-﻿namespace Horiba.Sdk.Tests;
+﻿using Horiba.Sdk.Enums;
 
-public class SpectrAcqTests
+namespace Horiba.Sdk.Tests;
+
+public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
 {
     private readonly SpectrAcqDeviceTestFixture _fixture;
 
@@ -10,7 +12,7 @@ public class SpectrAcqTests
     }
     
     [Fact]
-    public async Task GivenMonoDevice_WhenOpeningConnection_ThenConnectionIsOpened()
+    public async Task GivenSaqDevice_WhenOpeningConnection_ThenConnectionIsOpened()
     {
         // Act
         var actual = await _fixture.Saq.IsConnectionOpenedAsync();
