@@ -99,6 +99,24 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
         integrationTime.Should().Be(expectedIntegrationTime);
     }
     
+    [Theory]
+    [InlineData(49)]
+    [InlineData(51)]
+    public async Task GivenSaqDevice_WhenSettingHvBiasVoltage_ThenCorrectHvBiasVoltageIsReturned(int expectedHvBiasVoltage)
+    {
+        var initialHvBiasVoltage = await _fixture.Saq.GetHvBiasVoltageAsync();
+        
+        // Act
+        await _fixture.Saq.SetHvBiasVoltageAsync(expectedHvBiasVoltage);
+        var hvBiasVoltage = await _fixture.Saq.GetHvBiasVoltageAsync();
+
+        // Assert
+        hvBiasVoltage.Should().Be(expectedHvBiasVoltage);
+        
+        // Restore initial state
+        await _fixture.Saq.SetHvBiasVoltageAsync(initialHvBiasVoltage);
+    }
+    
     [Fact]
     public async Task GivenSaqDevice_WhenGettingMaxHvVoltageAllowed_ThenCorrectMaxHvVoltageAllowedIsReturned()
     {
@@ -110,6 +128,24 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
 
         // Assert
         maxHvVoltageAllowed.Should().Be(expectedMaxHvVoltageAllowed);
+    }
+    
+    [Fact(Skip="The integration in ICL version 177 does not come back with all parameters")]
+    public async Task GivenSaqDevice_WhenGettingAcquisitionSet_ThenCorrectAcquisitionSetIsReturned()
+    {
+        //Arrange
+        var expectedScanCount = 10;
+        var expectedTimeStep= 1;
+        var expectedIntegrationTime = 10;
+        var expectedExternalParam= 0;
+        // Act
+        var acquisitionSet = await _fixture.Saq.GetAcqSetAsync();
+
+        // Assert
+        acquisitionSet["scanCount"].Should().Be(expectedScanCount);
+        acquisitionSet["timeStep"].Should().Be(expectedTimeStep);
+        acquisitionSet["integrationTime"].Should().Be(expectedIntegrationTime);
+        acquisitionSet["externalParam"].Should().Be(expectedExternalParam);
     }
     
     
