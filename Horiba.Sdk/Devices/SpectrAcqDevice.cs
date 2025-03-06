@@ -174,7 +174,7 @@ public sealed record SpectrAcqDevice(
     {
         var result =
             await Communicator.SendWithResponseAsync(new SaqGetAvailableDataCommand(DeviceId), cancellationToken);
-        string jsonData = JsonConvert.SerializeObject(result.Results["data"], Formatting.None);
+        string jsonData = JsonConvert.SerializeObject(result.Results, Formatting.None);
         SaqData data = JsonConvert.DeserializeObject<SaqData>(jsonData);
         return data;
     }
