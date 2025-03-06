@@ -1,6 +1,9 @@
 ﻿using Horiba.Sdk.Commands;
 using Horiba.Sdk.Communication;
+using Horiba.Sdk.Data;
 using Horiba.Sdk.Enums;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Serilog;
 
 namespace Horiba.Sdk.Devices;
@@ -167,12 +170,14 @@ public sealed record SpectrAcqDevice(
         return (bool)result.Results["isDataAvailable"];
     }
 
-    public async Task<List<Dictionary<string, object>>> GetAvailableDataAsync(
+    public async Task<SaqData> GetAvailableDataAsync(
         CancellationToken cancellationToken = default)
     {
         var result =
-            await Communicator.SendWithResponseAsync(new SaqIsDataAvailableCommand(DeviceId), cancellationToken);
-        return (List<Dictionary<string, object>>)result.Results["data"];
+            await Communicator.SendWithResponseAsync(new SaqGetAvailableDataCommand(DeviceId), cancellationToken);
+        string jsonData = JsonConvert.SerializeObject(result.Results["data"], Formatting.None);
+        SaqData data = JsonConvert.DeserializeObject<SaqData>(jsonData);
+        return data;
     }
 
     public Task ForceTriggerAsync(CancellationToken cancellationToken = default)
