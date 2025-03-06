@@ -134,11 +134,10 @@ public sealed record SpectrAcqDevice(
             cancellationToken);
     }
 
-    public async Task<string> GetAcqSetAsync(CancellationToken cancellationToken = default)
+    public async Task<Dictionary<string, object>> GetAcqSetAsync(CancellationToken cancellationToken = default)
     {
         var result = await Communicator.SendWithResponseAsync(new SaqGetAcqSetCommand(DeviceId), cancellationToken);
-        return
-            $"scanCount: {result.Results["scanCount"]}, timeStep: {result.Results["timeStep"]}, integrationTime: {result.Results["integrationTime"]}, externalParam: {result.Results["externalParam"]}";
+        return result.Results;
     }
 
     public Task StartAcquisitionAsync(CancellationToken cancellationToken = default)
