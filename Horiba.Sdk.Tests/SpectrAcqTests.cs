@@ -148,5 +148,34 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
         acquisitionSet["externalParam"].Should().Be(expectedExternalParam);
     }
     
+    [Fact(Skip="The integration in ICL version 177 does deliver the wrong is_data_available bool value ")]
+    public async Task GivenSaqDevice_WhenCheckingIfDataIsAvailable_ThenTrueIsReturned()
+    {
+        //Arrange
+        await _fixture.Saq.SetIntegrationTimeAsync(2);
+        await _fixture.Saq.DefineAcqSetAsync(2,0,2,0);
+        // Act
+        await _fixture.Saq.StartAcquisitionAsync();
+        await _fixture.Saq.WaitForDeviceNotBusy(TimeSpan.FromSeconds(10)); 
+        var dataAvailable = await _fixture.Saq.GetIsDataAvailableAsync();
+
+        // Assert
+        dataAvailable.Should().BeTrue();
+    }
     
+        
+    [Fact]
+    public async Task GivenSaqDevice_WhenGettingData_ThenDataIsReturned()
+    {
+        //Arrange
+        await _fixture.Saq.SetIntegrationTimeAsync(2);
+        await _fixture.Saq.DefineAcqSetAsync(2,0,2,0);
+        // Act
+        await _fixture.Saq.StartAcquisitionAsync();
+        await _fixture.Saq.WaitForDeviceNotBusy(TimeSpan.FromSeconds(10)); 
+        var data = await _fixture.Saq.GetAvailableDataAsync();
+
+        // Assert
+        data.Count.Should().BeGreaterThan(0);
+    }
 }
