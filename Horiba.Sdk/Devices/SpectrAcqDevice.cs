@@ -104,7 +104,7 @@ public sealed record SpectrAcqDevice(
     {
         var result =
             await Communicator.SendWithResponseAsync(new SaqGetIntegrationTimeCommand(DeviceId), cancellationToken);
-        return (int)result.Results["integrationTime"];
+        return int.Parse(result.Results["integrationTime"].ToString());
     }
 
     public Task SetHvBiasVoltageAsync(int biasVoltage, CancellationToken cancellationToken = default)
@@ -116,14 +116,14 @@ public sealed record SpectrAcqDevice(
     {
         var result =
             await Communicator.SendWithResponseAsync(new SaqGetHvBiasVoltageCommand(DeviceId), cancellationToken);
-        return (int)result.Results["biasVoltage"];
+        return int.Parse(result.Results["biasVoltage"].ToString());
     }
 
     public async Task<int> GetMaxHvVoltageAllowedAsync(CancellationToken cancellationToken = default)
     {
         var result =
             await Communicator.SendWithResponseAsync(new SaqGetMaxHvVoltageAllowedCommand(DeviceId), cancellationToken);
-        return (int)result.Results["biasVoltage"];
+        return int.Parse(result.Results["biasVoltage"].ToString()) ;
     }
 
     public Task DefineAcqSetAsync(int scanCount, int timeStep, int integrationTime, int externalParam,
