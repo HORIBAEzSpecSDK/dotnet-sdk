@@ -25,9 +25,8 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
     public async Task GivenSaqDevice_WhenOpeningAndClosingConnection_ThenConnectionIsClosed()
     {
         // Act
-        await _fixture.Saq.WaitForDeviceNotBusy();
+        await _fixture.Saq.OpenConnectionAsync();
         await _fixture.Saq.CloseConnectionAsync();
-        await _fixture.Saq.WaitForDeviceNotBusy();
         var actual = await _fixture.Saq.IsConnectionOpenedAsync();
 
         // Assert
