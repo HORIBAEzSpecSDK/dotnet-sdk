@@ -47,13 +47,13 @@ public sealed record SpectrAcqDevice(
         return (bool)result.Results["isBusy"];
     }
 
-    public override async Task WaitForDeviceNotBusy(int initialWaitInMs, int waitIntervalInMs,
+    public override async Task WaitForDeviceNotBusy(int initialWaitInMs = 250, int waitIntervalInMs = 250,
         CancellationToken cancellationToken = default)
     {
         Task.Delay(initialWaitInMs, cancellationToken).Wait(cancellationToken);
         while (await GetAcquisitionBusyAsync(cancellationToken))
         {
-            Log.Information("CCD: Waiting for device operation to complete");
+            Log.Information("Saq: Waiting for device operation to complete");
             Task.Delay(waitIntervalInMs, cancellationToken).Wait(cancellationToken);
         }
     }
