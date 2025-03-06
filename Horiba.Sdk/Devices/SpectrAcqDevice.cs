@@ -80,11 +80,11 @@ public sealed record SpectrAcqDevice(
         return (string)result.Results["FpgaVersion"];
     }
 
-    public async Task<char> GetBordRevisionAsync(CancellationToken cancellationToken = default)
+    public async Task<string> GetBordRevisionAsync(CancellationToken cancellationToken = default)
     {
         var result =
             await Communicator.SendWithResponseAsync(new SaqGetBoardRevisionCommand(DeviceId), cancellationToken);
-        return (char)result.Results["boardRevision"];
+        return (string)result.Results["boardRevision"];
     }
 
     public async Task<string> GetSerialNumberAsync(CancellationToken cancellationToken = default)
