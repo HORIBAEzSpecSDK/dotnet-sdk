@@ -47,5 +47,47 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
         serialNumber.Should().Be(expectedSerialNumber);
     }
 
+    [Fact]
+    public async Task GivenSaqDevice_WhenGettingFirmwareVersion_ThenCorrectFirmwareVersionIsReturned()
+    {   
+        //Arrange
+        var expectedFirmwareVersion = "O1.37 Mar 15 2018 05:10:52";
+        
+        // Act
+        await _fixture.Saq.WaitForDeviceNotBusy();
+        var firmwareVersion = await _fixture.Saq.GetFirmwareVersionAsync();
 
+        // Assert
+        firmwareVersion.Should().Be(expectedFirmwareVersion);
+    }
+
+    [Fact]
+    public async Task GivenSaqDevice_WhenGettingFpgaVersion_ThenCorrectFpgaVersionIsReturned()
+    {   
+        //Arrange
+        var expectedFpgaVersion = "-:0.5";
+        
+        // Act
+        await _fixture.Saq.WaitForDeviceNotBusy();
+        var fpgaVersion = await _fixture.Saq.GetFpgaVersionAsync();
+
+        // Assert
+        fpgaVersion.Should().Be(expectedFpgaVersion);
+    }
+
+        [Fact]
+    public async Task GivenSaqDevice_WhenGettingBoardVersion_ThenCorrectBoardVersionIsReturned()
+    {   
+        //Arrange
+        var expectedBoardRevision = "B";
+        
+        // Act
+        await _fixture.Saq.WaitForDeviceNotBusy();
+        var boardRevision = await _fixture.Saq.GetBordRevisionAsync();
+
+        // Assert
+        boardRevision.Should().Be(expectedBoardRevision);
+    }
+
+    
 }
