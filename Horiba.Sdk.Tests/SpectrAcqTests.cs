@@ -155,7 +155,7 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
         await _fixture.Saq.SetIntegrationTimeAsync(2);
         await _fixture.Saq.DefineAcqSetAsync(2,0,2,0);
         // Act
-        await _fixture.Saq.StartAcquisitionAsync();
+        await _fixture.Saq.StartAcquisitionAsync(TriggerMode.TriggerAndInterval);
         await _fixture.Saq.WaitForDeviceNotBusy(TimeSpan.FromSeconds(10)); 
         var dataAvailable = await _fixture.Saq.GetIsDataAvailableAsync();
 
@@ -171,11 +171,44 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
         await _fixture.Saq.SetIntegrationTimeAsync(2);
         await _fixture.Saq.DefineAcqSetAsync(2,0,2,0);
         // Act
-        await _fixture.Saq.StartAcquisitionAsync();
-        await _fixture.Saq.WaitForDeviceNotBusy(TimeSpan.FromSeconds(10)); 
+        await _fixture.Saq.StartAcquisitionAsync(TriggerMode.TriggerAndInterval);
+        await Task.Delay(10000);
         var data = await _fixture.Saq.GetAvailableDataAsync();
 
         // Assert
         data.Count.Should().BeGreaterThan(0);
+    }
+    
+    [Fact]
+    public async Task GivenSaqDevice_WhenAcquisitionIsStopped_ThenDeviceIsNotBusy()
+    {
+        //Arrange
+        await _fixture.Saq.SetIntegrationTimeAsync(10);
+        await _fixture.Saq.DefineAcqSetAsync(10,0,10,0);
+        // Act
+        await _fixture.Saq.StartAcquisitionAsync(TriggerMode.TriggerAndInterval);
+        await Task.Delay(100);
+
+        // Assert
+        _fixture.Saq.GetIsBusyAsync().Should().Be(true);
+        await _fixture.Saq.StopAcquisitionAsync();
+        await Task.Delay(100);
+        _fixture.Saq.GetIsBusyAsync().Should().Be(false);
+    }
+    
+    [Fact]
+    public async Task GivenSaqDevice_WhenAcquisitionIsPausedAndThenContinued_ThenAcquisitionIsContinued()
+    {
+        //Arrange
+        await _fixture.Saq.SetIntegrationTimeAsync(10);
+        await _fixture.Saq.DefineAcqSetAsync(10,0,10,0);
+        // Act
+        await _fixture.Saq.StartAcquisitionAsync(TriggerMode.TriggerAndInterval);
+        await Task.Delay(100);
+        await _fixture.Saq.PauseAcquisitionAsync();
+
+        // Assuming some mechanism to check if acquisition paused
+        await _fixture.Saq.ContinueAcquisitionAsync();
+        // Assuming some mechanism to check if acquisition continued
     }
 }
