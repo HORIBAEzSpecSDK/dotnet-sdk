@@ -36,7 +36,6 @@ public sealed class DeviceManager : IDisposable
     public WebSocketCommunicator Communicator { get; }
     public List<MonochromatorDevice> Monochromators { get; private set; } = [];
     public List<ChargedCoupledDevice> ChargedCoupledDevices { get; private set; } = [];
-    
     public List<SpectrAcqDevice> SpectrAcqDevices { get; private set; } = [];
 
     public void Dispose()
