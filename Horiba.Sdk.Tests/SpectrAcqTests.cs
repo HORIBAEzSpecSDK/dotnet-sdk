@@ -40,7 +40,6 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
         var expectedSerialNumber = "SNPG18010036";
         
         // Act
-        await _fixture.Saq.WaitForDeviceNotBusy();
         var serialNumber = await _fixture.Saq.GetSerialNumberAsync();
 
         // Assert
@@ -54,7 +53,6 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
         var expectedFirmwareVersion = "O1.37 Mar 15 2018 05:10:52";
         
         // Act
-        await _fixture.Saq.WaitForDeviceNotBusy();
         var firmwareVersion = await _fixture.Saq.GetFirmwareVersionAsync();
 
         // Assert
@@ -68,7 +66,6 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
         var expectedFpgaVersion = "-:0.5";
         
         // Act
-        await _fixture.Saq.WaitForDeviceNotBusy();
         var fpgaVersion = await _fixture.Saq.GetFpgaVersionAsync();
 
         // Assert
@@ -82,7 +79,6 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
         var expectedBoardRevision = "B";
         
         // Act
-        await _fixture.Saq.WaitForDeviceNotBusy();
         var boardRevision = await _fixture.Saq.GetBordRevisionAsync();
 
         // Assert
