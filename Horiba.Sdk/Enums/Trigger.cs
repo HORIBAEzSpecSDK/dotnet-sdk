@@ -93,3 +93,10 @@ public enum InTriggerMode
     EventMarkerInput = 1,
     HardwareTriggerInput = 2
 }
+
+public enum TriggerMode
+{
+    StartAndInterval = 0,
+    TriggerAndInterval = 1,
+    TriggerOnly = 2
+}
