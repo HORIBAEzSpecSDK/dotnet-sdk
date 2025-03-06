@@ -9,7 +9,7 @@ public class SaqData
 
 public class DataItem
 {
-    [JsonProperty("currentSignal")] public Signal CurrentSignal { get; set; }
+    [JsonProperty("currentSignal")] public SaqSignal CurrentSignal { get; set; }
 
     [JsonProperty("elapsedTime")] public int ElapsedTime { get; set; }
 
@@ -21,16 +21,16 @@ public class DataItem
     [JsonProperty("overscaleVoltageChannel")]
     public bool OverscaleVoltageChannel { get; set; }
 
-    [JsonProperty("pmtSignal")] public Signal PmtSignal { get; set; }
+    [JsonProperty("pmtSignal")] public SaqSignal PmtSignal { get; set; }
 
     [JsonProperty("pointNumber")] public int PointNumber { get; set; }
 
-    [JsonProperty("ppdSignal")] public Signal PpdSignal { get; set; }
+    [JsonProperty("ppdSignal")] public SaqSignal PpdSignal { get; set; }
 
-    [JsonProperty("voltageSignal")] public Signal VoltageSignal { get; set; }
+    [JsonProperty("voltageSignal")] public SaqSignal VoltageSignal { get; set; }
 }
 
-public class Signal
+public class SaqSignal
 {
     [JsonProperty("unit")] public string Unit { get; set; }
 
