@@ -176,7 +176,7 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
         var data = await _fixture.Saq.GetAvailableDataAsync();
 
         // Assert
-        data.Count.Should().BeGreaterThan(0);
+        data.Data.Count().Should().BeGreaterThan(0);
     }
     
     [Fact]
