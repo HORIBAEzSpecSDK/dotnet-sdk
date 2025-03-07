@@ -208,7 +208,7 @@ public sealed record SpectrAcqDevice(
     }
 
     /// <summary>
-    /// Defines the acquisition set of the SAQ by sending the saq3_defineAcqSet command 
+    /// Sets the acquisition set of the SAQ by sending the saq3_setAcqSet command 
     /// </summary>
     /// <param name="scanCount"></param>
     /// <param name="timeStep"></param>
@@ -216,11 +216,11 @@ public sealed record SpectrAcqDevice(
     /// <param name="externalParam"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public Task DefineAcqSetAsync(int scanCount, int timeStep, int integrationTime, int externalParam,
+    public Task SetAcqSetAsync(int scanCount, int timeStep, int integrationTime, int externalParam,
         CancellationToken cancellationToken = default)
     {
         return Communicator.SendAsync(
-            new SaqDefineAcqSetCommand(DeviceId, scanCount, timeStep, integrationTime, externalParam),
+            new SaqSetAcqSetCommand(DeviceId, scanCount, timeStep, integrationTime, externalParam),
             cancellationToken);
     }
 

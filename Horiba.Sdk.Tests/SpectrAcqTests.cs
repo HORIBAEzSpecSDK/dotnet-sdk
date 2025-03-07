@@ -154,7 +154,7 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
     {
         //Arrange
         await _fixture.Saq.SetIntegrationTimeAsync(2);
-        await _fixture.Saq.DefineAcqSetAsync(2, 0, 2, 0);
+        await _fixture.Saq.SetAcqSetAsync(2, 0, 2, 0);
         // Act
         await _fixture.Saq.StartAcquisitionAsync(TriggerMode.TriggerAndInterval);
         await _fixture.Saq.WaitForDeviceNotBusy(TimeSpan.FromSeconds(10));
@@ -170,7 +170,7 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
     {
         //Arrange
         await _fixture.Saq.SetIntegrationTimeAsync(2);
-        await _fixture.Saq.DefineAcqSetAsync(2, 0, 2, 0);
+        await _fixture.Saq.SetAcqSetAsync(2, 0, 2, 0);
         // Act
         await _fixture.Saq.StartAcquisitionAsync(TriggerMode.TriggerAndInterval);
         await Task.Delay(10000);
@@ -185,7 +185,7 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
     {
         //Arrange
         await _fixture.Saq.SetIntegrationTimeAsync(10);
-        await _fixture.Saq.DefineAcqSetAsync(10, 0, 10, 0);
+        await _fixture.Saq.SetAcqSetAsync(10, 0, 10, 0);
 
         // Act
         await _fixture.Saq.StartAcquisitionAsync(TriggerMode.TriggerAndInterval);
@@ -203,7 +203,7 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
     {
         //Arrange
         await _fixture.Saq.SetIntegrationTimeAsync(10);
-        await _fixture.Saq.DefineAcqSetAsync(10, 0, 10, 0);
+        await _fixture.Saq.SetAcqSetAsync(10, 0, 10, 0);
         // Act
         await _fixture.Saq.StartAcquisitionAsync(TriggerMode.TriggerAndInterval);
         await Task.Delay(100);

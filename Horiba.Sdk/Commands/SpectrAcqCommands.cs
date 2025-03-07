@@ -81,12 +81,12 @@ internal record SaqGetMaxHvVoltageAllowedCommand(int DeviceId)
     public int DeviceId { get; } = DeviceId;
 }
 
-internal record SaqDefineAcqSetCommand(
+internal record SaqSetAcqSetCommand(
     int DeviceId,
     int ScanCount,
     int TimeStep,
     int IntegrationTime,
-    int ExternalParam) : SpectrAcqDeviceCommand("saq3_defineAcqSet", new Dictionary<string, object>
+    int ExternalParam) : SpectrAcqDeviceCommand("saq3_setAcqSet", new Dictionary<string, object>
 {
     { "index", DeviceId },
     { "scanCount", ScanCount },
