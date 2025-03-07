@@ -356,12 +356,12 @@ public sealed record SpectrAcqDevice(
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<string> GetErrorLogAsync(
+    public async Task<List<ErrorEntry>> GetErrorLogAsync(
         CancellationToken cancellationToken = default)
     {
         var result =
             await Communicator.SendWithResponseAsync(new SaqGetErrorLogCommand(DeviceId), cancellationToken);
-        return (string)result.Results["errors"];
+        return (List<ErrorEntry>)result.Results["errors"];
     }
 
     /// <summary>

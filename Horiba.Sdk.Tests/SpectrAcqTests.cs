@@ -251,7 +251,7 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
         var errorLog = await _fixture.Saq.GetErrorLogAsync();
 
         //Assert
-        errorLog.GetType().Should().Be(typeof(string));
+        errorLog.Count.Should().BeGreaterThan(0);
     }
 
     [Fact]
