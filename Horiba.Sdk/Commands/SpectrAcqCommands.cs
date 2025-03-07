@@ -43,22 +43,6 @@ internal record SaqGetSerialNumberCommand(int DeviceId) : SpectrAcqDeviceCommand
     public int DeviceId { get; } = DeviceId;
 }
 
-internal record SaqSetIntegrationTimeCommand(int DeviceId, int IntegrationTimeInSec) : SpectrAcqDeviceCommand(
-    "saq3_setIntegrationTime", new Dictionary<string, object>
-    {
-        { "index", DeviceId },
-        { "integrationTime", IntegrationTimeInSec }
-    })
-{
-    public int DeviceId { get; } = DeviceId;
-    public int IntegrationTimeInSec { get; } = IntegrationTimeInSec;
-}
-
-internal record SaqGetIntegrationTimeCommand(int DeviceId) : SpectrAcqDeviceCommand("saq3_getIntegrationTime", DeviceId)
-{
-    public int DeviceId { get; } = DeviceId;
-}
-
 internal record SaqSetHvBiasVoltageCommand(int DeviceId, int BiasVoltage) : SpectrAcqDeviceCommand(
     "saq3_setHVBiasVoltage", new Dictionary<string, object>
     {
@@ -189,6 +173,3 @@ internal record SaqClearErrorLogCommand(int DeviceId)
 {
     public int DeviceId { get; } = DeviceId;
 }
-
-
-

@@ -85,20 +85,6 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
         boardRevision.Should().Be(expectedBoardRevision);
     }
 
-    [Fact(Skip = "The integration in ICL version 177 does come back with type integrationTIme")]
-    public async Task GivenSaqDevice_WhenGettingIntegrationTime_ThenCorrectIntegrationTimeIsReturned()
-    {
-        //Arrange
-        var expectedIntegrationTime = 10;
-
-        // Act
-        await _fixture.Saq.SetIntegrationTimeAsync(expectedIntegrationTime);
-        var integrationTime = await _fixture.Saq.GetIntegrationTimeAsync();
-
-        // Assert
-        integrationTime.Should().Be(expectedIntegrationTime);
-    }
-
     [Theory]
     [InlineData(49)]
     [InlineData(51)]
@@ -152,7 +138,6 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
     public async Task GivenSaqDevice_WhenCheckingIfDataIsAvailable_ThenTrueIsReturned()
     {
         //Arrange
-        await _fixture.Saq.SetIntegrationTimeAsync(2);
         await _fixture.Saq.SetAcqSetAsync(2, 0, 2, 0);
         // Act
         await _fixture.Saq.StartAcquisitionAsync(ScanStartMode.TriggerAndInterval);
@@ -168,7 +153,6 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
     public async Task GivenSaqDevice_WhenGettingData_ThenDataIsReturned()
     {
         //Arrange
-        await _fixture.Saq.SetIntegrationTimeAsync(2);
         await _fixture.Saq.SetAcqSetAsync(2, 0, 2, 0);
         // Act
         await _fixture.Saq.StartAcquisitionAsync(ScanStartMode.TriggerAndInterval);
@@ -183,7 +167,6 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
     public async Task GivenSaqDevice_WhenAcquisitionIsStopped_ThenDeviceIsNotBusy()
     {
         //Arrange
-        await _fixture.Saq.SetIntegrationTimeAsync(10);
         await _fixture.Saq.SetAcqSetAsync(10, 0, 10, 0);
 
         // Act
@@ -201,7 +184,6 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
     public async Task GivenSaqDevice_WhenAcquisitionIsPausedAndThenContinued_ThenAcquisitionIsContinued()
     {
         //Arrange
-        await _fixture.Saq.SetIntegrationTimeAsync(10);
         await _fixture.Saq.SetAcqSetAsync(10, 0, 10, 0);
         // Act
         await _fixture.Saq.StartAcquisitionAsync(ScanStartMode.TriggerAndInterval);

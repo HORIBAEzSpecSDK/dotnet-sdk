@@ -148,29 +148,6 @@ public sealed record SpectrAcqDevice(
         return (string)result.Results["serialNumber"];
     }
 
-    /// <summary>
-    /// Sets the integration time of the SAQ by sending the saq3_setIntegrationTime command 
-    /// </summary>
-    /// <param name="integtrationTimeInSec"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    public Task SetIntegrationTimeAsync(int integtrationTimeInSec, CancellationToken cancellationToken = default)
-    {
-        return Communicator.SendAsync(new SaqSetIntegrationTimeCommand(DeviceId, integtrationTimeInSec),
-            cancellationToken);
-    }
-
-    /// <summary>
-    /// Retrieves the integration time of the SAQ by sending the saq3_getIntegrationTime command 
-    /// </summary>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    public async Task<int> GetIntegrationTimeAsync(CancellationToken cancellationToken = default)
-    {
-        var result =
-            await Communicator.SendWithResponseAsync(new SaqGetIntegrationTimeCommand(DeviceId), cancellationToken);
-        return int.Parse(result.Results["integrationTime"].ToString());
-    }
 
     /// <summary>
     /// Sets the bias voltage of the SAQ by sending the saq3_setHVBiasVoltage command 
