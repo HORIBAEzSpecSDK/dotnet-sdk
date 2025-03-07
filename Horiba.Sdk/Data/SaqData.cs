@@ -15,11 +15,9 @@ public class DataItem
 
     [JsonProperty("eventMarker")] public bool EventMarker { get; set; }
 
-    [JsonProperty("overscaleCurrentChannel")]
-    public bool OverscaleCurrentChannel { get; set; }
+    [JsonProperty("overscaleCurrentChannel")]  public bool OverscaleCurrentChannel { get; set; }
 
-    [JsonProperty("overscaleVoltageChannel")]
-    public bool OverscaleVoltageChannel { get; set; }
+    [JsonProperty("overscaleVoltageChannel")]  public bool OverscaleVoltageChannel { get; set; }
 
     [JsonProperty("pmtSignal")] public SaqSignal PmtSignal { get; set; }
 
