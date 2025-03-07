@@ -98,25 +98,26 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
         // Assert
         integrationTime.Should().Be(expectedIntegrationTime);
     }
-    
+
     [Theory]
     [InlineData(49)]
     [InlineData(51)]
-    public async Task GivenSaqDevice_WhenSettingHvBiasVoltage_ThenCorrectHvBiasVoltageIsReturned(int expectedHvBiasVoltage)
+    public async Task GivenSaqDevice_WhenSettingHvBiasVoltage_ThenCorrectHvBiasVoltageIsReturned(
+        int expectedHvBiasVoltage)
     {
         var initialHvBiasVoltage = await _fixture.Saq.GetHvBiasVoltageAsync();
-        
+
         // Act
         await _fixture.Saq.SetHvBiasVoltageAsync(expectedHvBiasVoltage);
         var hvBiasVoltage = await _fixture.Saq.GetHvBiasVoltageAsync();
 
         // Assert
         hvBiasVoltage.Should().Be(expectedHvBiasVoltage);
-        
+
         // Restore initial state
         await _fixture.Saq.SetHvBiasVoltageAsync(initialHvBiasVoltage);
     }
-    
+
     [Fact]
     public async Task GivenSaqDevice_WhenGettingMaxHvVoltageAllowed_ThenCorrectMaxHvVoltageAllowedIsReturned()
     {
@@ -129,15 +130,15 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
         // Assert
         maxHvVoltageAllowed.Should().Be(expectedMaxHvVoltageAllowed);
     }
-    
-    [Fact(Skip="The integration in ICL version 177 does not come back with all parameters")]
+
+    [Fact(Skip = "The integration in ICL version 177 does not come back with all parameters")]
     public async Task GivenSaqDevice_WhenGettingAcquisitionSet_ThenCorrectAcquisitionSetIsReturned()
     {
         //Arrange
         var expectedScanCount = 10;
-        var expectedTimeStep= 1;
+        var expectedTimeStep = 1;
         var expectedIntegrationTime = 10;
-        var expectedExternalParam= 0;
+        var expectedExternalParam = 0;
         // Act
         var acquisitionSet = await _fixture.Saq.GetAcqSetAsync();
 
@@ -147,29 +148,29 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
         acquisitionSet["integrationTime"].Should().Be(expectedIntegrationTime);
         acquisitionSet["externalParam"].Should().Be(expectedExternalParam);
     }
-    
-    [Fact(Skip="The integration in ICL version 177 does deliver the wrong is_data_available bool value ")]
+
+    [Fact(Skip = "The integration in ICL version 177 does deliver the wrong is_data_available bool value ")]
     public async Task GivenSaqDevice_WhenCheckingIfDataIsAvailable_ThenTrueIsReturned()
     {
         //Arrange
         await _fixture.Saq.SetIntegrationTimeAsync(2);
-        await _fixture.Saq.DefineAcqSetAsync(2,0,2,0);
+        await _fixture.Saq.DefineAcqSetAsync(2, 0, 2, 0);
         // Act
         await _fixture.Saq.StartAcquisitionAsync(TriggerMode.TriggerAndInterval);
-        await _fixture.Saq.WaitForDeviceNotBusy(TimeSpan.FromSeconds(10)); 
+        await _fixture.Saq.WaitForDeviceNotBusy(TimeSpan.FromSeconds(10));
         var dataAvailable = await _fixture.Saq.GetIsDataAvailableAsync();
 
         // Assert
         dataAvailable.Should().BeTrue();
     }
-    
-        
+
+
     [Fact]
     public async Task GivenSaqDevice_WhenGettingData_ThenDataIsReturned()
     {
         //Arrange
         await _fixture.Saq.SetIntegrationTimeAsync(2);
-        await _fixture.Saq.DefineAcqSetAsync(2,0,2,0);
+        await _fixture.Saq.DefineAcqSetAsync(2, 0, 2, 0);
         // Act
         await _fixture.Saq.StartAcquisitionAsync(TriggerMode.TriggerAndInterval);
         await Task.Delay(10000);
@@ -178,13 +179,14 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
         // Assert
         data.Data.Count().Should().BeGreaterThan(0);
     }
-    
+
     [Fact]
     public async Task GivenSaqDevice_WhenAcquisitionIsStopped_ThenDeviceIsNotBusy()
     {
         //Arrange
         await _fixture.Saq.SetIntegrationTimeAsync(10);
-        await _fixture.Saq.DefineAcqSetAsync(10,0,10,0);
+        await _fixture.Saq.DefineAcqSetAsync(10, 0, 10, 0);
+
         // Act
         await _fixture.Saq.StartAcquisitionAsync(TriggerMode.TriggerAndInterval);
         await Task.Delay(100);
@@ -195,13 +197,13 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
         await Task.Delay(100);
         _fixture.Saq.GetIsBusyAsync().Should().Be(false);
     }
-    
+
     [Fact]
     public async Task GivenSaqDevice_WhenAcquisitionIsPausedAndThenContinued_ThenAcquisitionIsContinued()
     {
         //Arrange
         await _fixture.Saq.SetIntegrationTimeAsync(10);
-        await _fixture.Saq.DefineAcqSetAsync(10,0,10,0);
+        await _fixture.Saq.DefineAcqSetAsync(10, 0, 10, 0);
         // Act
         await _fixture.Saq.StartAcquisitionAsync(TriggerMode.TriggerAndInterval);
         await Task.Delay(100);
@@ -210,5 +212,54 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
         // Assuming some mechanism to check if acquisition paused
         await _fixture.Saq.ContinueAcquisitionAsync();
         // Assuming some mechanism to check if acquisition continued
+    }
+
+    [Fact]
+    public async Task GivenSaqDevice_WhenTriggerIsForced_ThenTriggerIsForced()
+    {
+        // Assuming some mechanism to verify trigger was forced
+        await _fixture.Saq.ForceTriggerAsync();
+    }
+
+    [Fact]
+    public async Task GivenSaqDevice_WhenGettingInputTriggerMode_ThenExpectedInputTriggerModeIsReturned()
+    {
+        //Arrange
+        var expectedInTriggerMode = InTriggerMode.EventMarkerInput;
+        await _fixture.Saq.SetInTriggerModeAsync(expectedInTriggerMode);
+
+        //Act
+        var returnedTriggerModes = await _fixture.Saq.GetTriggerModeAsync();
+
+        //Assert
+        returnedTriggerModes["inputTriggerMode"].Should().Be(expectedInTriggerMode);
+    }
+
+    [Fact]
+    public async Task GivenSaqDevice_WhenGettingLastError_ThenLastErrorIsReturnedAsString()
+    {
+        //Act
+        var lastError = await _fixture.Saq.GetLastErrorAsync();
+
+        //Assert
+        lastError.GetType().Should().Be(typeof(string));
+    }
+
+    [Fact]
+    public async Task GivenSaqDevice_WhenGettingErrorLog_ThenErrorLogIsReturnedAsString()
+    {
+        //Act
+        var errorLog = await _fixture.Saq.GetErrorLogAsync();
+
+        //Assert
+        errorLog.GetType().Should().Be(typeof(string));
+    }
+
+    [Fact]
+    public async Task GivenSaqDevice_WhenClearingErrorLog_ThenErrorLogIsCleared()
+    {
+        //Act
+        await _fixture.Saq.ClearErrorLogAsync();
+        //Assuming some mechanism to verify error log was cleared
     }
 }
