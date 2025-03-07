@@ -238,12 +238,12 @@ public sealed record SpectrAcqDevice(
     /// <summary>
     /// Starts the data acquisition of the SAQ by sending the saq3_acqStart command
     /// </summary>
-    /// <param name="triggerMode"></param>
+    /// <param name="scanStartMode"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public Task StartAcquisitionAsync(TriggerMode triggerMode, CancellationToken cancellationToken = default)
+    public Task StartAcquisitionAsync(ScanStartMode scanStartMode, CancellationToken cancellationToken = default)
     {
-        return Communicator.SendAsync(new SaqAcqStartCommand(DeviceId, triggerMode), cancellationToken);
+        return Communicator.SendAsync(new SaqAcqStartCommand(DeviceId, scanStartMode), cancellationToken);
     }
 
     /// <summary>
@@ -330,11 +330,11 @@ public sealed record SpectrAcqDevice(
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<Dictionary<string, object>> GetTriggerModeAsync(
+    public async Task<Dictionary<string, object>> GetInTriggerModeAsync(
         CancellationToken cancellationToken = default)
     {
         var result =
-            await Communicator.SendWithResponseAsync(new SaqGetTriggerModeCommand(DeviceId), cancellationToken);
+            await Communicator.SendWithResponseAsync(new SaqGetInTriggerModeCommand(DeviceId), cancellationToken);
         return (Dictionary<string, object>)result.Results["results"];
     }
 

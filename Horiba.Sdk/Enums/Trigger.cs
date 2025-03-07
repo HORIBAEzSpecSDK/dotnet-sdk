@@ -101,7 +101,7 @@ public enum InTriggerMode
 /// <summary>
 /// Token used to specify which trigger mode to use
 /// </summary>
-public enum TriggerMode
+public enum ScanStartMode
 {
     StartAndInterval = 0,
     TriggerAndInterval = 1,

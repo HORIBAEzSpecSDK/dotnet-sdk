@@ -108,7 +108,7 @@ internal record SaqGetAcqSetCommand(int DeviceId)
     public int DeviceId { get; } = DeviceId;
 }
 
-internal record SaqAcqStartCommand(int DeviceId, TriggerMode Mode)
+internal record SaqAcqStartCommand(int DeviceId, ScanStartMode Mode)
     : SpectrAcqDeviceCommand("saq3_acqStart", new Dictionary<string, object>
     {
         { "index", DeviceId },
@@ -116,7 +116,7 @@ internal record SaqAcqStartCommand(int DeviceId, TriggerMode Mode)
     })
 {
     public int DeviceId { get; } = DeviceId;
-    public TriggerMode Mode { get; } = Mode;
+    public ScanStartMode Mode { get; } = Mode;
 }
 
 internal record SaqAcqStopCommand(int DeviceId)
@@ -166,8 +166,8 @@ internal record SaqSetInTriggerModeCommand(int DeviceId, InTriggerMode Mode) : S
     public InTriggerMode Mode { get; } = Mode;
 }
 
-internal record SaqGetTriggerModeCommand(int DeviceId)
-    : SpectrAcqDeviceCommand("saq3_getTriggerMode", DeviceId)
+internal record SaqGetInTriggerModeCommand(int DeviceId)
+    : SpectrAcqDeviceCommand("saq3_getInTriggerMode", DeviceId)
 {
     public int DeviceId { get; } = DeviceId;
 }

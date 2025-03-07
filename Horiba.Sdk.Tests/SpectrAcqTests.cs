@@ -155,7 +155,7 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
         await _fixture.Saq.SetIntegrationTimeAsync(2);
         await _fixture.Saq.SetAcqSetAsync(2, 0, 2, 0);
         // Act
-        await _fixture.Saq.StartAcquisitionAsync(TriggerMode.TriggerAndInterval);
+        await _fixture.Saq.StartAcquisitionAsync(ScanStartMode.TriggerAndInterval);
         await _fixture.Saq.WaitForDeviceNotBusy(TimeSpan.FromSeconds(10));
         var dataAvailable = await _fixture.Saq.GetIsDataAvailableAsync();
 
@@ -171,7 +171,7 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
         await _fixture.Saq.SetIntegrationTimeAsync(2);
         await _fixture.Saq.SetAcqSetAsync(2, 0, 2, 0);
         // Act
-        await _fixture.Saq.StartAcquisitionAsync(TriggerMode.TriggerAndInterval);
+        await _fixture.Saq.StartAcquisitionAsync(ScanStartMode.TriggerAndInterval);
         await Task.Delay(10000);
         var data = await _fixture.Saq.GetAvailableDataAsync();
 
@@ -187,7 +187,7 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
         await _fixture.Saq.SetAcqSetAsync(10, 0, 10, 0);
 
         // Act
-        await _fixture.Saq.StartAcquisitionAsync(TriggerMode.TriggerAndInterval);
+        await _fixture.Saq.StartAcquisitionAsync(ScanStartMode.TriggerAndInterval);
         await Task.Delay(100);
 
         // Assert
@@ -204,7 +204,7 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
         await _fixture.Saq.SetIntegrationTimeAsync(10);
         await _fixture.Saq.SetAcqSetAsync(10, 0, 10, 0);
         // Act
-        await _fixture.Saq.StartAcquisitionAsync(TriggerMode.TriggerAndInterval);
+        await _fixture.Saq.StartAcquisitionAsync(ScanStartMode.TriggerAndInterval);
         await Task.Delay(100);
         await _fixture.Saq.PauseAcquisitionAsync();
 
@@ -225,13 +225,20 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
     {
         //Arrange
         var expectedInTriggerMode = InTriggerMode.EventMarkerInput;
+        var expectedScanStartMode = ScanStartMode.TriggerAndInterval;
         await _fixture.Saq.SetInTriggerModeAsync(expectedInTriggerMode);
+        await _fixture.Saq.StartAcquisitionAsync(ScanStartMode.TriggerAndInterval);
+        await Task.Delay(100);
+        await _fixture.Saq.StopAcquisitionAsync();
+        await Task.Delay(100);
+        
 
         //Act
-        var returnedTriggerModes = await _fixture.Saq.GetTriggerModeAsync();
+        var returnedTriggerModes = await _fixture.Saq.GetInTriggerModeAsync();
 
         //Assert
         returnedTriggerModes["inputTriggerMode"].Should().Be(expectedInTriggerMode);
+        returnedTriggerModes["scanStartMode"].Should().Be(expectedScanStartMode);
     }
 
     [Fact]
