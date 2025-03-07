@@ -335,7 +335,7 @@ public sealed record SpectrAcqDevice(
     {
         var result =
             await Communicator.SendWithResponseAsync(new SaqGetInTriggerModeCommand(DeviceId), cancellationToken);
-        return (Dictionary<string, object>)result.Results["results"];
+        return (Dictionary<string, object>)result.Results;
     }
 
     /// <summary>

@@ -237,8 +237,8 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
         var returnedTriggerModes = await _fixture.Saq.GetInTriggerModeAsync();
 
         //Assert
-        returnedTriggerModes["inputTriggerMode"].Should().Be(expectedInTriggerMode);
-        returnedTriggerModes["scanStartMode"].Should().Be(expectedScanStartMode);
+        returnedTriggerModes["inputTriggerMode"].Should().Be((int)expectedInTriggerMode);
+        returnedTriggerModes["scanStartMode"].Should().Be((int)expectedScanStartMode);
     }
 
     [Fact]
