@@ -223,6 +223,21 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
         returnedTriggerModes["inputTriggerMode"].Should().Be((int)expectedInTriggerMode);
         returnedTriggerModes["scanStartMode"].Should().Be((int)expectedScanStartMode);
     }
+    
+    [Theory]
+    [InlineData(TriggerInputPolarity.ActiveLow)]
+    [InlineData(TriggerInputPolarity.ActiveHigh)]
+    public async Task GivenSaqDevice_WhenGettingTriggerInputPolarity_ThenExpectedTriggerInputPolarityIsReturned(TriggerInputPolarity expectedTriggerInputPolarity)
+    {
+        //Arrange
+        await _fixture.Saq.SetTriggerInPolarityAsync(expectedTriggerInputPolarity);
+        
+        //Act
+        var returnedTriggerInputPolarity = await _fixture.Saq.GetTriggerInPolarityAsync();
+
+        //Assert
+        returnedTriggerInputPolarity.Should().Be((int)expectedTriggerInputPolarity);
+    }
 
     [Fact]
     public async Task GivenSaqDevice_WhenGettingLastError_ThenLastErrorIsReturnedAsString()
