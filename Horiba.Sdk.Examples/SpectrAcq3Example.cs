@@ -1,4 +1,6 @@
-﻿namespace Horiba.Sdk.Examples;
+﻿using Horiba.Sdk.Devices;
+
+namespace Horiba.Sdk.Examples;
 using Microsoft.Extensions.Logging;
 
 
