@@ -125,6 +125,8 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
         var expectedTimeStep = 1;
         var expectedIntegrationTime = 10;
         var expectedExternalParam = 0;
+        await _fixture.Saq.SetAcqSetAsync(expectedScanCount, expectedTimeStep, expectedIntegrationTime, expectedExternalParam);
+
         // Act
         var acquisitionSet = await _fixture.Saq.GetAcqSetAsync();
 
