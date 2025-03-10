@@ -13,40 +13,40 @@ class SpectrAcq3Programm
     /// <returns></returns>
     public static async Task SpectrAcq3Example()
     {
-        /// Creating logger 
+        // Creating logger 
         using ILoggerFactory loggerFactory = LoggerFactory.Create(builder =>
         {
             builder.AddConsole();
         });
         ILogger logger = loggerFactory.CreateLogger<Program>();
         
-        ///Initialize the DeviceManager
+        //Initialize the DeviceManager
         DeviceManager Dm = new DeviceManager();
         try
         {
-            /// Start the DeviceManager
+            // Start the DeviceManager
             await Dm.StartAsync();
             
-            /// Discover SpectrAcq3 devices
+            // Discover SpectrAcq3 devices
             var saqDevices = Dm.SpectrAcqDevices;
 
-            /// Iterate over discovered SpectrAcq3 devices
+            // Iterate over discovered SpectrAcq3 devices
             foreach (var spectracq3 in saqDevices)
             {
-                /// Open the device
+                // Open the device
                 await spectracq3.OpenConnectionAsync();
 
-                /// Retrieve and log the serial number
+                // Retrieve and log the serial number
                 var serialNumber = await spectracq3.GetSerialNumberAsync();
                 logger.LogInformation($"Discovered SpectrAcq3 with Serial Number: {serialNumber}");
 
-                /// Close the device
+                // Close the device
                 await spectracq3.CloseConnectionAsync();
             }
         }
         finally
         {
-            /// Stop the DeviceManager
+            // Stop the DeviceManager
             await Dm.StopAsync();
         }
         
