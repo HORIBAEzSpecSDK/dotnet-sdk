@@ -306,7 +306,7 @@ public sealed record SpectrAcqDevice(
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<int> GetGetTriggerInPolarityAsync(CancellationToken cancellationToken = default)
+    public async Task<int> GetTriggerInPolarityAsync(CancellationToken cancellationToken = default)
     {
         var result =
             await Communicator.SendWithResponseAsync(new SaqGetTriggerInPolarityCommand(DeviceId), cancellationToken);
