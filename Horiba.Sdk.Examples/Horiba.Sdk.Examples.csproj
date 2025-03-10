@@ -9,7 +9,8 @@
 
   <ItemGroup>
     <PackageReference Include="Horiba.Sdk" Version="1.2.2" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.0-preview.1.25080.5" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.2" />
   </ItemGroup>
 
 </Project>
