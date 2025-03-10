@@ -139,6 +139,23 @@ internal record SaqForceTriggerCommand(int DeviceId)
     public int DeviceId { get; } = DeviceId;
 }
 
+internal record SaqSetTriggerInPolarityCommand(int DeviceId, TriggerInputPolarity Polarity) : SpectrAcqDeviceCommand(
+    "saq3_setTriggerInPolarity", new Dictionary<string, object>
+    {
+        { "index", DeviceId },
+        { "polarity", Polarity }
+    })
+{
+    public int DeviceId { get; } = DeviceId;
+    public TriggerInputPolarity Polarity { get; } = Polarity;
+}
+
+internal record SaqGetTriggerInPolarityCommand(int DeviceId)
+    : SpectrAcqDeviceCommand("saq3_getTriggerInPolarity", DeviceId)
+{
+    public int DeviceId { get; } = DeviceId;
+}
+
 internal record SaqSetInTriggerModeCommand(int DeviceId, InTriggerMode Mode) : SpectrAcqDeviceCommand(
     "saq3_setInTriggerMode", new Dictionary<string, object>
     {

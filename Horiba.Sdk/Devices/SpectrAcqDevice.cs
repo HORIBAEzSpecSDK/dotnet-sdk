@@ -291,6 +291,29 @@ public sealed record SpectrAcqDevice(
     }
 
     /// <summary>
+    /// Sets the trigger input polarity of the SAQ by sending the saq3_setTriggerInPolarity command
+    /// </summary>
+    /// <param name="polarity"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public Task SetTriggerInPolarityAsync(TriggerInputPolarity polarity, CancellationToken cancellationToken = default)
+    {
+        return Communicator.SendAsync(new SaqSetTriggerInPolarityCommand(DeviceId, polarity), cancellationToken);
+    }
+
+    /// <summary>
+    /// Gets the trigger input polarity of the SAQ by sending the saq3_getTriggerInPolarity command
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public async Task<int> GetGetTriggerInPolarityAsync(CancellationToken cancellationToken = default)
+    {
+        var result =
+            await Communicator.SendWithResponseAsync(new SaqGetTriggerInPolarityCommand(DeviceId), cancellationToken);
+        return (int)result.Results["polarity"];
+    }
+
+    /// <summary>
     /// Sets the input trigger mode of the SAQ by sending the saq3_setInTriggerMode command
     /// </summary>
     /// <param name="inTriggerMode"></param>

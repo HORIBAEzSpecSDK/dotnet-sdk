@@ -107,3 +107,12 @@ public enum ScanStartMode
     TriggerAndInterval = 1,
     TriggerOnly = 2
 }
+
+/// <summary>
+/// Token used to specify which trigger polarity to use
+/// </summary>
+public enum TriggerInputPolarity
+{
+    ActiveLow = 0,
+    ActiveHigh = 1
+}
