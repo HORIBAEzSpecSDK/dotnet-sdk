@@ -12,3 +12,6 @@ internal record IclDiscoverCcdCommand() : Command("ccd_discover");
 internal record IclDiscoverMonochromatorDevicesCommand() : Command("mono_discover");
 internal record IclMonochromatorListCommand() : Command("mono_list");
 internal record IclMonochromatorListCountCommand() : Command("mono_listCount");
+internal record IclDiscoverSpectrAcqCommand() : Command("saq3_discover");
+internal record IclSpectrAcqListCommand() : Command("saq3_list");
+internal record IclSpectrAcqListCountCommand() : Command("saq3_listCount");

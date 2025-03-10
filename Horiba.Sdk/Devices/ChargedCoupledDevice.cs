@@ -77,7 +77,7 @@ public sealed record ChargedCoupledDevice(
     /// <summary>
     /// Starts a polling cycle to check if the device is busy. The cycle will last until the device reports
     /// it is not busy anymore. The polling cycle will start after the initial wait time. Every polling cycle
-    /// activly sends the ccd_getAcquisitionBusy command
+    /// actively sends the ccd_getAcquisitionBusy command
     /// </summary>
     /// <param name="initialWaitInMs">Defines the time before the polling cycle begins</param>
     /// <param name="waitIntervalInMs">Defines how long will a polling cycle is</param>
