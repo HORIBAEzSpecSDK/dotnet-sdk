@@ -31,6 +31,9 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
 
         // Assert
         actual.Should().BeFalse();
+                
+        //opening connection again to not mess up the other tests
+        await _fixture.Saq.OpenConnectionAsync();
     }
 
     [Fact]
@@ -159,7 +162,8 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
         await _fixture.Saq.StartAcquisitionAsync(ScanStartMode.TriggerAndInterval);
         await Task.Delay(10000);
         var data = await _fixture.Saq.GetAvailableDataAsync();
-
+        await _fixture.Saq.StopAcquisitionAsync();
+        
         // Assert
         data.Data.Count().Should().BeGreaterThan(0);
     }
