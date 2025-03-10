@@ -117,6 +117,7 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
         maxHvVoltageAllowed.Should().Be(expectedMaxHvVoltageAllowed);
     }
     
+    [Fact]
     public async Task GivenSaqDevice_WhenGettingAcquisitionSet_ThenCorrectAcquisitionSetIsReturned()
     {
         //Arrange
