@@ -310,7 +310,7 @@ public sealed record SpectrAcqDevice(
     {
         var result =
             await Communicator.SendWithResponseAsync(new SaqGetTriggerInPolarityCommand(DeviceId), cancellationToken);
-        return (int)result.Results["polarity"];
+        return int.Parse(result.Results["polarity"].ToString());
     }
 
     /// <summary>
