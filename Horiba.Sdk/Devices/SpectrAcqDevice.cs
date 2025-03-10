@@ -3,6 +3,7 @@ using Horiba.Sdk.Communication;
 using Horiba.Sdk.Data;
 using Horiba.Sdk.Enums;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Serilog;
 
 namespace Horiba.Sdk.Devices;
@@ -356,12 +357,11 @@ public sealed record SpectrAcqDevice(
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<List<ErrorEntry>> GetErrorLogAsync(
-        CancellationToken cancellationToken = default)
+    public async Task<List<string>> GetErrorLogAsync(CancellationToken cancellationToken = default)
     {
-        var result =
-            await Communicator.SendWithResponseAsync(new SaqGetErrorLogCommand(DeviceId), cancellationToken);
-        return (List<ErrorEntry>)result.Results["errors"];
+        var result = await Communicator.SendWithResponseAsync(new SaqGetErrorLogCommand(DeviceId), cancellationToken);
+        var errorLog = result.Results["errors"] as JArray;
+        return errorLog?.Select(e => e.ToString()).ToList() ?? [];
     }
 
     /// <summary>

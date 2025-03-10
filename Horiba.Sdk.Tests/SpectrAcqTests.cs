@@ -249,8 +249,8 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
         lastError.GetType().Should().Be(typeof(string));
     }
 
-    [Fact]
-    public async Task GivenSaqDevice_WhenGettingErrorLog_ThenErrorLogIsReturnedAsString()
+    [Fact(Skip="The integration in ICL version 177 delivers an empty error log")]
+    public async Task GivenSaqDevice_WhenGettingErrorLog_ThenErrorLogIsReturned()
     {
         //Act
         var errorLog = await _fixture.Saq.GetErrorLogAsync();
