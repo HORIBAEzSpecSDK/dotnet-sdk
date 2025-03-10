@@ -117,14 +117,12 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
         maxHvVoltageAllowed.Should().Be(expectedMaxHvVoltageAllowed);
     }
     
-    [Fact]
-    public async Task GivenSaqDevice_WhenGettingAcquisitionSet_ThenCorrectAcquisitionSetIsReturned()
+    [Theory]
+    [InlineData(10, 1, 10, 1)]
+    [InlineData(5, 0 , 5, 0)]
+    public async Task GivenSaqDevice_WhenGettingAcquisitionSet_ThenCorrectAcquisitionSetIsReturned(int expectedScanCount, int expectedTimeStep, int expectedIntegrationTime, int expectedExternalParam)
     {
         //Arrange
-        var expectedScanCount = 10;
-        var expectedTimeStep = 1;
-        var expectedIntegrationTime = 10;
-        var expectedExternalParam = 0;
         await _fixture.Saq.SetAcqSetAsync(expectedScanCount, expectedTimeStep, expectedIntegrationTime, expectedExternalParam);
 
         // Act
