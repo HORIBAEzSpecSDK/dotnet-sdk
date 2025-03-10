@@ -138,7 +138,7 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
         acquisitionSet["externalParam"].Should().Be(expectedExternalParam);
     }
 
-    [Fact(Skip = "The integration in ICL version 177 does deliver the wrong is_data_available bool value ")]
+    [Fact(Skip = "The integration in ICL version 179 does deliver the wrong is_data_available bool value ")]
     public async Task GivenSaqDevice_WhenCheckingIfDataIsAvailable_ThenTrueIsReturned()
     {
         //Arrange
@@ -168,7 +168,7 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
         data.Data.Count().Should().BeGreaterThan(0);
     }
 
-    [Fact(Skip = "The integration in ICL version 177 does deliver the wrong is_data_available bool value ")]
+    [Fact(Skip = "The integration in ICL version 179 does deliver the wrong is_data_available bool value ")]
     public async Task GivenSaqDevice_WhenAcquisitionIsStopped_ThenDeviceIsNotBusy()
     {
         //Arrange
@@ -253,7 +253,7 @@ public class SpectrAcqTests : IClassFixture<SpectrAcqDeviceTestFixture>
         lastError.GetType().Should().Be(typeof(string));
     }
 
-    [Fact(Skip="The integration in ICL version 177 delivers an empty error log")]
+    [Fact(Skip="The integration in ICL version 179 delivers an empty error log")]
     public async Task GivenSaqDevice_WhenGettingErrorLog_ThenErrorLogIsReturned()
     {
         //Act
