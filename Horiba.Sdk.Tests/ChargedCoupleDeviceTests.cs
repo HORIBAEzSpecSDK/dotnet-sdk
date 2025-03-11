@@ -242,6 +242,7 @@ public class ChargedCoupleDeviceTests : IClassFixture<ChargedCoupleDeviceTestFix
         returnedCcDData.Acquisition[0].Region[0].YSize.Should().Be(4);
     }
 
+    //CCD at Zühlke does not support setting this property
     [Fact]
     public async Task GivenCcd_WhenSettingSpecificTrigger_ThenTriggerIsProperlySet()
     {
