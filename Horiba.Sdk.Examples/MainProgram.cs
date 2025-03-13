@@ -15,12 +15,12 @@ namespace Horiba.Sdk.Examples
         {
             /// <summary>
             /// Serilog log levels are used to specify the importance and severity of log messages. The available log levels in Serilog are:
-            ///•	Verbose: Detailed and potentially high-volume messages that are useful during development.
-            ///•	Debug: Diagnostic messages that are useful for debugging.
-            ///•	Information: Informational messages that track the general flow of the application.
-            ///•	Warning: Messages that indicate potential issues or unexpected situations.
-            ///•	Error: Error messages that indicate a failure in the current activity or operation.
-            ///•	Fatal: Critical errors that cause the application to crash or terminate.
+            ///ï¿½	Verbose: Detailed and potentially high-volume messages that are useful during development.
+            ///ï¿½	Debug: Diagnostic messages that are useful for debugging.
+            ///ï¿½	Information: Informational messages that track the general flow of the application.
+            ///ï¿½	Warning: Messages that indicate potential issues or unexpected situations.
+            ///ï¿½	Error: Error messages that indicate a failure in the current activity or operation.
+            ///ï¿½	Fatal: Critical errors that cause the application to crash or terminate.
             ///
             Console.WriteLine("Select a log level - chose Debug/Information for info from the SDK. Choose Warning for ICL output only:");
             Console.WriteLine("1. Verbose");
@@ -68,6 +68,7 @@ namespace Horiba.Sdk.Examples
             Console.WriteLine("Select an example to run:");
             Console.WriteLine("1. CCD Example");
             Console.WriteLine("2. Monochromator Example");
+            Console.WriteLine("3. SpectrAcq3 Example");
             Console.Write("Enter your choice: ");
             var exampleChoice = Console.ReadLine();
 
@@ -79,6 +80,10 @@ namespace Horiba.Sdk.Examples
                 case "2":
                     await MonoProgram.MonoExample();
                     break;
+                case "3":
+                    await SpectrAcq3Programm.SpectrAcq3Example();
+                    break;
+                
                 default:
                     Console.WriteLine("Invalid choice.");
                     break;
