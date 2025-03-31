@@ -69,6 +69,7 @@ namespace Horiba.Sdk.Examples
             Console.WriteLine("1. CCD Example");
             Console.WriteLine("2. Monochromator Example");
             Console.WriteLine("3. SpectrAcq3 Example");
+            Console.WriteLine("4. CCD abort Example");
             Console.Write("Enter your choice: ");
             var exampleChoice = Console.ReadLine();
 
@@ -82,6 +83,9 @@ namespace Horiba.Sdk.Examples
                     break;
                 case "3":
                     await SpectrAcq3Programm.SpectrAcq3Example();
+                    break;
+                case "4":
+                    await CccAbortExample.CcdExampleStartAndAbort();
                     break;
                 
                 default:
