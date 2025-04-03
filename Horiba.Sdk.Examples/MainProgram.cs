@@ -73,6 +73,7 @@ namespace Horiba.Sdk.Examples
             Console.WriteLine("5. CCD range scan with stitching Example");
             Console.WriteLine("6. CCD dark count subtraction example");
             Console.WriteLine("7. CCD raman shift example");
+            Console.WriteLine("8. SpectrAcq3 range scan example");
             Console.Write("Enter your choice: ");
             var exampleChoice = Console.ReadLine();
 
@@ -98,6 +99,9 @@ namespace Horiba.Sdk.Examples
                     break;
                 case "7":
                     await CcdRamanShiftExample.MainAsync();
+                    break;
+               case "8":
+                    await SpectrAcq3RangeScanExample.MainAsync();
                     break;
                 
                 
