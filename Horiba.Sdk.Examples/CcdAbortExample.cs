@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Horiba.Sdk.Examples;
 
-public class CccAbortExample
+public class CcdAbortExample
 {
      public static async Task CcdExampleStartAndAbort()
     {

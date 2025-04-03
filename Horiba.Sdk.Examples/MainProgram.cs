@@ -70,6 +70,9 @@ namespace Horiba.Sdk.Examples
             Console.WriteLine("2. Monochromator Example");
             Console.WriteLine("3. SpectrAcq3 Example");
             Console.WriteLine("4. CCD abort Example");
+            Console.WriteLine("5. CCD range scan with stitching Example");
+            Console.WriteLine("6. CCD dark count subtraction example");
+            Console.WriteLine("7. CCD raman shift example");
             Console.Write("Enter your choice: ");
             var exampleChoice = Console.ReadLine();
 
@@ -85,8 +88,18 @@ namespace Horiba.Sdk.Examples
                     await SpectrAcq3Programm.SpectrAcq3Example();
                     break;
                 case "4":
-                    await CccAbortExample.CcdExampleStartAndAbort();
+                    await CcdAbortExample.CcdExampleStartAndAbort();
                     break;
+                case "5":
+                    await CcdRangeScanExample.MainAsync();
+                    break;
+                case "6":
+                    await CcdDarkCountSubtractionExample.MainAsync();
+                    break;
+                case "7":
+                    await CcdRamanShiftExample.MainAsync();
+                    break;
+                
                 
                 default:
                     Console.WriteLine("Invalid choice.");
