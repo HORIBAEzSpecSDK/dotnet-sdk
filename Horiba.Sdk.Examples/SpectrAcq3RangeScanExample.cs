@@ -33,8 +33,12 @@ namespace Horiba.Sdk.Examples
             var startWavelength = 490;
             var endWavelength = 520;
             var incrementWavelength = 3;
-            var wavelengths = Enumerable.Range(startWavelength, (endWavelength - startWavelength) / incrementWavelength + 1)
-                                        .Select(i => startWavelength + i * incrementWavelength).ToList();
+            var wavelengths = new List<int>();
+            for (int wavelength = startWavelength; wavelength <= endWavelength; wavelength += incrementWavelength)
+            {
+                wavelengths.Add(wavelength);
+            }
+            Log.Information($"Wavelengths: {string.Join(", ", wavelengths)}");
             var xData = new List<int>();
             var yDataCurrent = new List<float>();
             var yDataVoltage = new List<float>();
