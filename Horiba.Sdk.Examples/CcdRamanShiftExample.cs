@@ -80,14 +80,14 @@ namespace Horiba.Sdk.Examples
                     }
 
                     var rawData = await ccd.GetAcquisitionDataAsync();
-                    Log.Information($"Retrieved wavelengths: {string.Join(", ", rawData.Acquisition[0].Region[0].XData.ToString())}");
+                    Log.Information($"Retrieved wavelengths: {string.Join(", ", rawData.Acquisition[0].Region[0].XData)}");
 
                     var wavelengths = rawData.Acquisition[0].Region[0].XData.Select(x => (float)x).ToList();
                     var ramanShift = await RamanConvertAsync(wavelengths, excitationWavelength);
                     var ramanShiftData =rawData;
                     ramanShiftData.Acquisition[0].Region[0].XData = ramanShift;
 
-                    Log.Information($"Data with Raman shift: {string.Join(", ", ramanShiftData.Acquisition[0].Region[0].XData.ToString())}");
+                    Log.Information($"Wavelengths converted to raman shift: {string.Join(", ", ramanShiftData.Acquisition[0].Region[0].XData)}");
                 }
             }
             finally
