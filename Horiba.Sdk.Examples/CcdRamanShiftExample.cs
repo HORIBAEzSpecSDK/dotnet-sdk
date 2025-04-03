@@ -41,7 +41,7 @@ namespace Horiba.Sdk.Examples
                     await mono.HomeAsync();
                     await WaitForMonoAsync(mono);
                 }
-                await mono.SetTurretGratingAsync(Grating.Third);
+                await mono.SetTurretGratingAsync(Grating.Second);
                 await WaitForMonoAsync(mono);
                 
                 var targetWavelength = 520;
@@ -56,16 +56,14 @@ namespace Horiba.Sdk.Examples
                 Log.Information($"Mono wavelength: {monoWavelength}");
                 
                 await ccd.SetAcquisitionCountAsync(1);
+                await ccd.SetCenterWavelengthAsync(mono.DeviceId, monoWavelength);
                 await ccd.SetXAxisConversionTypeAsync(ConversionType.FromIclSettingsIni);
                 await ccd.SetAcquisitionFormatAsync(AcquisitionFormat.Spectra, 1);
-                await ccd.SetAcquisitionCountAsync(1);
-                await ccd.SetCenterWavelengthAsync(mono.DeviceId, monoWavelength);
                 await ccd.SetExposureTimeAsync(new Random().Next(1, 5));
                 var ccdConfiguration = await ccd.GetDeviceConfigurationAsync();
                 var chipX = Convert.ToInt32(ccdConfiguration["chipWidth"]);
                 var chipY = Convert.ToInt32(ccdConfiguration["chipHeight"]);
                 await ccd.SetRegionOfInterestAsync(new RegionOfInterest(1,0, 0, chipX, chipY, 1, chipY));
-                Log.Information((await ccd.GetSpeedAsync()).ToString());
 
                 if (await ccd.GetAcquisitionReadyAsync())
                 {
