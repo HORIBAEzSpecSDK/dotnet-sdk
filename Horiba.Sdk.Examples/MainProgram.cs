@@ -75,6 +75,7 @@ namespace Horiba.Sdk.Examples
             Console.WriteLine("7. CCD raman shift example");
             Console.WriteLine("8. SpectrAcq3 range scan example");
             Console.WriteLine("9. SpectrAcq3 acquisition example");
+            Console.WriteLine("10. CCD acquisition example");
             Console.Write("Enter your choice: ");
             var exampleChoice = Console.ReadLine();
 
@@ -106,6 +107,9 @@ namespace Horiba.Sdk.Examples
                     break;
                 case "9":
                     await SpectrAcq3AcquisitionExample.MainAsync();
+                    break;
+               case "10":
+                    await CcdAcquisitionExample.MainAsync();
                     break;
                 
                 
