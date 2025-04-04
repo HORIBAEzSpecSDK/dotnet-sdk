@@ -8,7 +8,7 @@ using Serilog.Sinks.SystemConsole.Themes;
 
 
 
-namespace Horiba.Sdk.Examples.CcdExamples
+namespace Horiba.Sdk.Examples.Ccd
 {
     class CcdProgram
     

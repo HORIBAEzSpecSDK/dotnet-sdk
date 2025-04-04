@@ -8,7 +8,7 @@ using Horiba.Sdk.Enums;
 using MathNet.Numerics.Optimization;
 using Serilog;
 
-namespace Horiba.Sdk.Examples.CcdExamples
+namespace Horiba.Sdk.Examples.Ccd
 {
     public class CcdRamanShiftExample
     {

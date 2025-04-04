@@ -10,7 +10,7 @@ using MathNet.Numerics.Interpolation;
 using Serilog;
 using ScottPlot;
 
-namespace Horiba.Sdk.Examples.CcdExamples
+namespace Horiba.Sdk.Examples.Ccd
 {
     public class CcdRangeScanExample
     {
