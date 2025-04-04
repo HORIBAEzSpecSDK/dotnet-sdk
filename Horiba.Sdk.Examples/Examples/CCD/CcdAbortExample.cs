@@ -9,9 +9,9 @@ namespace Horiba.Sdk.Examples.CcdExamples
     {
          public static async Task MainAsync()
         {
-            DeviceManager Dm = new DeviceManager();
-            await Dm.StartAsync();
-            var ccd = Dm.ChargedCoupledDevices.First();
+            DeviceManager deviceManager = new DeviceManager();
+            await deviceManager.StartAsync();
+            var ccd = deviceManager.ChargedCoupledDevices.First();
             await ccd.OpenConnectionAsync();
             
             await ccd.SetAcquisitionCountAsync(1);
@@ -40,7 +40,7 @@ namespace Horiba.Sdk.Examples.CcdExamples
             Console.WriteLine($"Data when aborted while waiting for a trigger: {returnedCcDData}");
     
             await ccd.CloseConnectionAsync();
-            await Dm.StopAsync();
+            await deviceManager.StopAsync();
         }
     }
 }

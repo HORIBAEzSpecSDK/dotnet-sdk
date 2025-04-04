@@ -9,23 +9,21 @@ namespace Horiba.Sdk.Examples.CcdExamples
     {
         public static async Task MainAsync()
         {
-            DeviceManager Dm = new DeviceManager();
-            await Dm.StartAsync();
-            var Ccd = Dm.ChargedCoupledDevices.First();
-            await Ccd.OpenConnectionAsync();
+            DeviceManager deviceManager = new DeviceManager();
+            await deviceManager.StartAsync();
+            var ccd = deviceManager.ChargedCoupledDevices.First();
+            await ccd.OpenConnectionAsync();
 
-
-
-            var currentParallelSpeed = await Ccd.GetParallelSpeedAsync();
+            var currentParallelSpeed = await ccd.GetParallelSpeedAsync();
             Log.Information($"Current Parallel Speed: {currentParallelSpeed}");
             
-            await Ccd.SetParallelSpeedAsync(1);
-            var setParallelSpeed = await Ccd.GetParallelSpeedAsync();
+            await ccd.SetParallelSpeedAsync(1);
+            var setParallelSpeed = await ccd.GetParallelSpeedAsync();
             Log.Information($"Set Parallel Speed: {setParallelSpeed}");
 
     
-            await Ccd.CloseConnectionAsync();
-            await Dm.StopAsync();
+            await ccd.CloseConnectionAsync();
+            await deviceManager.StopAsync();
         }
     }
 }

@@ -17,45 +17,45 @@ namespace Horiba.Sdk.Examples.CcdExamples
    {
        public static async Task MainAsync()
        {
-           DeviceManager Dm = new DeviceManager();
-           await Dm.StartAsync();
+           DeviceManager deviceManager = new DeviceManager();
+           await deviceManager.StartAsync();
    
-           if (!Dm.ChargedCoupledDevices.Any())
+           if (!deviceManager.ChargedCoupledDevices.Any())
            {
                Log.Error("Required CCD not found");
-               await Dm.StopAsync();
+               await deviceManager.StopAsync();
                return;
            }
    
-           var Ccd = Dm.ChargedCoupledDevices.First();
-           await Ccd.OpenConnectionAsync();
-           await WaitForCcdAsync(Ccd);
+           var ccd = deviceManager.ChargedCoupledDevices.First();
+           await ccd.OpenConnectionAsync();
+           await WaitForCcdAsync(ccd);
            
    
            try
            {
                
                // CCD configuration
-               await Ccd.SetTimerResolutionAsync(TimerResolution.Millisecond);
-               await Ccd.SetExposureTimeAsync(100);
-               await Ccd.SetGainAsync(0); // High Light
-               await Ccd.SetSpeedAsync(2); // 1 MHz Ultra
+               await ccd.SetTimerResolutionAsync(TimerResolution.Millisecond);
+               await ccd.SetExposureTimeAsync(100);
+               await ccd.SetGainAsync(0); // High Light
+               await ccd.SetSpeedAsync(2); // 1 MHz Ultra
                
-               await Ccd.SetXAxisConversionTypeAsync(ConversionType.FromIclSettingsIni);
-               await Ccd.SetAcquisitionFormatAsync(AcquisitionFormat.Image, 1);
+               await ccd.SetXAxisConversionTypeAsync(ConversionType.FromIclSettingsIni);
+               await ccd.SetAcquisitionFormatAsync(AcquisitionFormat.Image, 1);
    
-               var ccdConfiguration = await Ccd.GetDeviceConfigurationAsync();
+               var ccdConfiguration = await ccd.GetDeviceConfigurationAsync();
                var chipX = Convert.ToInt32(ccdConfiguration["chipWidth"]);
                var chipY = Convert.ToInt32(ccdConfiguration["chipHeight"]);
-               await Ccd.SetRegionOfInterestAsync(new RegionOfInterest(1, 0, 0, chipX, chipY, 1, chipY));
+               await ccd.SetRegionOfInterestAsync(new RegionOfInterest(1, 0, 0, chipX, chipY, 1, chipY));
                
-               if (await Ccd.GetAcquisitionReadyAsync())
+               if (await ccd.GetAcquisitionReadyAsync())
                {
-                   await Ccd.AcquisitionStartAsync(true);
+                   await ccd.AcquisitionStartAsync(true);
                    await Task.Delay(1000); // Wait a short period for the acquisition to start
-                   await WaitForCcdAsync(Ccd);
+                   await WaitForCcdAsync(ccd);
    
-                   var rawData = await Ccd.GetAcquisitionDataAsync();
+                   var rawData = await ccd.GetAcquisitionDataAsync();
                    Log.Information(rawData.ToString());
                    CsvParser.SaveCcdAcquisitionDataToCsv(rawData, "ccd_acquisition_data.csv");
                }
@@ -67,9 +67,9 @@ namespace Horiba.Sdk.Examples.CcdExamples
            }
            finally
            {
-               await Ccd.CloseConnectionAsync();
+               await ccd.CloseConnectionAsync();
                await Task.Delay(1000);
-               await Dm.StopAsync();
+               await deviceManager.StopAsync();
            }
        }
    

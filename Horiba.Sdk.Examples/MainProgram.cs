@@ -10,9 +10,9 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Horiba.Sdk.Examples
 {
-    class Program
+    public class MainProgram
     {
-        static async Task Main(string[] args)
+        private static async Task Main(string[] args)
         {
             /// <summary>
             /// Serilog log levels are used to specify the importance and severity of log messages. The available log levels in Serilog are:
@@ -76,7 +76,7 @@ namespace Horiba.Sdk.Examples
                 .ToList();
 
             Console.WriteLine("Select a namespace:");
-            for (int i = 0; i < namespaces.Count; i++)
+            for (var i = 0; i < namespaces.Count; i++)
             {
                 Console.WriteLine($"{i + 1}. {namespaces[i]}");
             }
@@ -90,7 +90,7 @@ namespace Horiba.Sdk.Examples
                 .ToList();
 
             Console.WriteLine($"Classes in namespace {selectedNamespace}:");
-            for (int i = 0; i < classes.Count; i++)
+            for (var i = 0; i < classes.Count; i++)
             {
                 Console.WriteLine($"{i + 1}. {classes[i].Name}");
             }

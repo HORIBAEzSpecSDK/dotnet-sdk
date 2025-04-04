@@ -16,23 +16,23 @@ namespace Horiba.Sdk.Examples.CcdExamples
     {
         public static async Task MainAsync()
         {
-            DeviceManager Dm = new DeviceManager();
-            await Dm.StartAsync();
+            var deviceManager = new DeviceManager();
+            await deviceManager.StartAsync();
 
-            if (!Dm.ChargedCoupledDevices.Any() || !Dm.Monochromators.Any())
+            if (!deviceManager.ChargedCoupledDevices.Any() || !deviceManager.Monochromators.Any())
             {
                 Log.Error("Required monochromator or CCD not found");
-                await Dm.StopAsync();
+                await deviceManager.StopAsync();
                 return;
             }
 
-            var Mono = Dm.Monochromators.First();
-            await Mono.OpenConnectionAsync();
-            await WaitForMonoAsync(Mono);
+            var mono = deviceManager.Monochromators.First();
+            await mono.OpenConnectionAsync();
+            await WaitForMonoAsync(mono);
             
-            var Ccd = Dm.ChargedCoupledDevices.First();
-            await Ccd.OpenConnectionAsync();
-            await WaitForCcdAsync(Ccd);
+            var ccd = deviceManager.ChargedCoupledDevices.First();
+            await ccd.OpenConnectionAsync();
+            await WaitForCcdAsync(ccd);
 
             var startWavelength = 400;
             var endWavelength = 600;
@@ -41,35 +41,35 @@ namespace Horiba.Sdk.Examples.CcdExamples
             try
             {
                 // Mono configuration
-                if (!await Mono.GetIsInitializedAsync())
+                if (!await mono.GetIsInitializedAsync())
                 {
-                    await Mono.HomeAsync();
-                    await WaitForMonoAsync(Mono);
+                    await mono.HomeAsync();
+                    await WaitForMonoAsync(mono);
                 }
-                await Mono.SetTurretGratingAsync(Grating.Second);
-                await WaitForMonoAsync(Mono);
-                await Mono.SetMirrorPositionAsync(Mirror.Entrance, MirrorPosition.Axial);
-                await WaitForMonoAsync(Mono);
-                await Mono.SetSlitPositionAsync(Slit.A, (float)0.5);
-                await WaitForMonoAsync(Mono);
+                await mono.SetTurretGratingAsync(Grating.Second);
+                await WaitForMonoAsync(mono);
+                await mono.SetMirrorPositionAsync(Mirror.Entrance, MirrorPosition.Axial);
+                await WaitForMonoAsync(mono);
+                await mono.SetSlitPositionAsync(Slit.A, (float)0.5);
+                await WaitForMonoAsync(mono);
 
                 // CCD configuration
-                await Ccd.SetTimerResolutionAsync(TimerResolution.Millisecond);
-                await Ccd.SetExposureTimeAsync(100);
-                await Ccd.SetGainAsync(0); // High Light
-                await Ccd.SetSpeedAsync(2); // 1 MHz Ultra
+                await ccd.SetTimerResolutionAsync(TimerResolution.Millisecond);
+                await ccd.SetExposureTimeAsync(100);
+                await ccd.SetGainAsync(0); // High Light
+                await ccd.SetSpeedAsync(2); // 1 MHz Ultra
 
                 // Set center wavelength before setting x-axis conversion type
-                await Ccd.SetCenterWavelengthAsync(Mono.DeviceId, 0);
-                await Ccd.SetXAxisConversionTypeAsync(ConversionType.FromIclSettingsIni);
-                await Ccd.SetAcquisitionFormatAsync(AcquisitionFormat.Image, 1);
+                await ccd.SetCenterWavelengthAsync(mono.DeviceId, 0);
+                await ccd.SetXAxisConversionTypeAsync(ConversionType.FromIclSettingsIni);
+                await ccd.SetAcquisitionFormatAsync(AcquisitionFormat.Image, 1);
 
-                var ccdConfiguration = await Ccd.GetDeviceConfigurationAsync();
+                var ccdConfiguration = await ccd.GetDeviceConfigurationAsync();
                 var chipX = Convert.ToInt32(ccdConfiguration["chipWidth"]);
                 var chipY = Convert.ToInt32(ccdConfiguration["chipHeight"]);
-                await Ccd.SetRegionOfInterestAsync(new RegionOfInterest(1,0, 0, chipX, chipY, 1, chipY));
+                await ccd.SetRegionOfInterestAsync(new RegionOfInterest(1,0, 0, chipX, chipY, 1, chipY));
 
-                var centerWavelengths = await Ccd.CalculateRangePositionsAsync(Mono.DeviceId, startWavelength, endWavelength, 100);
+                var centerWavelengths = await ccd.CalculateRangePositionsAsync(mono.DeviceId, startWavelength, endWavelength, 100);
                 Log.Information($"Number of captures: {centerWavelengths.Count()}");
 
                 System.IO.File.WriteAllText("centerwavelengths.txt", string.Join(", ", centerWavelengths));
@@ -77,14 +77,14 @@ namespace Horiba.Sdk.Examples.CcdExamples
                 var captures = new List<List<List<float>>>();
                 foreach (var centerWavelength in centerWavelengths)
                 {
-                    await Mono.MoveToWavelengthAsync(centerWavelength.WavelengthValue);
-                    await WaitForMonoAsync(Mono);
-                    var monoWavelength = await Mono.GetCurrentWavelengthAsync();
+                    await mono.MoveToWavelengthAsync(centerWavelength.WavelengthValue);
+                    await WaitForMonoAsync(mono);
+                    var monoWavelength = await mono.GetCurrentWavelengthAsync();
                     Log.Information($"Mono wavelength {monoWavelength}");
 
-                    await Ccd.SetCenterWavelengthAsync(Mono.DeviceId, monoWavelength);
+                    await ccd.SetCenterWavelengthAsync(mono.DeviceId, monoWavelength);
 
-                    var xyData = await CaptureAsync(Ccd);
+                    var xyData = await CaptureAsync(ccd);
                     Log.Debug($"Capture data structure: {xyData}");
                     captures.Add(xyData);
                 }
@@ -99,11 +99,11 @@ namespace Horiba.Sdk.Examples.CcdExamples
             }
             finally
             {
-                await Ccd.CloseConnectionAsync();
+                await ccd.CloseConnectionAsync();
                 Log.Information("Waiting before closing Monochromator");
                 await Task.Delay(1000);
-                await Mono.CloseConnectionAsync();
-                await Dm.StopAsync();
+                await mono.CloseConnectionAsync();
+                await deviceManager.StopAsync();
             }
         }
 
@@ -136,7 +136,7 @@ namespace Horiba.Sdk.Examples.CcdExamples
         {
             var filteredWavelengths = new List<float>();
             var filteredIntensities = new List<float>();
-            for (int i = 0; i < wavelengthValues.Count; i++)
+            for (var i = 0; i < wavelengthValues.Count; i++)
             {
                 if (startWavelength <= wavelengthValues[i] && wavelengthValues[i] <= endWavelength)
                 {
@@ -163,7 +163,7 @@ namespace Horiba.Sdk.Examples.CcdExamples
 
         private static async Task WaitForCcdAsync(ChargedCoupledDevice ccd)
         {
-            bool acquisitionBusy = true;
+            var acquisitionBusy = true;
             while (acquisitionBusy)
             {
                 acquisitionBusy = await ccd.GetAcquisitionBusyAsync();
@@ -174,7 +174,7 @@ namespace Horiba.Sdk.Examples.CcdExamples
 
         private static async Task WaitForMonoAsync(MonochromatorDevice mono)
         {
-            bool monoBusy = true;
+            var monoBusy = true;
             while (monoBusy)
             {
                 monoBusy = await mono.IsDeviceBusyAsync();

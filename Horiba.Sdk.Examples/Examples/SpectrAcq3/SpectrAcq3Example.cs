@@ -18,17 +18,17 @@ class SpectrAcq3Programm
         {
             builder.AddConsole();
         });
-        ILogger logger = loggerFactory.CreateLogger<Program>();
+        ILogger logger = loggerFactory.CreateLogger<MainProgram>();
         
         //Initialize the DeviceManager
-        DeviceManager Dm = new DeviceManager();
+        DeviceManager deviceManager = new DeviceManager();
         try
         {
             // Start the DeviceManager
-            await Dm.StartAsync();
+            await deviceManager.StartAsync();
             
             // Discover SpectrAcq3 devices
-            var saqDevices = Dm.SpectrAcqDevices;
+            var saqDevices = deviceManager.SpectrAcqDevices;
 
             // Iterate over discovered SpectrAcq3 devices
             foreach (var spectracq3 in saqDevices)
@@ -47,7 +47,7 @@ class SpectrAcq3Programm
         finally
         {
             // Stop the DeviceManager
-            await Dm.StopAsync();
+            await deviceManager.StopAsync();
         }
         
     }

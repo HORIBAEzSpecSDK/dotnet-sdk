@@ -16,9 +16,9 @@ namespace Horiba.Sdk.Examples.CcdExamples
     
         public static async Task MainAsync()
         {
-            DeviceManager Dm = new DeviceManager();
-            await Dm.StartAsync();
-            var ccd = Dm.ChargedCoupledDevices.First();
+            DeviceManager deviceManager = new DeviceManager();
+            await deviceManager.StartAsync();
+            var ccd = deviceManager.ChargedCoupledDevices.First();
             await ccd.OpenConnectionAsync();
     
             var rawConfig = await ccd.GetDeviceConfigurationAsync();
@@ -71,7 +71,7 @@ namespace Horiba.Sdk.Examples.CcdExamples
             }
     
             await ccd.CloseConnectionAsync();
-            await Dm.StopAsync();
+            await deviceManager.StopAsync();
         }
     
     }

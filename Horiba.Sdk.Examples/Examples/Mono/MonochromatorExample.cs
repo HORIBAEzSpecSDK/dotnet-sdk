@@ -10,23 +10,23 @@ class MonoProgram
 
     public static async Task MainAsync()
     {
-        DeviceManager Dm = new DeviceManager();
-        await Dm.StartAsync();
-        var Mono = Dm.Monochromators.First();
-        await Mono.OpenConnectionAsync();
-        await Mono.HomeAsync();
-        await Mono.WaitForDeviceNotBusy();
+        DeviceManager deviceManager = new DeviceManager();
+        await deviceManager.StartAsync();
+        var mono = deviceManager.Monochromators.First();
+        await mono.OpenConnectionAsync();
+        await mono.HomeAsync();
+        await mono.WaitForDeviceNotBusy();
 
-        Console.WriteLine(await Mono.GetCurrentWavelengthAsync());
-        await Mono.MoveToWavelengthAsync(200);
-        await Mono.WaitForDeviceNotBusy();
-        Console.WriteLine(await Mono.GetCurrentWavelengthAsync());
+        Console.WriteLine(await mono.GetCurrentWavelengthAsync());
+        await mono.MoveToWavelengthAsync(200);
+        await mono.WaitForDeviceNotBusy();
+        Console.WriteLine(await mono.GetCurrentWavelengthAsync());
 
-        await Mono.SetMirrorPositionAsync(Enums.Mirror.Entrance, Enums.MirrorPosition.Axial);
-        await Mono.WaitForDeviceNotBusy();
+        await mono.SetMirrorPositionAsync(Enums.Mirror.Entrance, Enums.MirrorPosition.Axial);
+        await mono.WaitForDeviceNotBusy();
             
-        await Mono.CloseConnectionAsync();
-        await Dm.StopAsync();
+        await mono.CloseConnectionAsync();
+        await deviceManager.StopAsync();
     }
 
 }
