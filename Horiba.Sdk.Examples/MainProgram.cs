@@ -4,6 +4,7 @@ using Serilog.Events;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Reflection;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -65,58 +66,47 @@ namespace Horiba.Sdk.Examples
             }
 
 
-            Console.WriteLine("Select an example to run:");
-            Console.WriteLine("1. CCD Example");
-            Console.WriteLine("2. Monochromator Example");
-            Console.WriteLine("3. SpectrAcq3 Example");
-            Console.WriteLine("4. CCD abort Example");
-            Console.WriteLine("5. CCD range scan with stitching Example");
-            Console.WriteLine("6. CCD dark count subtraction example");
-            Console.WriteLine("7. CCD raman shift example");
-            Console.WriteLine("8. SpectrAcq3 range scan example");
-            Console.WriteLine("9. SpectrAcq3 acquisition example");
-            Console.WriteLine("10. CCD acquisition example");
-            Console.Write("Enter your choice: ");
-            var exampleChoice = Console.ReadLine();
+            var rootNamespace = "Horiba.Sdk.Examples";
+            var namespaces = Assembly.GetExecutingAssembly()
+                .GetTypes()
+                .Where(t => t.Namespace != null && t.Namespace.StartsWith(rootNamespace))
+                .Select(t => t.Namespace)
+                .Distinct()
+                .Select(ns => ns.Split('.').Last())
+                .ToList();
 
-            switch (exampleChoice)
+            Console.WriteLine("Select a namespace:");
+            for (int i = 0; i < namespaces.Count; i++)
             {
-                case "1":
-                    await CcdProgram.CcdExample();
-                    break;
-                case "2":
-                    await MonoProgram.MonoExample();
-                    break;
-                case "3":
-                    await SpectrAcq3Programm.SpectrAcq3Example();
-                    break;
-                case "4":
-                    await CcdAbortExample.CcdExampleStartAndAbort();
-                    break;
-                case "5":
-                    await CcdRangeScanExample.MainAsync();
-                    break;
-                case "6":
-                    await CcdDarkCountSubtractionExample.MainAsync();
-                    break;
-                case "7":
-                    await CcdRamanShiftExample.MainAsync();
-                    break;
-               case "8":
-                    await SpectrAcq3RangeScanExample.MainAsync();
-                    break;
-                case "9":
-                    await SpectrAcq3AcquisitionExample.MainAsync();
-                    break;
-               case "10":
-                    await CcdAcquisitionExample.MainAsync();
-                    break;
-                
-                
-                default:
-                    Console.WriteLine("Invalid choice.");
-                    break;
+                Console.WriteLine($"{i + 1}. {namespaces[i]}");
+            }
+            Console.Write("Enter your choice: ");
+            var namespaceChoice = int.Parse(Console.ReadLine()) - 1;
+            var selectedNamespace = namespaces[namespaceChoice];
+
+            var classes = Assembly.GetExecutingAssembly()
+                .GetTypes()
+                .Where(t => t.Namespace == $"{rootNamespace}.{selectedNamespace}")
+                .ToList();
+
+            Console.WriteLine($"Classes in namespace {selectedNamespace}:");
+            for (int i = 0; i < classes.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. {classes[i].Name}");
+            }
+            Console.Write("Enter your choice: ");
+            var classChoice = int.Parse(Console.ReadLine()) - 1;
+            var selectedClass = classes[classChoice];
+
+            var method = selectedClass.GetMethod("MainAsync", BindingFlags.Public | BindingFlags.Static);
+            if (method != null)
+            {
+                await (Task)method.Invoke(null, null);
+            }
+            else
+            {
+                Console.WriteLine("MainAsync method not found in the selected class.");
+            }
             }
         }
     }
-}
