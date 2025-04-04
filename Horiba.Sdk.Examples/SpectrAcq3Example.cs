@@ -1,6 +1,6 @@
 ﻿using Horiba.Sdk.Devices;
 
-namespace Horiba.Sdk.Examples;
+namespace Horiba.Sdk.Examples.SpectrAcq3;
 using Microsoft.Extensions.Logging;
 
 

@@ -1,6 +1,6 @@
 ﻿using Horiba.Sdk.Devices;
 using Serilog.Core;
-namespace Horiba.Sdk.Examples;
+namespace Horiba.Sdk.Examples.Mono;
 
 
 

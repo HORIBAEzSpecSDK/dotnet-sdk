@@ -7,7 +7,7 @@ using Horiba.Sdk.Devices;
 using Horiba.Sdk.Enums;
 using Serilog;
 
-namespace Horiba.Sdk.Examples
+namespace Horiba.Sdk.Examples.CcdExamples
 {
     public class CcdDarkCountSubtractionExample
     {

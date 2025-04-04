@@ -9,7 +9,7 @@ using Newtonsoft.Json.Linq;
 using Serilog;
 using HelperFunctions;
 
-namespace Horiba.Sdk.Examples
+namespace Horiba.Sdk.Examples.SpectrAcq3
 {
     public class SpectrAcq3AcquisitionExample
     {

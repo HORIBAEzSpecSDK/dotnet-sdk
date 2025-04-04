@@ -7,7 +7,7 @@ using Horiba.Sdk.Enums;
 using Serilog;
 using ScottPlot;
 
-namespace Horiba.Sdk.Examples
+namespace Horiba.Sdk.Examples.SpectrAcq3
 {
     public class SpectrAcq3RangeScanExample
     {

@@ -11,7 +11,7 @@ using Serilog;
 using ScottPlot;
 using HelperFunctions;
 
-namespace Horiba.Sdk.Examples
+namespace Horiba.Sdk.Examples.CcdExamples
 {
    public class CcdAcquisitionExample
    {
