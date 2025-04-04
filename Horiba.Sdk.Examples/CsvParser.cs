@@ -10,14 +10,12 @@ namespace HelperFunctions
 {
     public static class CsvParser
     {
-        public static void SaveAcquisitionDataToCsv(string jsonData, string csvFilename)
+        public static void SaveCcdAcquisitionDataToCsv(CcdData ccdData, string csvFilename)
         {
-            // Parse the JSON data
-            var data = JsonConvert.DeserializeObject<JObject>(jsonData);
 
             // Extract xData and yData
-            var xData = data["acquisition"][0]["roi"][0]["xData"].ToObject<List<float>>();
-            var yData = data["acquisition"][0]["roi"][0]["yData"][0].ToObject<List<float>>(); // Assuming yData is a list of lists
+            var xData = ccdData.Acquisition[0].Region[0].XData;
+            var yData = ccdData.Acquisition[0].Region[0].YData[0];
 
             // Write to CSV file
             using (var file = new StreamWriter(csvFilename))
