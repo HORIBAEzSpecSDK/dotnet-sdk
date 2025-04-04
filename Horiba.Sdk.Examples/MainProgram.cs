@@ -69,7 +69,7 @@ namespace Horiba.Sdk.Examples
             var rootNamespace = "Horiba.Sdk.Examples";
             var namespaces = Assembly.GetExecutingAssembly()
                 .GetTypes()
-                .Where(t => t.Namespace != null && t.Namespace.StartsWith(rootNamespace))
+                .Where(t => t.Namespace != null && t.Namespace.StartsWith(rootNamespace) && t.Namespace != rootNamespace)
                 .Select(t => t.Namespace)
                 .Distinct()
                 .Select(ns => ns.Split('.').Last())
@@ -86,7 +86,7 @@ namespace Horiba.Sdk.Examples
 
             var classes = Assembly.GetExecutingAssembly()
                 .GetTypes()
-                .Where(t => t.Namespace == $"{rootNamespace}.{selectedNamespace}")
+                .Where(t => t.Namespace == $"{rootNamespace}.{selectedNamespace}" && t.Assembly == Assembly.GetExecutingAssembly() && !t.Name.StartsWith("<"))
                 .ToList();
 
             Console.WriteLine($"Classes in namespace {selectedNamespace}:");
