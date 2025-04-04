@@ -7,7 +7,7 @@ namespace Horiba.Sdk.Examples.CcdExamples
 {
     public class CcdAbortExample
     {
-         public static async Task CcdExampleStartAndAbort()
+         public static async Task MainAsync()
         {
             DeviceManager Dm = new DeviceManager();
             await Dm.StartAsync();

@@ -14,7 +14,7 @@ namespace Horiba.Sdk.Examples.CcdExamples
     
     {
     
-        public static async Task CcdExample()
+        public static async Task MainAsync()
         {
             DeviceManager Dm = new DeviceManager();
             await Dm.StartAsync();

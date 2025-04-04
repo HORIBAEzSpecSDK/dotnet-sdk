@@ -11,7 +11,7 @@ class SpectrAcq3Programm
     /// logs the information, and then closes the connections.
     /// </summary>
     /// <returns></returns>
-    public static async Task SpectrAcq3Example()
+    public static async Task MainAsync()
     {
         // Creating logger 
         using ILoggerFactory loggerFactory = LoggerFactory.Create(builder =>

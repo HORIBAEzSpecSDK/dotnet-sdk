@@ -8,7 +8,7 @@ class MonoProgram
 
 {
 
-    public static async Task MonoExample()
+    public static async Task MainAsync()
     {
         DeviceManager Dm = new DeviceManager();
         await Dm.StartAsync();
