@@ -9,6 +9,7 @@ namespace Horiba.Sdk.Examples.Ccd
     {
         public async Task MainAsync()
         {
+            Log.Information("This example shows how to set the parallel speed of a CCD. The way this example works can be used to set other parameters as well.");
             DeviceManager deviceManager = new DeviceManager();
             await deviceManager.StartAsync();
             var ccd = deviceManager.ChargedCoupledDevices.First();
