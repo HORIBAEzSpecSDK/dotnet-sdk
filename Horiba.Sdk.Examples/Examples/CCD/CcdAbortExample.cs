@@ -2,6 +2,7 @@ using Horiba.Sdk.Data;
 using Horiba.Sdk.Devices;
 using Horiba.Sdk.Enums;
 using Newtonsoft.Json.Linq;
+using Serilog;
 
 namespace Horiba.Sdk.Examples.Ccd
 {
@@ -9,7 +10,7 @@ namespace Horiba.Sdk.Examples.Ccd
     {
          public async Task MainAsync()
         {
-            DeviceManager deviceManager = new DeviceManager();
+            DeviceManager deviceManager = new DeviceManager(showIclConsoleOutput: false);
             await deviceManager.StartAsync();
             var ccd = deviceManager.ChargedCoupledDevices.First();
             await ccd.OpenConnectionAsync();
@@ -29,7 +30,7 @@ namespace Horiba.Sdk.Examples.Ccd
                 while (await ccd.GetAcquisitionBusyAsync())
                 {
                     await Task.Delay(300);
-                    Console.WriteLine("Aborting acquisition...");
+                    Log.Information("Aborting acquisition...");
                     await ccd.AcquisitionAbortAsync();
                 }
                 
@@ -37,7 +38,13 @@ namespace Horiba.Sdk.Examples.Ccd
                 returnedCcDData = await ccd.GetAcquisitionDataAsync();
             }
             
-            Console.WriteLine($"Data when aborted while waiting for a trigger: {returnedCcDData}");
+            Log.Information($"XData when aborted while waiting for a trigger: {string.Join(", ", returnedCcDData.Acquisition[0].Region[0].XData)}");
+            Log.Information($"YData when aborted while waiting for a trigger: {string.Join(", ", returnedCcDData.Acquisition[0].Region[0].YData[0])}");
+
+            Log.Information("Restarting CCD to clear trigger commands...");
+            await ccd.RestartDeviceAsync();
+            Log.Information("Device restarting...");
+            await Task.Delay(10000);
     
             await ccd.CloseConnectionAsync();
             await deviceManager.StopAsync();
