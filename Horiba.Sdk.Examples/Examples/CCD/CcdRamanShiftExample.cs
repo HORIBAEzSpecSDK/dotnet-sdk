@@ -14,7 +14,13 @@ namespace Horiba.Sdk.Examples.Ccd
     {
         public async Task MainAsync()
         {
-            var  excitationWavelength = 520.0;
+            Console.Write("Enter the excitation wavelength (float value): ");
+            double excitationWavelength;
+            while (!double.TryParse(Console.ReadLine(), out excitationWavelength))
+            {
+                Console.WriteLine("Invalid input. Please enter a valid float value.");
+                Console.Write("Enter the excitation wavelength (float value): ");
+            }
             var acquisitionFormat = AcquisitionFormat.Spectra;
             var deviceManager = new DeviceManager();
             await deviceManager.StartAsync();
@@ -44,7 +50,14 @@ namespace Horiba.Sdk.Examples.Ccd
                 await mono.SetTurretGratingAsync(Grating.Second);
                 await WaitForMonoAsync(mono);
                 
-                var targetWavelength = 520;
+                
+                Console.Write("Enter the center wavelength for the monochromator (float value): ");
+                float targetWavelength;
+                while (!float.TryParse(Console.ReadLine(), out targetWavelength))
+                {
+                    Console.WriteLine("Invalid input. Please enter a valid float value.");
+                    Console.Write("Enter the center wavelength (float value): ");
+                }
                 await mono.MoveToWavelengthAsync(targetWavelength);
                 Log.Information($"Moving to target wavelength {targetWavelength}...");
                 await WaitForMonoAsync(mono);
