@@ -5,9 +5,9 @@ using Newtonsoft.Json.Linq;
 
 namespace Horiba.Sdk.Examples.Ccd
 {
-    public class CcdAbortExample
+    public class CcdAbortExample : IExample
     {
-         public static async Task MainAsync()
+         public async Task MainAsync()
         {
             DeviceManager deviceManager = new DeviceManager();
             await deviceManager.StartAsync();

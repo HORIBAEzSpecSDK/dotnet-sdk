@@ -10,9 +10,9 @@ using Serilog;
 
 namespace Horiba.Sdk.Examples.Ccd
 {
-    public class CcdRamanShiftExample
+    public class CcdRamanShiftExample : IExample
     {
-        public static async Task MainAsync()
+        public async Task MainAsync()
         {
             var  excitationWavelength = 520.0;
             var acquisitionFormat = AcquisitionFormat.Spectra;

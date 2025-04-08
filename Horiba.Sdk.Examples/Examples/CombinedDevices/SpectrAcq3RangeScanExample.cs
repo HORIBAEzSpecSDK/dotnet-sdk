@@ -7,11 +7,11 @@ using Horiba.Sdk.Enums;
 using Serilog;
 using ScottPlot;
 
-namespace Horiba.Sdk.Examples.SpectrAcq3
+namespace Horiba.Sdk.Examples.CombinedDevices
 {
-    public class SpectrAcq3RangeScanExample
+    public class SpectrAcq3RangeScanExample : IExample
     {
-        public static async Task MainAsync()
+        public async Task MainAsync()
         {
             var deviceManager = new DeviceManager();
             await deviceManager.StartAsync();

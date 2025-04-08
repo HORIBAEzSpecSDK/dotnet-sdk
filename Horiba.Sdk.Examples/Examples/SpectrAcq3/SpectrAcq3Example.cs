@@ -4,14 +4,14 @@ namespace Horiba.Sdk.Examples.SpectrAcq3;
 using Microsoft.Extensions.Logging;
 
 
-class SpectrAcq3Programm
+class SpectrAcq3Programm : IExample
 {
     /// <summary>
     /// This example initializes the DeviceManager, discovers SpectrAcq3 devices, retrieves their serial numbers,
     /// logs the information, and then closes the connections.
     /// </summary>
     /// <returns></returns>
-    public static async Task MainAsync()
+    public async Task MainAsync()
     {
         // Creating logger 
         using ILoggerFactory loggerFactory = LoggerFactory.Create(builder =>

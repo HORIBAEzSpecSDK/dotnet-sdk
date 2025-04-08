@@ -9,9 +9,9 @@ using Serilog;
 
 namespace Horiba.Sdk.Examples.Ccd
 {
-    public class CcdDarkCountSubtractionExample
+    public class CcdDarkCountSubtractionExample : IExample
     {
-        public static async Task MainAsync()
+        public async Task MainAsync()
         {
             var acquisitionFormat = AcquisitionFormat.Image;
             var deviceManager = new DeviceManager();

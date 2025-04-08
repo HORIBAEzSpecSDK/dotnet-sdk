@@ -13,9 +13,9 @@ using HelperFunctions;
 
 namespace Horiba.Sdk.Examples.Ccd
 {
-   public class CcdAcquisitionExample
+   public class CcdAcquisitionExample : IExample
    {
-       public static async Task MainAsync()
+       public async Task MainAsync()
        {
            DeviceManager deviceManager = new DeviceManager();
            await deviceManager.StartAsync();

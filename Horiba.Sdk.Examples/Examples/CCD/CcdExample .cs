@@ -10,11 +10,11 @@ using Serilog.Sinks.SystemConsole.Themes;
 
 namespace Horiba.Sdk.Examples.Ccd
 {
-    class CcdProgram
+    class CcdProgram : IExample
     
     {
     
-        public static async Task MainAsync()
+        public async Task MainAsync()
         {
             DeviceManager deviceManager = new DeviceManager();
             await deviceManager.StartAsync();

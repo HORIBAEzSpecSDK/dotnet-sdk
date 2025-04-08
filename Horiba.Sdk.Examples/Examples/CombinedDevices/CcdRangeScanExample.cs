@@ -10,11 +10,11 @@ using MathNet.Numerics.Interpolation;
 using Serilog;
 using ScottPlot;
 
-namespace Horiba.Sdk.Examples.Ccd
+namespace Horiba.Sdk.Examples.CombinedDevices
 {
-    public class CcdRangeScanExample
+    public class CcdRangeScanExample : IExample
     {
-        public static async Task MainAsync()
+        public async Task MainAsync()
         {
             var deviceManager = new DeviceManager();
             await deviceManager.StartAsync();

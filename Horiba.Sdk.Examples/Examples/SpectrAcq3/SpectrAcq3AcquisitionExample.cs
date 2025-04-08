@@ -11,9 +11,9 @@ using HelperFunctions;
 
 namespace Horiba.Sdk.Examples.SpectrAcq3
 {
-    public class SpectrAcq3AcquisitionExample
+    public class SpectrAcq3AcquisitionExample : IExample
     {
-        public static async Task MainAsync()
+        public async Task MainAsync()
         {
             var deviceManager = new DeviceManager();
             await deviceManager.StartAsync();

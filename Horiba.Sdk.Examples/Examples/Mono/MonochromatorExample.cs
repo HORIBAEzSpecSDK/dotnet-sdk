@@ -4,11 +4,11 @@ namespace Horiba.Sdk.Examples.Mono;
 
 
 
-class MonoProgram
+class MonoProgram : IExample
 
 {
 
-    public static async Task MainAsync()
+    public async Task MainAsync()
     {
         DeviceManager deviceManager = new DeviceManager();
         await deviceManager.StartAsync();

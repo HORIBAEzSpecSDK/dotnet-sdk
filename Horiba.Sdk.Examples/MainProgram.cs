@@ -75,7 +75,7 @@ namespace Horiba.Sdk.Examples
                 .Select(ns => ns.Split('.').Last())
                 .ToList();
 
-            Console.WriteLine("Select a namespace:");
+            Console.WriteLine("Select a device to see the existing examples:");
             for (var i = 0; i < namespaces.Count; i++)
             {
                 Console.WriteLine($"{i + 1}. {namespaces[i]}");
@@ -98,14 +98,14 @@ namespace Horiba.Sdk.Examples
             var classChoice = int.Parse(Console.ReadLine()) - 1;
             var selectedClass = classes[classChoice];
 
-            var method = selectedClass.GetMethod("MainAsync", BindingFlags.Public | BindingFlags.Static);
-            if (method != null)
+            var instance = Activator.CreateInstance(selectedClass) as IExample;
+            if (instance != null)
             {
-                await (Task)method.Invoke(null, null);
+                await instance.MainAsync();
             }
             else
             {
-                Console.WriteLine("MainAsync method not found in the selected class.");
+                Console.WriteLine("Failed to create an instance of the selected class.");
             }
             }
         }
