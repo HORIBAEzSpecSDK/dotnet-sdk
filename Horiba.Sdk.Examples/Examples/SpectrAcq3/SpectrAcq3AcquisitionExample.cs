@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Horiba.Sdk.Devices;
 using Horiba.Sdk.Enums;
+using Horiba.Sdk.Data;
 using Newtonsoft.Json.Linq;
 using Serilog;
 using HelperFunctions;
@@ -39,6 +40,8 @@ namespace Horiba.Sdk.Examples.SpectrAcq3
             await spectracq3.OpenConnectionAsync();
 
             var wavelengths = new List<int> { 500, 501, 502 };
+            // create list of dataItems coupled with wavelengths
+            var scanResults = new List<(int, DataItem)>();
 
             try
             {
@@ -56,12 +59,16 @@ namespace Horiba.Sdk.Examples.SpectrAcq3
                     await Task.Delay(3000);
                     var data = await spectracq3.GetAvailableDataAsync();
                     Log.Information($"Acquired data at {wavelength}nm: {data}");
-                    var fileName = $"acquisition_data_{wavelength}.csv";
-                    CsvParser.SaveSpectrAcq3DataToCsv(data.Data[0], fileName);
+                    // append to scanResults
+                    scanResults.Add((wavelength, data.Data[0]));
                 }
+                // Save all data to a single CSV file
+                var allDataFileName = "all_acquisition_data.csv";
+                CsvParser.SaveSpectrAcq3DataToCsv(scanResults, allDataFileName);
             }
             finally
             {
+                
                 await mono.CloseConnectionAsync();
                 await spectracq3.CloseConnectionAsync();
                 await deviceManager.StopAsync();
