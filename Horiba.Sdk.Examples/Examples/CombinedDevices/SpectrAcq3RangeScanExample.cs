@@ -84,7 +84,9 @@ namespace Horiba.Sdk.Examples.CombinedDevices
             plt.Title($"Range Scan {startWavelength}-{endWavelength}[nm] vs. Intensity");
             plt.XLabel("Wavelength");
             plt.YLabel("Intensity");
-            plt.SavePng("SpectrAcq3RangeScanPlot.png", 400, 300);
+            var fileName = $"SpectrAcq3RangeScan_{startWavelength}-{endWavelength}.png";
+            plt.SavePng(fileName, 400, 300);
+            Log.Information($"Range scan plot has been saved as {fileName}");
         }
 
         private static async Task WaitForMonoAsync(MonochromatorDevice mono)

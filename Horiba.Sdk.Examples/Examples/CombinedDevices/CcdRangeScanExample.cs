@@ -158,7 +158,9 @@ namespace Horiba.Sdk.Examples.CombinedDevices
             plt.Title($"Range Scan {startWavelength}-{endWavelength}[nm] vs. Intensity");
             plt.XLabel("Wavelength");
             plt.YLabel("Intensity");
-            plt.SavePng($"ccdRangeScanPlot_{startWavelength}_{endWavelength}_nm.png", 400, 300);
+            var fileName = $"ccdRangeScanPlot_{startWavelength}_{endWavelength}_nm.png";
+            plt.SavePng(fileName, 400, 300);
+            Log.Information($"Range scan plot has been saved as {fileName}");
         }
 
         private static async Task WaitForCcdAsync(ChargedCoupledDevice ccd)

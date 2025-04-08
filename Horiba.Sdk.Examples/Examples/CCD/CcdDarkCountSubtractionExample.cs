@@ -90,7 +90,7 @@ namespace Horiba.Sdk.Examples.Ccd
                 var dataSubtracted = rawDataShutterOpen;
                 dataSubtracted.Acquisition[0].Region[0].YData[0] = dataWithoutNoise;
 
-                Log.Information($"Data without noise: {string.Join(", ", dataWithoutNoise)}");
+                Log.Information($"Dark subtracted data: {string.Join(", ", dataWithoutNoise)}");
             }
             finally
             {
