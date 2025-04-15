@@ -11,8 +11,10 @@ namespace Horiba.Sdk.Devices;
 /// </summary>
 public sealed class DeviceManager : IDisposable
 {
+    
+    
     internal readonly Process IclProcess = new();
-    private bool _isIclRunning;
+    private bool _isIclRunning = Process.GetProcessesByName("icl").Any();
 
     /// <summary>
     /// 
@@ -21,24 +23,28 @@ public sealed class DeviceManager : IDisposable
     /// <param name="ipAddress">The address of the PC running the ICL process. Defaults to '127.0.0.1'</param>
     /// <param name="port">The port on which the ICL process is running. Defaults to 25010</param>
     /// <param name="showIclConsoleOutput">If true, the console output of the ICL process will be shown. Defaults to true.</param>
-    public DeviceManager(string? iclExePath = null, IPAddress? ipAddress = null, int? port = null, bool showIclConsoleOutput = true)
+    public DeviceManager(string? iclExePath = null, IPAddress? ipAddress = null, int? port = null,
+        bool showIclConsoleOutput = true)
     {
         Communicator = new WebSocketCommunicator(ipAddress ?? IPAddress.Loopback, port ?? 25010);
-        IclProcess.StartInfo.FileName = iclExePath ??
-                                        $@"{Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles)}\HORIBA Scientific\SDK\icl.exe";
-        if (showIclConsoleOutput == false)
-        {
-            IclProcess.StartInfo.UseShellExecute = false;
-            IclProcess.StartInfo.RedirectStandardOutput = true;
-            IclProcess.StartInfo.RedirectStandardError = true;
-            
+
+        if ( !_isIclRunning){
+            IclProcess.StartInfo.FileName = iclExePath ??
+                                            $@"{Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles)}\HORIBA Scientific\SDK\icl.exe";
+            if (showIclConsoleOutput == false)
+            {
+                IclProcess.StartInfo.UseShellExecute = false;
+                IclProcess.StartInfo.RedirectStandardOutput = true;
+                IclProcess.StartInfo.RedirectStandardError = true;
+
+            }
+
+
+            // NOTE first unsubscribe then subscribe so that we lower the chance to
+            // have a memory leak in the case of unexpected crash
+            IclProcess.Exited -= IclProcessOnExited;
+            IclProcess.Exited += IclProcessOnExited;
         }
-        
-        
-        // NOTE first unsubscribe then subscribe so that we lower the chance to
-        // have a memory leak in the case of unexpected crash
-        IclProcess.Exited -= IclProcessOnExited;
-        IclProcess.Exited += IclProcessOnExited;
     }
 
     public WebSocketCommunicator Communicator { get; }
