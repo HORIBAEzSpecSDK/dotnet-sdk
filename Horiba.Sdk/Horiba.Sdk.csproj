@@ -13,14 +13,14 @@
         <Copyright>Zuhlke Engineering</Copyright>
         <Company>HORIBA</Company>
         <RepositoryType>git</RepositoryType>
-        <AssemblyVersion>1.2.7</AssemblyVersion>
-        <PackageTags>1.2.7</PackageTags>
-        <Version>1.2.7</Version>
+        <AssemblyVersion>1.2.8</AssemblyVersion>
+        <PackageTags>1.2.8</PackageTags>
+        <Version>1.2.8</Version>
         <PackageReleaseNotes>Initial pipeline deployment</PackageReleaseNotes>
         <TargetFrameworks>netstandard2.1;net7.0;net8.0</TargetFrameworks>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-        <FileVersion>1.2.7</FileVersion>
+        <FileVersion>1.2.8</FileVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.1|AnyCPU'">
