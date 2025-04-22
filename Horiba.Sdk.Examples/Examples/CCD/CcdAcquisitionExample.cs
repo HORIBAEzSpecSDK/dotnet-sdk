@@ -15,9 +15,9 @@ namespace Horiba.Sdk.Examples.Ccd
 {
    public class CcdAcquisitionExample : IExample
    {
-       public async Task MainAsync()
+       public async Task MainAsync(bool showIclConsoleOutput= false)
        {
-           DeviceManager deviceManager = new DeviceManager();
+           DeviceManager deviceManager = new DeviceManager(showIclConsoleOutput:showIclConsoleOutput);
            await deviceManager.StartAsync();
    
            if (!deviceManager.ChargedCoupledDevices.Any())

@@ -11,7 +11,7 @@ class SpectrAcq3Programm : IExample
     /// logs the information, and then closes the connections.
     /// </summary>
     /// <returns></returns>
-    public async Task MainAsync()
+    public async Task MainAsync(bool showIclConsoleOutput= false)
     {
         // Creating logger 
         using ILoggerFactory loggerFactory = LoggerFactory.Create(builder =>
@@ -21,7 +21,7 @@ class SpectrAcq3Programm : IExample
         ILogger logger = loggerFactory.CreateLogger<MainProgram>();
         
         //Initialize the DeviceManager
-        DeviceManager deviceManager = new DeviceManager();
+        DeviceManager deviceManager = new DeviceManager(showIclConsoleOutput:showIclConsoleOutput);
         try
         {
             // Start the DeviceManager

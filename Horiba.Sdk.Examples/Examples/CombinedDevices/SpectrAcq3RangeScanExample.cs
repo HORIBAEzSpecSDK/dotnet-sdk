@@ -11,9 +11,9 @@ namespace Horiba.Sdk.Examples.CombinedDevices
 {
     public class SpectrAcq3RangeScanExample : IExample
     {
-        public async Task MainAsync()
+        public async Task MainAsync(bool showIclConsoleOutput= false)
         {
-            var deviceManager = new DeviceManager();
+            var deviceManager = new DeviceManager(showIclConsoleOutput:showIclConsoleOutput);
             await deviceManager.StartAsync();
 
             if (!deviceManager.SpectrAcqDevices.Any() || !deviceManager.Monochromators.Any())

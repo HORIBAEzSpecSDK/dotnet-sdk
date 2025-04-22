@@ -2,5 +2,5 @@ namespace Horiba.Sdk.Examples;
 
 public interface IExample
 {
-    Task MainAsync();
+    Task MainAsync(bool showIclConsoleOutput = false);
 }

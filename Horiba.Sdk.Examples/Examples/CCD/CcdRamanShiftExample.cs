@@ -12,7 +12,7 @@ namespace Horiba.Sdk.Examples.Ccd
 {
     public class CcdRamanShiftExample : IExample
     {
-        public async Task MainAsync()
+        public async Task MainAsync(bool showIclConsoleOutput= false)
         {
             Console.Write("Enter the excitation wavelength (float value): ");
             double excitationWavelength;
@@ -22,7 +22,7 @@ namespace Horiba.Sdk.Examples.Ccd
                 Console.Write("Enter the excitation wavelength (float value): ");
             }
             var acquisitionFormat = AcquisitionFormat.Spectra;
-            var deviceManager = new DeviceManager();
+            var deviceManager = new DeviceManager(showIclConsoleOutput:showIclConsoleOutput);
             await deviceManager.StartAsync();
 
             if (!deviceManager.ChargedCoupledDevices.Any() || !deviceManager.Monochromators.Any())

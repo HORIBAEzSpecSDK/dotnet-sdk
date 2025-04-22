@@ -11,10 +11,10 @@ namespace Horiba.Sdk.Examples.Ccd
 {
     public class CcdDarkCountSubtractionExample : IExample
     {
-        public async Task MainAsync()
+        public async Task MainAsync(bool showIclConsoleOutput= false)
         {
             var acquisitionFormat = AcquisitionFormat.Image;
-            var deviceManager = new DeviceManager();
+            var deviceManager = new DeviceManager(showIclConsoleOutput:showIclConsoleOutput);
             await deviceManager.StartAsync();
 
             if (!deviceManager.ChargedCoupledDevices.Any())

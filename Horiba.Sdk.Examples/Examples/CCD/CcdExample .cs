@@ -14,9 +14,9 @@ namespace Horiba.Sdk.Examples.Ccd
     
     {
     
-        public async Task MainAsync()
+        public async Task MainAsync(bool showIclConsoleOutput= false)
         {
-            DeviceManager deviceManager = new DeviceManager();
+            DeviceManager deviceManager = new DeviceManager(showIclConsoleOutput:showIclConsoleOutput);
             await deviceManager.StartAsync();
             var ccd = deviceManager.ChargedCoupledDevices.First();
             await ccd.OpenConnectionAsync();

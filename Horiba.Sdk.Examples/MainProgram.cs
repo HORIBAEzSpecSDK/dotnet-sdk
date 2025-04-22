@@ -65,6 +65,8 @@ namespace Horiba.Sdk.Examples
                     .CreateLogger();
             }
 
+            Console.WriteLine("Do you want to see the logging output from the icl.exe? [y/n]:");
+            var showIclConsoleOutput = Console.ReadLine()?.ToLower() == "y";
 
             var rootNamespace = "Horiba.Sdk.Examples";
             var namespaces = Assembly.GetExecutingAssembly()
@@ -101,7 +103,7 @@ namespace Horiba.Sdk.Examples
             var instance = Activator.CreateInstance(selectedClass) as IExample;
             if (instance != null)
             {
-                await instance.MainAsync();
+                await instance.MainAsync(showIclConsoleOutput: showIclConsoleOutput);
             }
             else
             {

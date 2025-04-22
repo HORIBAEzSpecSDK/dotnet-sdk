@@ -14,9 +14,9 @@ namespace Horiba.Sdk.Examples.SpectrAcq3
 {
     public class SpectrAcq3AcquisitionExample : IExample
     {
-        public async Task MainAsync()
+        public async Task MainAsync(bool showIclConsoleOutput= false)
         {
-            var deviceManager = new DeviceManager();
+            var deviceManager = new DeviceManager(showIclConsoleOutput:showIclConsoleOutput);
             await deviceManager.StartAsync();
 
             if (!deviceManager.Monochromators.Any())
@@ -65,6 +65,7 @@ namespace Horiba.Sdk.Examples.SpectrAcq3
                 // Save all data to a single CSV file
                 var allDataFileName = "all_acquisition_data.csv";
                 CsvParser.SaveSpectrAcq3DataToCsv(scanResults, allDataFileName);
+                Log.Information($"All data saved to {allDataFileName}");
             }
             finally
             {

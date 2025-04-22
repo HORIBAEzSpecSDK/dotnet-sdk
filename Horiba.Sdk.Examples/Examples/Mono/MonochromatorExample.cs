@@ -8,9 +8,9 @@ class MonoProgram : IExample
 
 {
 
-    public async Task MainAsync()
+    public async Task MainAsync(bool showIclConsoleOutput= false)
     {
-        DeviceManager deviceManager = new DeviceManager();
+        DeviceManager deviceManager = new DeviceManager(showIclConsoleOutput:showIclConsoleOutput);
         await deviceManager.StartAsync();
         var mono = deviceManager.Monochromators.First();
         await mono.OpenConnectionAsync();

@@ -8,9 +8,9 @@ namespace Horiba.Sdk.Examples.Ccd
 {
     public class CcdAbortExample : IExample
     {
-         public async Task MainAsync()
+         public async Task MainAsync(bool showIclConsoleOutput= false)
         {
-            DeviceManager deviceManager = new DeviceManager(showIclConsoleOutput: false);
+            DeviceManager deviceManager = new DeviceManager(showIclConsoleOutput: showIclConsoleOutput);
             await deviceManager.StartAsync();
             var ccd = deviceManager.ChargedCoupledDevices.First();
             await ccd.OpenConnectionAsync();

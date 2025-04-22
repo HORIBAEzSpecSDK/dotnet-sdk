@@ -14,9 +14,9 @@ namespace Horiba.Sdk.Examples.CombinedDevices
 {
     public class CcdRangeScanExample : IExample
     {
-        public async Task MainAsync()
+        public async Task MainAsync(bool showIclConsoleOutput= false)
         {
-            var deviceManager = new DeviceManager();
+            var deviceManager = new DeviceManager(showIclConsoleOutput:showIclConsoleOutput);
             await deviceManager.StartAsync();
 
             if (!deviceManager.ChargedCoupledDevices.Any() || !deviceManager.Monochromators.Any())
