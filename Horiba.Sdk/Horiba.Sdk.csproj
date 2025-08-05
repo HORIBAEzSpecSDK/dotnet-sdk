@@ -53,6 +53,7 @@
         <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
         <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
         <None Include="..\README.md" Pack="true" PackagePath="\" />
+        <PackageReference Include="Websocket.Client" Version="5.2.0" />
     </ItemGroup>
 
 </Project>
