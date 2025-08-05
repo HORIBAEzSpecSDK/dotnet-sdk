@@ -27,24 +27,21 @@ public sealed class DeviceManager : IDisposable
         bool showIclConsoleOutput = true)
     {
         Communicator = new WebSocketCommunicator(ipAddress ?? IPAddress.Loopback, port ?? 25010);
-
-        if ( !_isIclRunning){
-            IclProcess.StartInfo.FileName = iclExePath ??
+        IclProcess.StartInfo.FileName = iclExePath ??
                                             $@"{Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles)}\HORIBA Scientific\SDK\icl.exe";
-            if (showIclConsoleOutput == false)
-            {
-                IclProcess.StartInfo.UseShellExecute = false;
-                IclProcess.StartInfo.RedirectStandardOutput = true;
-                IclProcess.StartInfo.RedirectStandardError = true;
+        if (showIclConsoleOutput == false)
+        {
+            IclProcess.StartInfo.UseShellExecute = false;
+            IclProcess.StartInfo.RedirectStandardOutput = true;
+            IclProcess.StartInfo.RedirectStandardError = true;
 
-            }
-
-
-            // NOTE first unsubscribe then subscribe so that we lower the chance to
-            // have a memory leak in the case of unexpected crash
-            IclProcess.Exited -= IclProcessOnExited;
-            IclProcess.Exited += IclProcessOnExited;
         }
+
+        // NOTE first unsubscribe then subscribe so that we lower the chance to
+        // have a memory leak in the case of unexpected crash
+        IclProcess.Exited -= IclProcessOnExited;
+        IclProcess.Exited += IclProcessOnExited;
+        
     }
 
     public WebSocketCommunicator Communicator { get; }
@@ -54,10 +51,27 @@ public sealed class DeviceManager : IDisposable
 
     public void Dispose()
     {
-        if (_isIclRunning)
+        if (_isIclRunning && IclProcess != null)
         {
-            Log.Debug("Killing ICL process...");
-            IclProcess.Kill();
+            try
+            {
+                // Only kill if the process is still running and hasn't exited
+                if (!IclProcess.HasExited)
+                {
+                    Log.Debug("Killing ICL process...");
+                    IclProcess.Kill();
+                }
+            }
+            catch (InvalidOperationException)
+            {
+                // Process has already exited or is not associated with a running process
+                Log.Debug("ICL process was already terminated or not associated");
+            }
+            catch (System.ComponentModel.Win32Exception ex)
+            {
+                // Process could not be terminated (access denied, etc.)
+                Log.Warning("Could not terminate ICL process: {Message}", ex.Message);
+            }
         }
 
         IclProcess.Exited -= IclProcessOnExited;

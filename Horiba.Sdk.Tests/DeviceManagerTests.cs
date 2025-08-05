@@ -11,7 +11,7 @@ public class DeviceManagerTests
     public async Task GivenNewDeviceManager_WhenGettingDevices_ThenReturnsAvailableDevices()
     {
         // Arrange
-        using var deviceManager = new DeviceManager();
+        using var deviceManager = new DeviceManager(showIclConsoleOutput:false);
 
         // Act
         await deviceManager.StartAsync();
@@ -25,7 +25,7 @@ public class DeviceManagerTests
     public async Task GivenNewDeviceManager_WhenStartingIclProcess_ThenStartsIclProcess()
     {
         // Arrange
-        using var manager = new DeviceManager();
+        using var manager = new DeviceManager(showIclConsoleOutput:false);
 
         // Act
         await manager.StartAsync();
@@ -38,7 +38,7 @@ public class DeviceManagerTests
     public async Task GivenNewDeviceManager_WhenStartingAndStoppingIclProcess_ThenIclIsStopped()
     {
         // Arrange
-        using var manager = new DeviceManager();
+        using var manager = new DeviceManager(showIclConsoleOutput:false);
 
         // Act
         await manager.StartAsync();
@@ -73,7 +73,7 @@ public class DeviceManagerTests
     public async Task GivenNewDeviceManager_WhenGettingIclInfo_ThenReturnsConsistentResult()
     {
         // Arrange
-        using var deviceManager = new DeviceManager();
+        using var deviceManager = new DeviceManager(showIclConsoleOutput:false);
         await deviceManager.StartAsync();
         
         // Act
@@ -87,7 +87,7 @@ public class DeviceManagerTests
     public async Task GivenDeviceManager_WhenGetCountOfCcd_ThenReturnsCountAfterDiscovery()
     {
         // Arrange
-        using var deviceManager = new DeviceManager();
+        using var deviceManager = new DeviceManager(showIclConsoleOutput:false);
         await deviceManager.StartAsync();
         
         // Act
@@ -101,7 +101,7 @@ public class DeviceManagerTests
     public async Task GivenDeviceManager_WhenGetCountOfMonochromators_ThenReturnsCountAfterDiscovery()
     {
         // Arrange
-        using var deviceManager = new DeviceManager();
+        using var deviceManager = new DeviceManager(showIclConsoleOutput:false);
         await deviceManager.StartAsync();
         
         // Act
