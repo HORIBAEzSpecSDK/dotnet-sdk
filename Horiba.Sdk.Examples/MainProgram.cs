@@ -4,23 +4,24 @@ using Serilog.Events;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Reflection;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Horiba.Sdk.Examples
 {
-    class Program
+    public class MainProgram
     {
-        static async Task Main(string[] args)
+        private static async Task Main(string[] args)
         {
             /// <summary>
             /// Serilog log levels are used to specify the importance and severity of log messages. The available log levels in Serilog are:
-            ///•	Verbose: Detailed and potentially high-volume messages that are useful during development.
-            ///•	Debug: Diagnostic messages that are useful for debugging.
-            ///•	Information: Informational messages that track the general flow of the application.
-            ///•	Warning: Messages that indicate potential issues or unexpected situations.
-            ///•	Error: Error messages that indicate a failure in the current activity or operation.
-            ///•	Fatal: Critical errors that cause the application to crash or terminate.
+            ///ï¿½	Verbose: Detailed and potentially high-volume messages that are useful during development.
+            ///ï¿½	Debug: Diagnostic messages that are useful for debugging.
+            ///ï¿½	Information: Informational messages that track the general flow of the application.
+            ///ï¿½	Warning: Messages that indicate potential issues or unexpected situations.
+            ///ï¿½	Error: Error messages that indicate a failure in the current activity or operation.
+            ///ï¿½	Fatal: Critical errors that cause the application to crash or terminate.
             ///
             Console.WriteLine("Select a log level - chose Debug/Information for info from the SDK. Choose Warning for ICL output only:");
             Console.WriteLine("1. Verbose");
@@ -64,25 +65,50 @@ namespace Horiba.Sdk.Examples
                     .CreateLogger();
             }
 
+            Console.WriteLine("Do you want to see the logging output from the icl.exe? [y/n]:");
+            var showIclConsoleOutput = Console.ReadLine()?.ToLower() == "y";
 
-            Console.WriteLine("Select an example to run:");
-            Console.WriteLine("1. CCD Example");
-            Console.WriteLine("2. Monochromator Example");
-            Console.Write("Enter your choice: ");
-            var exampleChoice = Console.ReadLine();
+            var rootNamespace = "Horiba.Sdk.Examples";
+            var namespaces = Assembly.GetExecutingAssembly()
+                .GetTypes()
+                .Where(t => t.Namespace != null && t.Namespace.StartsWith(rootNamespace) && t.Namespace != rootNamespace)
+                .Select(t => t.Namespace)
+                .Distinct()
+                .Select(ns => ns.Split('.').Last())
+                .ToList();
 
-            switch (exampleChoice)
+            Console.WriteLine("Select a device to see the existing examples:");
+            for (var i = 0; i < namespaces.Count; i++)
             {
-                case "1":
-                    await CcdProgram.CcdExample();
-                    break;
-                case "2":
-                    await MonoProgram.MonoExample();
-                    break;
-                default:
-                    Console.WriteLine("Invalid choice.");
-                    break;
+                Console.WriteLine($"{i + 1}. {namespaces[i]}");
+            }
+            Console.Write("Enter your choice: ");
+            var namespaceChoice = int.Parse(Console.ReadLine()) - 1;
+            var selectedNamespace = namespaces[namespaceChoice];
+
+            var classes = Assembly.GetExecutingAssembly()
+                .GetTypes()
+                .Where(t => t.Namespace == $"{rootNamespace}.{selectedNamespace}" && t.Assembly == Assembly.GetExecutingAssembly() && !t.Name.StartsWith("<"))
+                .ToList();
+
+            Console.WriteLine($"Classes in namespace {selectedNamespace}:");
+            for (var i = 0; i < classes.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. {classes[i].Name}");
+            }
+            Console.Write("Enter your choice: ");
+            var classChoice = int.Parse(Console.ReadLine()) - 1;
+            var selectedClass = classes[classChoice];
+
+            var instance = Activator.CreateInstance(selectedClass) as IExample;
+            if (instance != null)
+            {
+                await instance.MainAsync(showIclConsoleOutput: showIclConsoleOutput);
+            }
+            else
+            {
+                Console.WriteLine("Failed to create an instance of the selected class.");
+            }
             }
         }
     }
-}

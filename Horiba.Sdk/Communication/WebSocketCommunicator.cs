@@ -57,7 +57,6 @@ public sealed class WebSocketCommunicator(IPAddress ipAddress, int port)
 
 
         var parsedResult = await ReceiveResponseAsync(cancellationToken);
-        Log.Debug("Receiving response: {@Response}", parsedResult);
 
         if (parsedResult is null) throw new NullReferenceException("Deserialization of the response failed");
         if (parsedResult.Errors.Count != 0) throw new CommunicationException(parsedResult.Errors.First());
@@ -74,7 +73,6 @@ public sealed class WebSocketCommunicator(IPAddress ipAddress, int port)
     {
         await SendInternalAsync(command, cancellationToken);
         var echo = await ReceiveResponseAsync(cancellationToken);
-        Log.Debug("ECHO sent command: {@Response}", echo);
     }
 
     private async Task SendInternalAsync(Command command, CancellationToken cancellationToken)
@@ -94,6 +92,7 @@ public sealed class WebSocketCommunicator(IPAddress ipAddress, int port)
         await _wsClient.ReceiveAsync(new ArraySegment<byte>(singleResponseBuffer), cancellationToken);
 
         var res = Encoding.UTF8.GetString(singleResponseBuffer, 0, singleResponseBuffer.Length);
+        Log.Debug("The response string is: {@Response}", res);
         var parsedResult = JsonConvert.DeserializeObject<Response>(res);
         return parsedResult;
     }
