@@ -22,6 +22,10 @@ C# developers can use this SDK to offload the complexity related to establishing
 
 * ICL.exe installed as part of the Horiba SDK, licensed and activated
 
+## API reference is available at
+
+https://HORIBAEzSpecSDK.github.io/horiba-dotnet-sdk
+
 ## Compatibility
 
 The SDK is built to support a wide range of target frameworks via multi-targeting. This means you can use the same NuGet package in both legacy and modern .NET environments:
