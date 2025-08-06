@@ -24,7 +24,7 @@ C# developers can use this SDK to offload the complexity related to establishing
 
 ## API reference is available at
 
-https://HORIBAEzSpecSDK.github.io/horiba-dotnet-sdk
+[https://HORIBAEzSpecSDK.github.io/horiba-dotnet-sdk](https://horibaezspecsdk.github.io/dotnet-sdk/api/index.html)
 
 ## Compatibility
 
