@@ -25,6 +25,11 @@
         <TargetFrameworks>net48;netstandard2.0;netstandard2.1;net7.0;net8.0</TargetFrameworks>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        
+        <!-- Enable XML documentation generation -->
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+        <NoWarn>$(NoWarn);1591</NoWarn> <!-- Suppress missing XML documentation warnings -->
     </PropertyGroup>
 
     <!-- For .NET Framework 4.8 -->
