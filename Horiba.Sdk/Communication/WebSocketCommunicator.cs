@@ -20,6 +20,7 @@ public sealed class WebSocketCommunicator(IPAddress ipAddress, int port) : IDisp
     private readonly WebsocketClient _wsClient = new(new Uri("ws://" + ipAddress + ":" + port));
     private readonly Uri _wsUri = new("ws://" + ipAddress + ":" + port);
     private readonly BlockingCollection<string> _messageQueue = new();
+    private readonly SemaphoreSlim _sendSemaphore = new(1, 1);
     private IDisposable? _messageSubscription;
 
     public bool IsConnectionOpened => _wsClient.IsRunning;
@@ -66,14 +67,22 @@ public sealed class WebSocketCommunicator(IPAddress ipAddress, int port) : IDisp
     /// <exception cref="CommunicationException">Thrown when the ICL responds with an error</exception>
     public async Task<Response> SendWithResponseAsync(Command command, CancellationToken cancellationToken = default)
     {
-        await SendInternalAsync(command, cancellationToken);
+        await _sendSemaphore.WaitAsync(cancellationToken);
+        try
+        {
+            await SendInternalAsync(command, cancellationToken);
 
-        var parsedResult = await ReceiveResponseAsync(cancellationToken);
+            var parsedResult = await ReceiveResponseAsync(cancellationToken);
 
-        if (parsedResult is null) throw new NullReferenceException("Deserialization of the response failed");
-        if (parsedResult.Errors.Count != 0) throw new CommunicationException(parsedResult.Errors.First());
+            if (parsedResult is null) throw new NullReferenceException("Deserialization of the response failed");
+            if (parsedResult.Errors.Count != 0) throw new CommunicationException(parsedResult.Errors.First());
 
-        return parsedResult;
+            return parsedResult;
+        }
+        finally
+        {
+            _sendSemaphore.Release();
+        }
     }
 
     /// <summary>
@@ -83,8 +92,16 @@ public sealed class WebSocketCommunicator(IPAddress ipAddress, int port) : IDisp
     /// <param name="cancellationToken">A token for cancelling all long lasting tasks</param>
     public async Task SendAsync(Command command, CancellationToken cancellationToken = default)
     {
-        await SendInternalWithResponseAsync(command, cancellationToken);
-        // Response is received but ignored
+        await _sendSemaphore.WaitAsync(cancellationToken);
+        try
+        {
+            await SendInternalWithResponseAsync(command, cancellationToken);
+            // Response is received but ignored
+        }
+        finally
+        {
+            _sendSemaphore.Release();
+        }
     }
     
     /// <summary>
@@ -156,6 +173,7 @@ public sealed class WebSocketCommunicator(IPAddress ipAddress, int port) : IDisp
     {
         _messageSubscription?.Dispose();
         _messageQueue?.Dispose();
+        _sendSemaphore?.Dispose();
         _wsClient?.Dispose();
     }
 }
