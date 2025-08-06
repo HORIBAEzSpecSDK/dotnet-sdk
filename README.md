@@ -19,10 +19,23 @@ ___
 
 ___
 
-**📦 Prerequisites**
+## 📦 Prerequisites
+You must have ICL.exe installed, licensed, and running on a PC connected to the hardware via USB.
 
-* .NET Standard or .NET 6+
-* ICL.exe installed as part of the Horiba SDK, licensed and activated
+## 🔧 Multi-Platform Compatibility
+
+We have restructured the SDK to **maximize compatibility** across modern and legacy .NET platforms. The current SDK targets:
+
+```
+net48; netstandard2.0; netstandard2.1; net7.0; net8.0
+```
+
+### What does this mean?
+
+* ✅ Supports legacy **.NET Framework 4.8**
+* ✅ Compatible with **.NET Standard 2.0 and 2.1**
+* ✅ Forward-compatible with **modern .NET (7 & 8)**
+* 🧩 Dependency resolution is handled per target (e.g., WebSocket & Serilog versions differ by framework)
 
 ## API reference is available at
 
