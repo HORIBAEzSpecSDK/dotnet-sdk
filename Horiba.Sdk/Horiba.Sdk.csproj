@@ -21,20 +21,29 @@
         <PackageTags>horiba sdk ezspec monochromator ccd spectracq3</PackageTags>
         <PackageReleaseNotes>Initial pipeline deployment</PackageReleaseNotes>
 
-        <TargetFrameworks>net48;netstandard2.1;net7.0;net8.0</TargetFrameworks>
+        <TargetFrameworks>net48;netstandard2.0;netstandard2.1;net7.0;net8.0</TargetFrameworks>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     </PropertyGroup>
 
-    <!-- Conditional dependencies -->
-    <ItemGroup Condition=" '$(TargetFramework)' == 'net48' ">
+    <!-- For .NET Framework 4.8 -->
+    <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
         <PackageReference Include="Websocket.Client" Version="4.4.39" />
         <PackageReference Include="Serilog" Version="2.12.0" />
         <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
         <PackageReference Include="Serilog.Sinks.File" Version="4.1.0" />
     </ItemGroup>
 
-    <ItemGroup Condition=" '$(TargetFramework)' != 'net48' ">
+    <!-- For netstandard2.0 only: Websocket.Client 4.x still needed -->
+    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+        <PackageReference Include="Websocket.Client" Version="4.4.39" />
+        <PackageReference Include="Serilog" Version="2.12.0" />
+        <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
+        <PackageReference Include="Serilog.Sinks.File" Version="4.1.0" />
+    </ItemGroup>
+
+    <!-- For netstandard2.1 and modern .NET -->
+    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1' Or '$(TargetFramework)' == 'net7.0' Or '$(TargetFramework)' == 'net8.0'">
         <PackageReference Include="Websocket.Client" Version="5.2.0" />
         <PackageReference Include="Serilog" Version="3.1.1" />
         <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
