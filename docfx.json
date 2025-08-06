@@ -3,23 +3,36 @@
     {
       "src": [
         {
-          "src": "Horiba.Sdk/",
+          "src": ".",
           "files": [
-            "**/*.csproj"
+            "Horiba.Sdk/Horiba.Sdk.csproj"
+          ],
+          "exclude": [
+            "**/bin/**",
+            "**/obj/**"
           ]
         }
       ],
-      "dest": "docs/api"
+      "dest": "api",
+      "includePrivateMembers": false,
+      "disableGitFeatures": false,
+      "disableDefaultFilter": false
     }
   ],
   "build": {
     "content": [
       {
         "files": [
-          "**/*.{md,yml}"
-        ],
-        "exclude": [
-          "_site/**"
+          "api/**.yml",
+          "api/index.md"
+        ]
+      },
+      {
+        "files": [
+          "articles/**.md",
+          "articles/**/toc.yml",
+          "toc.yml",
+          "*.md"
         ]
       }
     ],
@@ -30,16 +43,27 @@
         ]
       }
     ],
-    "output": "docs/_site",
+    "output": "_site",
+    "globalMetadataFiles": [],
+    "fileMetadataFiles": [],
     "template": [
-      "default",
-      "modern"
+      "default"
+    ],
+    "postProcessors": [
+      "ExtractSearchIndex"
     ],
     "globalMetadata": {
-      "_appName": "Horiba C# SDK",
-      "_appTitle": "Horiba C# SDK",
+      "_appTitle": "HORIBA EzSpec SDK Documentation",
+      "_appName": "HORIBA EzSpec SDK",
       "_enableSearch": true,
-      "pdf": false
-    }
+      "_gitContribute": {
+        "repo": "https://github.com/HORIBAEzSpecSDK/dotnet-framework-sdk",
+        "branch": "feature/threadSafety"
+      },
+      "_gitUrlPattern": "github"
+    },
+    "dest": "_site",
+    "keepFileLink": false,
+    "disableGitFeatures": false
   }
 }

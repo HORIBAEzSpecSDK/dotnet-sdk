@@ -7,7 +7,7 @@ public static class TriggerExtensions
     private const string AddressTokenName = "address";
     private const string EventTokenName = "event";
     private const string SignalTypeTokenName = "signalType";
-    
+
     /// <summary>
     /// Converts the result of a command to a Trigger.
     /// </summary>
@@ -30,7 +30,7 @@ public static class TriggerExtensions
         catch (Exception e)
         {
             Log.Error(e, "CommandResult did not contain the expected Trigger values");
-                
+
             throw;
         }
     }
@@ -38,8 +38,9 @@ public static class TriggerExtensions
 
 public record Trigger(TriggerAddress TriggerAddress, TriggerEvent TriggerEvent, TriggerSignalType TriggerSignalType)
 {
-    public static readonly Trigger Default = new(TriggerAddress.Input, TriggerEvent.Once, TriggerSignalType.FallingEdge);
-    
+    public static readonly Trigger
+        Default = new(TriggerAddress.Input, TriggerEvent.Once, TriggerSignalType.FallingEdge);
+
     public TriggerAddress TriggerAddress { get; } = TriggerAddress;
     public TriggerEvent TriggerEvent { get; } = TriggerEvent;
     public TriggerSignalType TriggerSignalType { get; } = TriggerSignalType;
@@ -54,7 +55,7 @@ public enum TriggerSignalType
     /// TTL Falling Edge
     /// </summary>
     FallingEdge = 0,
-    
+
     /// <summary>
     /// TTL Rising Edge
     /// </summary>
@@ -70,7 +71,7 @@ public enum TriggerEvent
     /// For all acquisitions only once
     /// </summary>
     Once = 0,
-    
+
     /// <summary>
     /// For each acquisition
     /// </summary>
@@ -85,4 +86,33 @@ public enum TriggerAddress
     Disabled = -1,
     Input = 0,
     Output = 1
+}
+
+/// <summary>
+/// Token used to specify which input trigger mode to use
+/// </summary>
+public enum InTriggerMode
+{
+    TtlInput = 0,
+    EventMarkerInput = 1,
+    HardwareTriggerInput = 2
+}
+
+/// <summary>
+/// Token used to specify which trigger mode to use
+/// </summary>
+public enum ScanStartMode
+{
+    StartAndInterval = 0,
+    TriggerAndInterval = 1,
+    TriggerOnly = 2
+}
+
+/// <summary>
+/// Token used to specify which trigger polarity to use
+/// </summary>
+public enum TriggerInputPolarity
+{
+    ActiveLow = 0,
+    ActiveHigh = 1
 }

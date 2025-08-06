@@ -1,3 +1,56 @@
+# HORIBA EzSpec SDK Documentation
+
+Welcome to the HORIBA EzSpec SDK for .NET - a comprehensive library for controlling HORIBA spectroscopic instruments including monochromators, CCDs, and SpectrAcq devices.
+
+## Overview
+
+The HORIBA EzSpec SDK provides a modern, thread-safe .NET interface for:
+
+- **Monochromator Control**: Precise wavelength control, grating selection, and mirror positioning
+- **CCD Operations**: Image acquisition, exposure control, and data processing
+- **SpectrAcq Integration**: Seamless integration with HORIBA's SpectrAcq software
+- **Multi-Platform Support**: Compatible with .NET Framework 4.8, .NET Standard 2.0/2.1, and .NET 7.0/8.0
+
+## Key Features
+
+- ✅ **Thread-Safe Operations**: All device communications are thread-safe
+- ✅ **WebSocket Communication**: Real-time communication with instruments
+- ✅ **Comprehensive Error Handling**: Robust exception handling and logging
+- ✅ **Device Discovery**: Automatic detection of connected instruments
+- ✅ **Modern .NET**: Support for latest .NET versions with async/await patterns
+
+## Quick Start
+
+```csharp
+// Initialize device manager
+var deviceManager = new DeviceManager();
+await deviceManager.StartAsync();
+
+// Discover devices
+var devices = await deviceManager.DiscoverDevicesAsync();
+
+// Connect to a monochromator
+var mono = devices.OfType<MonochromatorDevice>().First();
+await mono.OpenAsync();
+
+// Set wavelength
+await mono.SetWavelengthAsync(550.0);
+```
+
+## Getting Started
+
+For detailed setup instructions and examples, see the [Getting Started Guide](articles/getting-started.md).
+
+## API Reference
+
+Browse the complete [API Reference](api/index.md) for detailed information about all classes and methods.
+
+## Support
+
+- **Repository**: [GitHub](https://github.com/HORIBAEzSpecSDK/dotnet-framework-sdk)
+- **Issues**: Report bugs and feature requests on [GitHub Issues](https://github.com/HORIBAEzSpecSDK/dotnet-framework-sdk/issues)
+- **License**: MIT License
+
 # Command Status
 
 ---
@@ -187,7 +240,7 @@
 | ccd_setAcquisitionStart    |      ✅      |        ✅        |   ✅    |                                                            |
 | ccd_getAcquisitionBusy     |      ✅      |        ✅        |   ✅    |                                                            |
 | ccd_setAcquisitionAbort    |      ✅      |        ✖️        |   ❓    |          what is the expected 'Abort' procedure?           |
-| ccd_getAcquisitionData     |      ✅      |        ✅        |   ✅    |                                                            |
+| ccd_getAcquisitionData     |      ✅      |        ✅        |   ⛔    |            [E];-326;Error Data Formatting Error            |
 
 **Single Chanel Detector Commands**
 
