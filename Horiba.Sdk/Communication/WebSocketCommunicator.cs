@@ -83,8 +83,21 @@ public sealed class WebSocketCommunicator(IPAddress ipAddress, int port) : IDisp
     /// <param name="cancellationToken">A token for cancelling all long lasting tasks</param>
     public async Task SendAsync(Command command, CancellationToken cancellationToken = default)
     {
+        await SendInternalWithResponseAsync(command, cancellationToken);
+        // Response is received but ignored
+    }
+    
+    /// <summary>
+    /// Sends a command to the ICL and waits for a response. If the response contains errors, an exception is thrown.
+    /// This method is used internally by the SDK to send commands and receive responses.
+    /// </summary>
+    /// <param name="command"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    private async Task<Response?> SendInternalWithResponseAsync(Command command, CancellationToken cancellationToken)
+    {
         await SendInternalAsync(command, cancellationToken);
-        var echo = await ReceiveResponseAsync(cancellationToken);
+        return await ReceiveResponseAsync(cancellationToken);
     }
 
     private async Task SendInternalAsync(Command command, CancellationToken cancellationToken)
