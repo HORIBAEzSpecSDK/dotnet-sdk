@@ -237,5 +237,10 @@ The SDK supports connecting to the ICL process over the local network. This can 
 ```csh
 using var deviceManager = new DeviceManager(ipAddress: IPAddress.Parse("192.168.123.123"), port: 1111);
 ```
+## To build the package locally
+use the following command:
+```dotnetcli
+dotnet build -c Release ; dotnet pack -c Release
+```
 
 ---
