@@ -265,22 +265,29 @@ public sealed record SpectrAcqDevice(
             await Communicator.SendWithResponseAsync(new SaqIsDataAvailableCommand(DeviceId), cancellationToken);
         return (bool)result.Results["isDataAvailable"];
     }
+    
 
     /// <summary>
     /// Retrieves available acquisition data of the SAQ by sending the saq3_getAvailableData command
     /// </summary>
+    /// <param name="channels">Optional list of channels to read data from. Supported channels: "current", "voltage", "ppd", "photon". If not provided, data for all channels will be returned.</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     public async Task<SaqData> GetAvailableDataAsync(
+        string[]? channels = null,
         CancellationToken cancellationToken = default)
     {
+        // Use explicit default values if channels is null
+        channels ??= new[] { "current", "voltage", "ppd", "photon" };
+    
         var result =
-            await Communicator.SendWithResponseAsync(new SaqGetAvailableDataCommand(DeviceId), cancellationToken);
+            await Communicator.SendWithResponseAsync(new SaqGetAvailableDataCommand(DeviceId, channels), cancellationToken);
         string jsonData = JsonConvert.SerializeObject(result.Results, Formatting.None);
         SaqData data = JsonConvert.DeserializeObject<SaqData>(jsonData);
         return data;
     }
 
+    
     /// <summary>
     /// Forces the trigger of the SAQ by sending the saq3_forceTrigger command
     /// </summary>
