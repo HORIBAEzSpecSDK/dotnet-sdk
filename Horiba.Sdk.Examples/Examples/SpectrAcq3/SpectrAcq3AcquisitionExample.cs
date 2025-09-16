@@ -35,7 +35,7 @@ namespace Horiba.Sdk.Examples.SpectrAcq3
 
             var mono = deviceManager.Monochromators.First();
             var spectracq3 = deviceManager.SpectrAcqDevices.First();
-
+            Log.Information("Opening Device Connections...");
             await mono.OpenConnectionAsync();
             await spectracq3.OpenConnectionAsync();
 

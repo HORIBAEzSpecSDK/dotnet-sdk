@@ -103,9 +103,9 @@ public enum InTriggerMode
 /// </summary>
 public enum ScanStartMode
 {
-    StartAndInterval = 0,
-    TriggerAndInterval = 1,
-    TriggerOnly = 2
+    StartAndInterval = 1,
+    TriggerAndInterval = 2,
+    TriggerOnly = 3
 }
 
 /// <summary>
