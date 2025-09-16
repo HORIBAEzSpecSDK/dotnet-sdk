@@ -127,10 +127,15 @@ internal record SaqIsDataAvailableCommand(int DeviceId)
     public int DeviceId { get; } = DeviceId;
 }
 
-internal record SaqGetAvailableDataCommand(int DeviceId)
-    : SpectrAcqDeviceCommand("saq3_getAvailableData", DeviceId)
+internal record SaqGetAvailableDataCommand(int DeviceId, string[]? Channels = null) 
+    : SpectrAcqDeviceCommand("saq3_getAvailableData", new Dictionary<string, object>
+    {
+        { "index", DeviceId },
+        { "channels", Channels ?? new[] { "current", "voltage", "ppd", "photon" } }
+    })
 {
     public int DeviceId { get; } = DeviceId;
+    public string[] Channels { get; } = Channels ?? new[] { "current", "voltage", "ppd", "photon" };
 }
 
 internal record SaqForceTriggerCommand(int DeviceId)
