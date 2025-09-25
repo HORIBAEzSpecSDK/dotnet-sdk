@@ -2,9 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Horiba.Sdk.Core.Internal;
+using MathNet.Numerics;
+using MathNet.Numerics.Interpolation;
+using Serilog;
 
-namespace Horiba.Sdk.Core.Stitching
-{
+
+
+namespace Horiba.Sdk.Calculations.Stitching;
+
     /// <summary>
     /// Stitches a list of spectra using a weighted average as in LabSpec6.
     /// 
@@ -16,65 +21,62 @@ namespace Horiba.Sdk.Core.Stitching
     /// - Computes weights A and B linearly over the overlap and combines y elementwise.
     ///   (Assumes the two overlap ranges have the same number of samples, as in the Python.)
     /// </summary>
-    public sealed class LabSpec6SpectraStitch : ISpectraStitch
+public class LabSpec6SpectraStitch : SpectraStitch
+{
+    private readonly List<List<float>> _stitchedSpectrum;
+
+    public LabSpec6SpectraStitch(List<List<List<float>>> spectraList)
     {
-        // Stored as Python-compatible raw shape: [x, y]
-        private readonly List<object> _stitchedSpectrum;
+        if (spectraList == null || spectraList.Count == 0)
+            throw new ArgumentException("Spectra list cannot be null or empty");
 
-        /// <summary>
-        /// Construct from a list of spectra, each in Python-compatible shape: [x, y].
-        /// Example (C#):
-        /// var spectra = new List&lt;List&lt;object&gt;&gt;
-        /// {
-        ///     new() { x1, y1 },
-        ///     new() { x2, y2 },
-        /// };
-        /// </summary>
-        public LabSpec6SpectraStitch(List<List<object>> spectraList)
+        _stitchedSpectrum = spectraList[0];
+
+        for (var i = 1; i < spectraList.Count; i++)
         {
-            if (spectraList == null || spectraList.Count == 0)
-                throw new ArgumentException("spectraList must contain at least one spectrum.");
-
-            var stitched = spectraList[0];
-
-            for (int i = 1; i < spectraList.Count; i++)
-                stitched = StitchSpectra(stitched, spectraList[i]);
-
-            _stitchedSpectrum = stitched;
+            _stitchedSpectrum = StitchSpectra(_stitchedSpectrum, spectraList[i]);
         }
+    }
 
-        public ISpectraStitch StitchWith(ISpectraStitch otherStitch)
+    public override SpectraStitch StitchWith(SpectraStitch otherStitch)
+    {
+        var newStitch = new LabSpec6SpectraStitch(new List<List<List<float>>>
         {
-            if (otherStitch is not LabSpec6SpectraStitch other)
-                throw new ArgumentException("otherStitch must be a LabSpec6SpectraStitch for exact parity.");
+            StitchedSpectra(),
+            otherStitch.StitchedSpectra()
+        });
+        return newStitch;
+    }
 
-            var combined = StitchSpectra(
-                (List<object>)this.StitchedSpectra(),
-                (List<object>)other.StitchedSpectra()
-            );
+    public override List<List<float>> StitchedSpectra()
+    {
+        return _stitchedSpectrum;
+    }
 
-            return new LabSpec6SpectraStitch(new List<List<object>> { combined });
-        }
+    private List<List<float>> StitchSpectra(List<List<float>> spectrum1, List<List<float>> spectrum2)
+    {
 
-        public object StitchedSpectra() => _stitchedSpectrum;
+        // Unpack Python-like shape: [x, y]
+        var fx1 = spectrum1[0];
+        var fy1 = spectrum1[1];
+        var fx2 = spectrum2[0];
+        var fy2 = spectrum2[1];
 
-        // ---------- Core algorithm (parity with Python) ----------
+        // Convert to arrays
+        var x1 = fx1.ToArray();
+        var x2 = fx2.ToArray();
+        var y1 = fy1.ToArray();
+        var y2 = fy2.ToArray();
 
-        private static List<object> StitchSpectra(List<object> spectrum1Raw, List<object> spectrum2Raw)
-        {
-            // Unpack Python-like shape: [x, y]
-            var x1 = ToDoubleArray(spectrum1Raw[0]);
-            var y1 = ToDoubleArray(spectrum1Raw[1]);
-
-            var x2 = ToDoubleArray(spectrum2Raw[0]);
-            var y2 = ToDoubleArray(spectrum2Raw[1]);
-
-            if (x1.Length == 0 || x2.Length == 0)
+        if (x1.Length == 0 || x2.Length == 0)
                 throw new ArgumentException("Spectra must contain at least one x/y pair.");
 
+
+            Array.Sort(x1, y1);
+            Array.Sort(x2, y2);
             // Overlap region (assumes x are ordered; no sorting in Python version)
-            double overlapStart = Math.Max(x1[0], x2[0]);
-            double overlapEnd   = Math.Min(x1[x1.Length - 1], x2[x2.Length - 1]);
+            float overlapStart = Math.Max(x1[0], x2[0]);
+            float overlapEnd = Math.Min(x1[x1.Length - 1], x2[x2.Length - 1]);
 
             if (overlapStart >= overlapEnd)
                 throw new InvalidOperationException(
@@ -92,12 +94,12 @@ namespace Horiba.Sdk.Core.Stitching
                     $"Got x1_overlap={x1Overlap.Length}, x2_overlap={x2Overlap.Length}.");
 
             // Compute weights A, B over the overlap [overlapStart, overlapEnd]
-            double denom = (overlapEnd - overlapStart);
+            float denom = (overlapEnd - overlapStart);
             if (denom == 0.0)
                 throw new InvalidOperationException("Degenerate overlap (start equals end).");
 
-            var A = new double[x1Overlap.Length];
-            var B = new double[x2Overlap.Length];
+            var A = new float[x1Overlap.Length];
+            var B = new float[x2Overlap.Length];
 
             for (int i = 0; i < x1Overlap.Length; i++)
                 A[i] = (x1Overlap[i] - overlapStart) / denom;
@@ -106,15 +108,15 @@ namespace Horiba.Sdk.Core.Stitching
                 B[i] = (overlapEnd - x2Overlap[i]) / denom;
 
             // y_stitched = (y1_overlap * A + y2_overlap * B) / (A + B)
-            var yStitchedOverlap = new double[x1Overlap.Length];
+            var yStitchedOverlap = new float[x1Overlap.Length];
             for (int i = 0; i < yStitchedOverlap.Length; i++)
             {
-                double sum = A[i] + B[i];
+                float sum = A[i] + B[i];
                 // In theory sum > 0 inside the overlap; guard against float quirks.
                 if (sum == 0.0)
                 {
                     // Fallback: average (mirrors the intuitive limit case)
-                    yStitchedOverlap[i] = 0.5 * (y1Overlap[i] + y2Overlap[i]);
+                    yStitchedOverlap[i] = (y1Overlap[i] + y2Overlap[i])/2;
                 }
                 else
                 {
@@ -135,39 +137,34 @@ namespace Horiba.Sdk.Core.Stitching
             var yStitchedFinal = Concat3(yBefore, yStitchedOverlap, yAfter);
 
             // Return in Python-compatible shape: [x_stitched, y_stitched]
-            return new List<object>
+            return new List<List<float>>
             {
                 xStitched.ToList(),
                 yStitchedFinal.ToList()
             };
-        }
+    }
 
-        // ---------- Helpers ----------
+    // ---------- Helpers ----------
 
-        private static double[] ToDoubleArray(object o)
+    private static (float[] xs, float[] ys) WhereXY(float[] x, float[] y, Func<float, bool> predicate)
+    {
+        var xs = new List<float>();
+        var ys = new List<float>();
+        for (int i = 0; i < x.Length; i++)
         {
-            if (o is IEnumerable<double> ed) return ed.ToArray();
-            throw new ArgumentException("Expected a List<double> for x or y.");
-        }
-
-        private static (double[] xs, double[] ys) WhereXY(double[] x, double[] y, Func<double, bool> predicate)
-        {
-            var xs = new List<double>();
-            var ys = new List<double>();
-            for (int i = 0; i < x.Length; i++)
+            if (predicate(x[i]))
             {
-                if (predicate(x[i]))
-                {
-                    xs.Add(x[i]);
-                    ys.Add(y[i]);
-                }
+                xs.Add(x[i]);
+                ys.Add(y[i]);
             }
-            return (xs.ToArray(), ys.ToArray());
         }
+        return (xs.ToArray(), ys.ToArray());
+    }
 
-        private static double[] Concat3(double[] a, double[] b, double[] c)
-        {
-            return NumpyShims.Concat(NumpyShims.Concat(a, b), c);
-        }
+    private static float[] Concat3(float[] a, float[] b, float[] c)
+    {
+        return NumpyShims.Concat(NumpyShims.Concat(a, b), c);
     }
 }
+
+    
