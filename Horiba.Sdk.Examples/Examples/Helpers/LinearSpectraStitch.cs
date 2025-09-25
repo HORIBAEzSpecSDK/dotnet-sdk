@@ -5,13 +5,13 @@ using MathNet.Numerics;
 using MathNet.Numerics.Interpolation;
 using Serilog;
 
-namespace Horiba.Sdk.Examples;
+namespace Horiba.Sdk.Calculations.Stitching;
 
-public abstract class SpectraStitch
-{
-    public abstract SpectraStitch StitchWith(SpectraStitch otherStitch);
-    public abstract List<List<float>> StitchedSpectra();
-}
+//public abstract class SpectraStitch
+//{
+//    public abstract SpectraStitch StitchWith(SpectraStitch otherStitch);
+//    public abstract List<List<float>> StitchedSpectra();
+//}
 
 public class LinearSpectraStitch : SpectraStitch
     {
