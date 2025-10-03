@@ -54,7 +54,7 @@ namespace Horiba.Sdk.Examples.SpectrAcq3
                     }
                     Log.Information($"Monochromator set to {wavelength}nm");
 
-                    await spectracq3.SetAcqSetAsync(1, 0, 1, 0);
+                    await spectracq3.SetAcqSetAsync(1, 0.0, 1.0, 0);
                     await spectracq3.StartAcquisitionAsync(ScanStartMode.TriggerAndInterval);
                     await Task.Delay(3000);
                     var data = await spectracq3.GetAvailableDataAsync();
