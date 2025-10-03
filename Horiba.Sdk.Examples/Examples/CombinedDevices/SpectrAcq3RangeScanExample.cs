@@ -46,7 +46,7 @@ namespace Horiba.Sdk.Examples.CombinedDevices
 
             try
             {
-                await spectracq3.SetAcqSetAsync(1, 0, 1, 0);
+                await spectracq3.SetAcqSetAsync(1, 0.0, 1.0, 0);
 
                 foreach (var wavelength in wavelengths)
                 {
