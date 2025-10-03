@@ -81,8 +81,8 @@ internal record SaqSetAcqSetCommand(
 {
     public int DeviceId { get; } = DeviceId;
     public int ScanCount { get; } = ScanCount;
-    public int TimeStep { get; } = TimeStep;
-    public int IntegrationTime { get; } = IntegrationTime;
+    public double TimeStep { get; } = TimeStep;
+    public double IntegrationTime { get; } = IntegrationTime;
     public int ExternalParam { get; } = ExternalParam;
 }
 
