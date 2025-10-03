@@ -1,10 +1,13 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using Horiba.Sdk.Commands;
 using Horiba.Sdk.Communication;
 using Horiba.Sdk.Enums;
 using Serilog;
 
 namespace Horiba.Sdk.Devices;
+
+internal static class IsExternalInit { }
 
 public sealed record MonochromatorDevice(
     int DeviceId,
@@ -166,10 +169,10 @@ public sealed record MonochromatorDevice(
     /// <returns>
     ///     <see cref="FilterWheelPosition" />
     /// </returns>
-    public async Task<FilterWheelPosition> GetFilterWheelPositionAsync(CancellationToken cancellationToken = default)
+    public async Task<FilterWheelPosition> GetFilterWheelPositionAsync(FilterWheel FilterWheel, CancellationToken cancellationToken = default)
     {
         var response =
-            await Communicator.SendWithResponseAsync(new MonoGetFilterWheelPositionCommand(DeviceId),
+            await Communicator.SendWithResponseAsync(new MonoGetFilterWheelPositionCommand(DeviceId, FilterWheel),
                 cancellationToken);
         return (FilterWheelPosition)int.Parse(response.Results["position"].ToString());
     }
@@ -180,10 +183,10 @@ public sealed record MonochromatorDevice(
     /// <param name="filterWheelPosition"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public Task SetFilterWheelPositionAsync(FilterWheelPosition filterWheelPosition,
+    public Task SetFilterWheelPositionAsync(FilterWheel FilterWheel, FilterWheelPosition filterWheelPosition,
         CancellationToken cancellationToken = default)
     {
-        return Communicator.SendAsync(new MonoMoveFilterWheelCommand(DeviceId, filterWheelPosition), cancellationToken);
+        return Communicator.SendAsync(new MonoMoveFilterWheelCommand(DeviceId, FilterWheel, filterWheelPosition), cancellationToken);
     }
 
     /// <summary>
