@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using CsvHelper;
@@ -41,13 +42,35 @@ namespace HelperFunctions
         public static void SaveSpectrAcq3DataToCsv(List<(int Wavelength, DataItem DataItem)> dataItems,
             string csvFilename)
         {
-            var headers = new List<string>
-            {
-                "wavelength", "elapsedTime", "currentSignal_value", "currentSignal_unit", "pmtSignal_value",
-                "pmtSignal_unit",
-                "ppdSignal_value", "ppdSignal_unit", "voltageSignal_value", "voltageSignal_unit",
-                "eventMarker", "overscaleCurrentChannel", "overscaleVoltageChannel", "pointNumber"
-            };
+
+            var data = new List<DataItem>
+            {};
+
+            List<DataItem> onlyDataItems = dataItems.Select(item => item.DataItem).ToList();
+
+            List<string> headers = onlyDataItems
+                .SelectMany(item =>
+                    item.GetType()
+                        .GetProperties()
+                        .Where(p =>
+                            p.PropertyType == typeof(SaqSignal) &&
+                            p.GetValue(item) != null
+                        )
+                        .SelectMany(p =>
+                        {
+                            var outerName = p.Name;
+                            var saqSignal = p.GetValue(item);
+                            return saqSignal.GetType()
+                                .GetProperties()
+                                .Select(np => $"{outerName}.{np.Name}");
+                        })
+                )
+                .Distinct()
+                .ToList();
+
+            headers.Insert(0, "wavelength");
+
+            
 
             // Write to a single CSV file
             using (var file = new StreamWriter(csvFilename))
@@ -66,18 +89,32 @@ namespace HelperFunctions
                     foreach (var (wavelength, dataItem) in dataItems)
                     {
                         var row = new List<object>
+                        {wavelength};
+
+                        if (headers.Any(header => header.Contains("Current")))
                         {
-                            wavelength,
-                            dataItem.ElapsedTime,
-                            dataItem.CurrentSignal.Value, dataItem.CurrentSignal.Unit,
-                            dataItem.PmtSignal.Value, dataItem.PmtSignal.Unit,
-                            dataItem.PpdSignal.Value, dataItem.PpdSignal.Unit,
-                            dataItem.VoltageSignal.Value, dataItem.VoltageSignal.Unit,
-                            dataItem.EventMarker,
-                            dataItem.OverscaleCurrentChannel,
-                            dataItem.OverscaleVoltageChannel,
-                            dataItem.PointNumber
-                        };
+                            row.Add(dataItem.CurrentSignal.Value);
+                            row.Add(dataItem.CurrentSignal.Unit);
+                        }
+
+                        if (headers.Any(header => header.Contains("Pmt")))
+                        {
+                            row.Add(dataItem.PmtSignal.Value);
+                            row.Add(dataItem.PmtSignal.Unit);
+                        }
+
+                        if (headers.Any(header => header.Contains("Ppd")))
+                        {
+                            row.Add(dataItem.PpdSignal.Value);
+                            row.Add(dataItem.PpdSignal.Unit);
+                        }
+
+                        if (headers.Any(header => header.Contains("Voltage")))
+                        {
+                            row.Add(dataItem.VoltageSignal.Value);
+                            row.Add(dataItem.VoltageSignal.Unit);
+                        }
+
 
                         foreach (var field in row)
                         {

@@ -51,9 +51,9 @@ namespace Horiba.Sdk.Core.Internal
         /// <summary>
         /// Concatenate two arrays.
         /// </summary>
-        public static double[] Concat(double[] a, double[] b)
+        public static float[] Concat(float[] a, float[] b)
         {
-            var r = new double[a.Length + b.Length];
+            var r = new float[a.Length + b.Length];
             Array.Copy(a, 0, r, 0, a.Length);
             Array.Copy(b, 0, r, a.Length, b.Length);
             return r;

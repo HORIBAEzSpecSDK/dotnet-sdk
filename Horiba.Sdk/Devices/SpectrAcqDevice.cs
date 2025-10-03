@@ -1,4 +1,4 @@
-﻿using Horiba.Sdk.Commands;
+using Horiba.Sdk.Commands;
 using Horiba.Sdk.Communication;
 using Horiba.Sdk.Data;
 using Horiba.Sdk.Enums;
@@ -194,7 +194,7 @@ public sealed record SpectrAcqDevice(
     /// <param name="externalParam"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public Task SetAcqSetAsync(int scanCount, int timeStep, int integrationTime, int externalParam,
+    public Task SetAcqSetAsync(int scanCount, double timeStep, double integrationTime, int externalParam,
         CancellationToken cancellationToken = default)
     {
         return Communicator.SendAsync(
