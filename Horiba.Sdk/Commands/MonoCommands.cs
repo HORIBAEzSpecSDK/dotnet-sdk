@@ -77,21 +77,21 @@ internal record MonoMoveGratingCommand(int DeviceId, Grating Grating) : Monochro
     public Grating Grating { get; } = Grating;
 }
 
-internal record MonoGetFilterWheelPositionCommand(int DeviceId) : MonochromatorDeviceCommand(
+internal record MonoGetFilterWheelPositionCommand(int DeviceId, FilterWheel FilterWheel) : MonochromatorDeviceCommand(
     "mono_getFilterWheelPosition", new Dictionary<string, object>
     {
         { "index", DeviceId },
-        { "type", 1 }
+        { "locationId", (int)FilterWheel}
     })
 {
     public int DeviceId { get; } = DeviceId;
 }
 
-internal record MonoMoveFilterWheelCommand(int DeviceId, FilterWheelPosition FilterWheelPosition)
+internal record MonoMoveFilterWheelCommand(int DeviceId, FilterWheel FilterWheel, FilterWheelPosition FilterWheelPosition)
     : MonochromatorDeviceCommand("mono_moveFilterWheel", new Dictionary<string, object>
     {
         { "index", DeviceId },
-        { "type", 1 },
+        { "locationId", (int) FilterWheel},
         { "position", (int)FilterWheelPosition }
     })
 {
