@@ -198,7 +198,7 @@ public sealed record SpectrAcqDevice(
         CancellationToken cancellationToken = default)
     {
         return Communicator.SendAsync(
-            new SaqSetAcqSetCommand(DeviceId, scanCount, timeStep, integrationTime, externalParam),
+            new SaqSetAcqSetCommand(DeviceId, (double)scanCount, (double)timeStep, integrationTime, externalParam),
             cancellationToken);
     }
 
