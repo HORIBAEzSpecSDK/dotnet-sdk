@@ -62,7 +62,7 @@ namespace Horiba.Sdk.Examples.CombinedDevices
                 // Set center wavelength before setting x-axis conversion type
                 await ccd.SetCenterWavelengthAsync(mono.DeviceId, 0);
                 await ccd.SetXAxisConversionTypeAsync(ConversionType.FromIclSettingsIni);
-                await ccd.SetAcquisitionFormatAsync(AcquisitionFormat.Image, 1);
+                await ccd.SetAcquisitionFormatAsync(AcquisitionFormat.Spectra_Image, 1);
 
                 var ccdConfiguration = await ccd.GetDeviceConfigurationAsync();
                 var chipX = Convert.ToInt32(ccdConfiguration["chipWidth"]);
