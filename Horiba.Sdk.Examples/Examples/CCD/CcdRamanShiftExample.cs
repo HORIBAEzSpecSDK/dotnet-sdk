@@ -21,7 +21,7 @@ namespace Horiba.Sdk.Examples.Ccd
                 Console.WriteLine("Invalid input. Please enter a valid float value.");
                 Console.Write("Enter the excitation wavelength (float value): ");
             }
-            var acquisitionFormat = AcquisitionFormat.Spectra;
+            var acquisitionFormat = AcquisitionFormat.Spectra_Image;
             var deviceManager = new DeviceManager(showIclConsoleOutput:showIclConsoleOutput);
             await deviceManager.StartAsync();
 
