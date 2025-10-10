@@ -31,7 +31,7 @@ namespace Horiba.Sdk.Examples.Ccd
             {
                 await ccd.SetAcquisitionCountAsync(1);
                 await ccd.SetXAxisConversionTypeAsync(ConversionType.None);
-                await ccd.SetAcquisitionFormatAsync(AcquisitionFormat.Image, 1);
+                await ccd.SetAcquisitionFormatAsync(AcquisitionFormat.Spectra_Image, 1);
                 Log.Information((await ccd.GetAcquisitionCountAsync()).ToString());
                 Log.Information((await ccd.GetCleanCountAsync()).ToString());
                 Log.Information((await ccd.GetTimerResolutionAsync()).ToString());

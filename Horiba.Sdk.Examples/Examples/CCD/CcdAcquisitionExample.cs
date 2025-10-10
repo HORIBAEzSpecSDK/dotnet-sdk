@@ -42,7 +42,7 @@ namespace Horiba.Sdk.Examples.Ccd
                await ccd.SetSpeedAsync(2); // 1 MHz Ultra
                
                await ccd.SetXAxisConversionTypeAsync(ConversionType.FromIclSettingsIni);
-               await ccd.SetAcquisitionFormatAsync(AcquisitionFormat.Image, 1);
+               await ccd.SetAcquisitionFormatAsync(AcquisitionFormat.Spectra_Image, 1);
    
                var ccdConfiguration = await ccd.GetDeviceConfigurationAsync();
                var chipX = Convert.ToInt32(ccdConfiguration["chipWidth"]);

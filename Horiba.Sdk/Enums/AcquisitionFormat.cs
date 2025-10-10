@@ -2,8 +2,7 @@
 
 public enum AcquisitionFormat
 {
-    Spectra = 0,
-    Image = 1,
+    Spectra_Image = 1,
     Crop = 2,
     FastKinetics = 3
 }
