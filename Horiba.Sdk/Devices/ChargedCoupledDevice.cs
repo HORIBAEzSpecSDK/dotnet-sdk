@@ -1,11 +1,13 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Horiba.Sdk.Commands;
+﻿using Horiba.Sdk.Commands;
 using Horiba.Sdk.Communication;
 using Horiba.Sdk.Data;
 using Horiba.Sdk.Enums;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Serilog;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Horiba.Sdk.Devices;
 
@@ -194,10 +196,36 @@ public sealed record ChargedCoupledDevice(
     }
 
     /// <summary>
+    /// Sets CCD EM Gain value for EMCCDs. Check API document for safety and usage.
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// 
+    public Task SetEMGainAsync(int gain, CancellationToken cancellationToken = default)
+    {
+        return Communicator.SendAsync(new CcdSetEMGainCommand(DeviceId, gain),
+            cancellationToken);
+    }
+
+    /// <summary>
+    /// Retrieves the EM Gain value of an EMCCD by sending the getEMGain command
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns>The exposure time im milliseconds</returns>
+    public async Task<int> GetEMGainAsync(CancellationToken cancellationToken = default)
+    {
+        var result =
+            await Communicator.SendWithResponseAsync(new CcdGetEMGainCommand(DeviceId), cancellationToken);
+        return int.Parse(result.Results["gain"].ToString());
+    }
+
+
+    /// <summary>
     /// Retrieves the acquisition ready status of the CCD by sending the ccd_getAcquisitionReady command
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
+    /// 
     public async Task<bool> GetAcquisitionReadyAsync(CancellationToken cancellationToken = default)
     {
         var result =
