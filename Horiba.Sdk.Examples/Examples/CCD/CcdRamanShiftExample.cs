@@ -71,7 +71,7 @@ namespace Horiba.Sdk.Examples.Ccd
                 await ccd.SetAcquisitionCountAsync(1);
                 await ccd.SetCenterWavelengthAsync(mono.DeviceId, monoWavelength);
                 await ccd.SetXAxisConversionTypeAsync(ConversionType.FromIclSettingsIni);
-                await ccd.SetAcquisitionFormatAsync(AcquisitionFormat.Spectra, 1);
+                await ccd.SetAcquisitionFormatAsync(acquisitionFormat, 1);
                 await ccd.SetExposureTimeAsync(new Random().Next(1, 5));
                 var ccdConfiguration = await ccd.GetDeviceConfigurationAsync();
                 var chipX = Convert.ToInt32(ccdConfiguration["chipWidth"]);
