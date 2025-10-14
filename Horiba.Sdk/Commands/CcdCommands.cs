@@ -252,6 +252,23 @@ internal record CcdGetDataSizeCommand(int DeviceId) : ChargedCoupleDeviceCommand
     public int DeviceId { get; } = DeviceId;
 }
 
+internal record CcdGetEMGainCommand(int DeviceId) : ChargedCoupleDeviceCommand("ccd_getEMGain", DeviceId)
+{
+    public int DeviceId { get; } = DeviceId;
+}
+
+internal record CcdSetEMGainCommand(int DeviceId, int gain) : ChargedCoupleDeviceCommand(
+    "ccd_setEMGain",
+    new Dictionary<string, object>
+    {
+        { "index", DeviceId },
+        { "gain", gain }
+    })
+{
+    public int DeviceId { get; } = DeviceId;
+    public int gain { get; } = gain;
+}
+
 internal record CcdGetTriggerInCommand(int DeviceId) : ChargedCoupleDeviceCommand("ccd_getTriggerIn", DeviceId)
 {
     public int DeviceId { get; } = DeviceId;

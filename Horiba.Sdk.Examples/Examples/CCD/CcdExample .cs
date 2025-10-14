@@ -22,6 +22,7 @@ namespace Horiba.Sdk.Examples.Ccd
             await ccd.OpenConnectionAsync();
     
             var rawConfig = await ccd.GetDeviceConfigurationAsync();
+
     
             var ChipHSpacing = (long)rawConfig["chipHSpacing"];
             var ChipHeight = (long)rawConfig["chipHeight"];
@@ -40,6 +41,12 @@ namespace Horiba.Sdk.Examples.Ccd
     
             JArray jsonStringArray = (JArray)rawConfig["speeds"];
             RegionOfInterest myRegion = new RegionOfInterest(1, 0, 0, 16, 4, 1, 4);
+
+            await ccd.SetEMGainAsync(400);
+            await ccd.GetEMGainAsync();
+            while (true){
+                
+            }
             await ccd.SetAcquisitionCountAsync(1);
             await ccd.SetExposureTimeAsync(100);
             await ccd.SetRegionOfInterestAsync(myRegion);
