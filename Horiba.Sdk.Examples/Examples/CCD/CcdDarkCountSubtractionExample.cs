@@ -13,7 +13,7 @@ namespace Horiba.Sdk.Examples.Ccd
     {
         public async Task MainAsync(bool showIclConsoleOutput= false)
         {
-            var acquisitionFormat = AcquisitionFormat.Image;
+            var acquisitionFormat = AcquisitionFormat.Spectra_Image;
             var deviceManager = new DeviceManager(showIclConsoleOutput:showIclConsoleOutput);
             await deviceManager.StartAsync();
 
