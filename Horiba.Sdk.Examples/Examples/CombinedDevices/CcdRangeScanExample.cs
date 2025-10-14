@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Horiba.Sdk.Calculations;
+using Horiba.Sdk.Calculations.Stitching;
 using Horiba.Sdk.Data;
 using Horiba.Sdk.Devices;
 using Horiba.Sdk.Enums;
