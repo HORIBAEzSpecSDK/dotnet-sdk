@@ -29,58 +29,67 @@ namespace Horiba.Sdk.Examples.Ccd
    
            var ccd = deviceManager.ChargedCoupledDevices.First();
            await ccd.OpenConnectionAsync();
-           await WaitForCcdAsync(ccd);
-           
-   
+              
            try
            {
-               
-               // CCD configuration
-               await ccd.SetTimerResolutionAsync(TimerResolution.Millisecond);
-               await ccd.SetExposureTimeAsync(100);
-               await ccd.SetGainAsync(0); // High Light
-               await ccd.SetSpeedAsync(2); // 1 MHz Ultra
-               
-               await ccd.SetXAxisConversionTypeAsync(ConversionType.FromIclSettingsIni);
-               await ccd.SetAcquisitionFormatAsync(AcquisitionFormat.Spectra_Image, 1);
-   
-               var ccdConfiguration = await ccd.GetDeviceConfigurationAsync();
-               var chipX = Convert.ToInt32(ccdConfiguration["chipWidth"]);
-               var chipY = Convert.ToInt32(ccdConfiguration["chipHeight"]);
-               await ccd.SetRegionOfInterestAsync(new RegionOfInterest(1, 0, 0, chipX, chipY, 1, chipY));
-               
-               if (await ccd.GetAcquisitionReadyAsync())
-               {
-                   await ccd.AcquisitionStartAsync(true);
-                   await Task.Delay(1000); // Wait a short period for the acquisition to start
-                   await WaitForCcdAsync(ccd);
-   
-                   var rawData = await ccd.GetAcquisitionDataAsync();
-                   Log.Information(rawData.ToString());
-                   CsvParser.SaveCcdAcquisitionDataToCsv(rawData, "ccd_acquisition_data.csv");
-               }
-               else
-               {
-                   throw new Exception("CCD not ready for acquisition");
-               }
-               
-           }
+
+                //ccd config
+
+                var ccdConfiguration = await ccd.GetDeviceConfigurationAsync();
+                var chipX = Convert.ToInt32(ccdConfiguration["chipWidth"]);
+                var chipY = Convert.ToInt32(ccdConfiguration["chipHeight"]);
+
+                await ccd.SetAcquisitionFormatAsync(AcquisitionFormat.Spectra_Image, 1);
+                RegionOfInterest myRegion = new RegionOfInterest(1, 0, 0, chipX, chipY, 1, chipY);
+                await ccd.SetRegionOfInterestAsync(myRegion);
+
+                await ccd.SetXAxisConversionTypeAsync(ConversionType.None);
+
+                await ccd.SetAcquisitionCountAsync(1);
+
+                int exposureTime = 1000;
+
+                await ccd.SetTimerResolutionAsync(TimerResolution.Millisecond);
+                await ccd.SetExposureTimeAsync(exposureTime);
+
+                await ccd.SetGainAsync(0); //Least sensitive
+                await ccd.SetSpeedAsync(0); //Slowest, but least read noise
+
+
+                if (await ccd.GetAcquisitionReadyAsync())
+                {
+                    await ccd.AcquisitionStartAsync(isShutterOpened: true);
+                    while (true)
+                    {
+                        try
+                        {
+                            await Task.Delay(exposureTime * 2);
+
+                            Log.Information("Trying for data...");
+
+                            var data = await ccd.GetAcquisitionDataAsync();
+
+                            Log.Information(data.ToString());
+                            CsvParser.SaveCcdAcquisitionDataToCsv(data, "ccd_acquisition_data.csv");
+                            Log.Information("Saved data to ccd_acquisition_data.csv");
+
+                            break;
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error($"Error: {ex.Message}"); // This error is expected in this case
+
+                            Log.Information("Data not ready yet...");
+
+                        }
+                    }
+                }
+            }
            finally
            {
                await ccd.CloseConnectionAsync();
                await Task.Delay(1000);
                await deviceManager.StopAsync();
-           }
-       }
-   
-       private static async Task WaitForCcdAsync(ChargedCoupledDevice ccd)
-       {
-           bool acquisitionBusy = true;
-           while (acquisitionBusy)
-           {
-               acquisitionBusy = await ccd.GetAcquisitionBusyAsync();
-               await Task.Delay(1000);
-               Log.Information("Acquisition busy");
            }
        }
        
