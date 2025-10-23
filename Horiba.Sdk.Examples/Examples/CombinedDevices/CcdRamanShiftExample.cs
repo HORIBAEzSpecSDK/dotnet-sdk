@@ -8,7 +8,7 @@ using Horiba.Sdk.Enums;
 using MathNet.Numerics.Optimization;
 using Serilog;
 
-namespace Horiba.Sdk.Examples.Ccd
+namespace Horiba.Sdk.Examples.CombinedDevices
 {
     public class CcdRamanShiftExample : IExample
     {
@@ -21,7 +21,6 @@ namespace Horiba.Sdk.Examples.Ccd
                 Console.WriteLine("Invalid input. Please enter a valid float value.");
                 Console.Write("Enter the excitation wavelength (float value): ");
             }
-            var acquisitionFormat = AcquisitionFormat.Spectra_Image;
             var deviceManager = new DeviceManager(showIclConsoleOutput:showIclConsoleOutput);
             await deviceManager.StartAsync();
 
@@ -67,35 +66,62 @@ namespace Horiba.Sdk.Examples.Ccd
                 await WaitForMonoAsync(mono);
                 var monoWavelength = await mono.GetCurrentWavelengthAsync();
                 Log.Information($"Mono wavelength: {monoWavelength}");
-                
-                await ccd.SetAcquisitionCountAsync(1);
-                await ccd.SetCenterWavelengthAsync(mono.DeviceId, monoWavelength);
-                await ccd.SetXAxisConversionTypeAsync(ConversionType.FromIclSettingsIni);
-                await ccd.SetAcquisitionFormatAsync(acquisitionFormat, 1);
-                await ccd.SetExposureTimeAsync(new Random().Next(1, 5));
+
+                //ccd config
+
                 var ccdConfiguration = await ccd.GetDeviceConfigurationAsync();
                 var chipX = Convert.ToInt32(ccdConfiguration["chipWidth"]);
                 var chipY = Convert.ToInt32(ccdConfiguration["chipHeight"]);
-                await ccd.SetRegionOfInterestAsync(new RegionOfInterest(1,0, 0, chipX, chipY, 1, chipY));
+
+                await ccd.SetAcquisitionFormatAsync(AcquisitionFormat.Spectra_Image, 1);
+                RegionOfInterest myRegion = new RegionOfInterest(1, 0, 0, chipX, chipY, 1, chipY);
+                await ccd.SetRegionOfInterestAsync(myRegion);
+
+                await ccd.SetCenterWavelengthAsync(mono.DeviceId, monoWavelength);
+
+                await ccd.SetXAxisConversionTypeAsync(ConversionType.FromIclSettingsIni);
+
+                await ccd.SetAcquisitionCountAsync(1);
+
+                int exposureTime = 1000;
+
+                await ccd.SetTimerResolutionAsync(TimerResolution.Millisecond);
+                await ccd.SetExposureTimeAsync(exposureTime);
+
+                await ccd.SetGainAsync(0); //Least sensitive
+                await ccd.SetSpeedAsync(0); //Slowest, but least read noise
+
+                var rawData = new CcdData();
 
                 if (await ccd.GetAcquisitionReadyAsync())
                 {
-                    await ccd.AcquisitionStartAsync(true);
-                    await Task.Delay(1000); // Wait a short period for the acquisition to start
-                    bool acquisitionBusy = true;
-                    while (acquisitionBusy)
+                    await ccd.AcquisitionStartAsync(isShutterOpened: true);
+                    while (true)
                     {
-                        acquisitionBusy = await ccd.GetAcquisitionBusyAsync();
-                        await Task.Delay(300);
-                        Log.Information("Acquisition busy");
+                        try
+                        {
+                            await Task.Delay(exposureTime * 2);
+
+                            Log.Information("Trying for data...");
+
+                            rawData = await ccd.GetAcquisitionDataAsync();
+
+                            break;
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error($"Error: {ex.Message}"); // This error is expected in this case
+
+                            Log.Information("Data not ready yet...");
+
+                        }
                     }
 
-                    var rawData = await ccd.GetAcquisitionDataAsync();
                     Log.Information($"Retrieved wavelengths: {string.Join(", ", rawData.Acquisition[0].Region[0].XData)}");
 
                     var wavelengths = rawData.Acquisition[0].Region[0].XData.Select(x => (float)x).ToList();
                     var ramanShift = await RamanConvertAsync(wavelengths, excitationWavelength);
-                    var ramanShiftData =rawData;
+                    var ramanShiftData = rawData;
                     ramanShiftData.Acquisition[0].Region[0].XData = ramanShift;
 
                     Log.Information($"Wavelengths converted to raman shift: {string.Join(", ", ramanShiftData.Acquisition[0].Region[0].XData)}");
@@ -126,7 +152,7 @@ namespace Horiba.Sdk.Examples.Ccd
                 var ramanValues = new List<float>();
                 foreach (var waveLength in spectrum)
                 {
-                    var ramanShift = ((1 / excitationWavelength) - (1 / waveLength)) * 1e7;
+                    var ramanShift = (1 / excitationWavelength - 1 / waveLength) * 1e7;
                     ramanValues.Add((float)ramanShift);
                 }
                 return ramanValues;

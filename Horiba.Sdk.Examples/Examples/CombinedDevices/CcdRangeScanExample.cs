@@ -33,7 +33,6 @@ namespace Horiba.Sdk.Examples.CombinedDevices
             
             var ccd = deviceManager.ChargedCoupledDevices.First();
             await ccd.OpenConnectionAsync();
-            await WaitForCcdAsync(ccd);
 
             var startWavelength = 400;
             var endWavelength = 600;
@@ -54,21 +53,30 @@ namespace Horiba.Sdk.Examples.CombinedDevices
                 await mono.SetSlitPositionAsync(Slit.A, (float)0.5);
                 await WaitForMonoAsync(mono);
 
-                // CCD configuration
-                await ccd.SetTimerResolutionAsync(TimerResolution.Millisecond);
-                await ccd.SetExposureTimeAsync(100);
-                await ccd.SetGainAsync(0); // High Light
-                await ccd.SetSpeedAsync(2); // 1 MHz Ultra
-
-                // Set center wavelength before setting x-axis conversion type
-                await ccd.SetCenterWavelengthAsync(mono.DeviceId, 0);
-                await ccd.SetXAxisConversionTypeAsync(ConversionType.FromIclSettingsIni);
-                await ccd.SetAcquisitionFormatAsync(AcquisitionFormat.Spectra_Image, 1);
+                //ccd config
 
                 var ccdConfiguration = await ccd.GetDeviceConfigurationAsync();
                 var chipX = Convert.ToInt32(ccdConfiguration["chipWidth"]);
                 var chipY = Convert.ToInt32(ccdConfiguration["chipHeight"]);
-                await ccd.SetRegionOfInterestAsync(new RegionOfInterest(1,0, 0, chipX, chipY, 1, chipY));
+
+                await ccd.SetAcquisitionFormatAsync(AcquisitionFormat.Spectra_Image, 1);
+                RegionOfInterest myRegion = new RegionOfInterest(1, 0, 0, chipX, chipY, 1, chipY);
+                await ccd.SetRegionOfInterestAsync(myRegion);
+
+                var monoWavelength = await mono.GetCurrentWavelengthAsync();
+                await ccd.SetCenterWavelengthAsync(mono.DeviceId, monoWavelength);
+
+                await ccd.SetXAxisConversionTypeAsync(ConversionType.FromIclSettingsIni);
+
+                await ccd.SetAcquisitionCountAsync(1);
+
+                int exposureTime = 1000;
+
+                await ccd.SetTimerResolutionAsync(TimerResolution.Millisecond);
+                await ccd.SetExposureTimeAsync(exposureTime);
+
+                await ccd.SetGainAsync(0); //Least sensitive
+                await ccd.SetSpeedAsync(0); //Slowest, but least read noise
 
                 var centerWavelengths = await ccd.CalculateRangePositionsAsync(mono.DeviceId, startWavelength, endWavelength, 100);
                 Log.Information($"Number of captures: {centerWavelengths.Count()}");
@@ -80,7 +88,7 @@ namespace Horiba.Sdk.Examples.CombinedDevices
                 {
                     await mono.MoveToWavelengthAsync(centerWavelength.WavelengthValue);
                     await WaitForMonoAsync(mono);
-                    var monoWavelength = await mono.GetCurrentWavelengthAsync();
+                    monoWavelength = await mono.GetCurrentWavelengthAsync();
                     Log.Information($"Mono wavelength {monoWavelength}");
 
                     await ccd.SetCenterWavelengthAsync(mono.DeviceId, monoWavelength);
@@ -113,11 +121,29 @@ namespace Horiba.Sdk.Examples.CombinedDevices
             var xyData = new List<List<float>> { new List<float> { 0 }, new List<float> { 0 } };
             if (await ccd.GetAcquisitionReadyAsync())
             {
-                await ccd.AcquisitionStartAsync(true);
-                await Task.Delay(1000); // Wait a short period for the acquisition to start
-                await WaitForCcdAsync(ccd);
+                var rawData = new CcdData();
+                await ccd.AcquisitionStartAsync(isShutterOpened: true);
+                while (true)
+                {
+                    try
+                    {
+                        var exposureTime = await ccd.GetExposureTimeAsync();
+                        await Task.Delay(exposureTime * 2);
 
-                var rawData = await ccd.GetAcquisitionDataAsync();
+                        Log.Information("Trying for data...");
+
+                        rawData = await ccd.GetAcquisitionDataAsync();
+
+                        break;
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error($"Error: {ex.Message}"); // This error is expected in this case
+
+                        Log.Information("Data not ready yet...");
+
+                    }
+                }
                 Log.Information(rawData.ToString());
                 xyData = new List<List<float>>
                 {
@@ -162,17 +188,6 @@ namespace Horiba.Sdk.Examples.CombinedDevices
             var fileName = $"ccdRangeScanPlot_{startWavelength}_{endWavelength}_nm.png";
             plt.SavePng(fileName, 400, 300);
             Log.Information($"Range scan plot has been saved as {fileName}");
-        }
-
-        private static async Task WaitForCcdAsync(ChargedCoupledDevice ccd)
-        {
-            var acquisitionBusy = true;
-            while (acquisitionBusy)
-            {
-                acquisitionBusy = await ccd.GetAcquisitionBusyAsync();
-                await Task.Delay(1000);
-                Log.Information("Acquisition busy");
-            }
         }
 
         private static async Task WaitForMonoAsync(MonochromatorDevice mono)

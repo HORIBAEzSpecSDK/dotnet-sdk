@@ -13,7 +13,6 @@ namespace Horiba.Sdk.Examples.Ccd
     {
         public async Task MainAsync(bool showIclConsoleOutput= false)
         {
-            var acquisitionFormat = AcquisitionFormat.Spectra_Image;
             var deviceManager = new DeviceManager(showIclConsoleOutput:showIclConsoleOutput);
             await deviceManager.StartAsync();
 
@@ -29,40 +28,53 @@ namespace Horiba.Sdk.Examples.Ccd
 
             try
             {
-                await ccd.SetAcquisitionCountAsync(1);
-                await ccd.SetXAxisConversionTypeAsync(ConversionType.None);
-                await ccd.SetAcquisitionFormatAsync(AcquisitionFormat.Spectra_Image, 1);
-                Log.Information((await ccd.GetAcquisitionCountAsync()).ToString());
-                Log.Information((await ccd.GetCleanCountAsync()).ToString());
-                Log.Information((await ccd.GetTimerResolutionAsync()).ToString());
-                Log.Information((await ccd.GetGainAsync()).ToString());
-                Log.Information((await ccd.GetChipSizeAsync()).ToString());
-                Log.Information((await ccd.GetExposureTimeAsync()).ToString());
-                await ccd.SetExposureTimeAsync(new Random().Next(1, 5));
-                Log.Information((await ccd.GetExposureTimeAsync()).ToString());
-                Log.Information((await ccd.GetChipTemperatureAsync()).ToString());
-                Log.Information((await ccd.GetSpeedAsync()).ToString());
-                
+                //ccd config
+
                 var ccdConfiguration = await ccd.GetDeviceConfigurationAsync();
                 var chipX = Convert.ToInt32(ccdConfiguration["chipWidth"]);
                 var chipY = Convert.ToInt32(ccdConfiguration["chipHeight"]);
-                await ccd.SetRegionOfInterestAsync(new RegionOfInterest(1,0, 0, chipX, chipY, 1, chipY));
+
+                await ccd.SetAcquisitionFormatAsync(AcquisitionFormat.Spectra_Image, 1);
+                RegionOfInterest myRegion = new RegionOfInterest(1, 0, 0, chipX, chipY, 1, chipY);
+                await ccd.SetRegionOfInterestAsync(myRegion);
+
+                await ccd.SetXAxisConversionTypeAsync(ConversionType.None);
+
+                await ccd.SetAcquisitionCountAsync(1);
+
+                int exposureTime = 1000;
+
+                await ccd.SetTimerResolutionAsync(TimerResolution.Millisecond);
+                await ccd.SetExposureTimeAsync(exposureTime);
+
+                await ccd.SetGainAsync(0); //Least sensitive
+                await ccd.SetSpeedAsync(0); //Slowest, but least read noise
 
                 var rawDataShutterClosed = new CcdData();
                 List<float> intensityDataShutterClosed = new List<float>();
                 if (await ccd.GetAcquisitionReadyAsync())
                 {
-                    await ccd.AcquisitionStartAsync(false);
-                    await Task.Delay(1000); // Wait a short period for the acquisition to start
-                    bool acquisitionBusy = true;
-                    while (acquisitionBusy)
+                    await ccd.AcquisitionStartAsync(isShutterOpened: false);
+                    while (true)
                     {
-                        acquisitionBusy = await ccd.GetAcquisitionBusyAsync();
-                        await Task.Delay(300);
-                        Log.Information("Acquisition busy");
-                    }
+                        try
+                        {
+                            await Task.Delay(exposureTime * 2);
 
-                    rawDataShutterClosed = await ccd.GetAcquisitionDataAsync();
+                            Log.Information("Trying for data...");
+
+                            rawDataShutterClosed = await ccd.GetAcquisitionDataAsync();
+
+                            break;
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error($"Error: {ex.Message}"); // This error is expected in this case
+
+                            Log.Information("Data not ready yet...");
+
+                        }
+                    }
                     intensityDataShutterClosed = rawDataShutterClosed.Acquisition[0].Region[0].YData[0].Select(y => (float)y).ToList();
                     Log.Information($"Data with closed shutter: {string.Join(", ", intensityDataShutterClosed)}");
                 }
@@ -71,17 +83,28 @@ namespace Horiba.Sdk.Examples.Ccd
                 var rawDataShutterOpen = new CcdData();
                 if (await ccd.GetAcquisitionReadyAsync())
                 {
-                    await ccd.AcquisitionStartAsync(true);
-                    await Task.Delay(1000); // Wait a short period for the acquisition to start
-                    bool acquisitionBusy = true;
-                    while (acquisitionBusy)
+                    await ccd.AcquisitionStartAsync(isShutterOpened: true);
+                    while (true)
                     {
-                        acquisitionBusy = await ccd.GetAcquisitionBusyAsync();
-                        await Task.Delay(300);
-                        Log.Information("Acquisition busy");
+                        try
+                        {
+                            await Task.Delay(exposureTime * 2);
+
+                            Log.Information("Trying for data...");
+
+                            rawDataShutterOpen = await ccd.GetAcquisitionDataAsync();
+
+                            break;
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error($"Error: {ex.Message}"); // This error is expected in this case
+
+                            Log.Information("Data not ready yet...");
+
+                        }
                     }
 
-                    rawDataShutterOpen = await ccd.GetAcquisitionDataAsync();
                     intensityDataShutterOpen = rawDataShutterOpen.Acquisition[0].Region[0].YData[0].Select(y => (float)y).ToList();
                     Log.Information($"Data with open shutter: {string.Join(", ", intensityDataShutterOpen)}");
                 }
