@@ -75,7 +75,7 @@ public class MonochromatorTests : IClassFixture<MonochromatorTestFixture>
     {
         // Act
         await _fixture.Mono.SetFilterWheelPositionAsync(target);
-        var actual = await _fixture.Mono.GetFilterWheelPositionAsync();
+        var actual = await _fixture.Mono.GetFilterWheelPositionAsync(FilterWheel.Internal);
 
         // Assert
         actual.Should().Be(target);
