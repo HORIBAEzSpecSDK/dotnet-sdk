@@ -67,10 +67,10 @@ public class MonochromatorTests : IClassFixture<MonochromatorTestFixture>
     }
 
     [Theory(Skip = "The available device does not have a wheel installed. Hardware feature is missing")]
-    [InlineData(FilterWheelPosition.Red)]
-    [InlineData(FilterWheelPosition.Green)]
-    [InlineData(FilterWheelPosition.Blue)]
-    [InlineData(FilterWheelPosition.Yellow)]
+    [InlineData(FilterWheelPosition.First)]
+    [InlineData(FilterWheelPosition.Second)]
+    [InlineData(FilterWheelPosition.Third)]
+    [InlineData(FilterWheelPosition.Fourth)]
     public async Task GivenMonoDevice_WhenMovingFilterPosition_ThenFilterPositionIsUpdated(FilterWheelPosition target)
     {
         // Act
