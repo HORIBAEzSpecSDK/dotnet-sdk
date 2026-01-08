@@ -165,7 +165,7 @@ public sealed class DeviceManager : IDisposable
         {
             await Communicator.SendAsync(new IclBinaryModeAllCommand());
         }
-
+        await Task.Delay(TimeSpan.FromSeconds(5));
         await DiscoverDevicesAsync();
     }
 
