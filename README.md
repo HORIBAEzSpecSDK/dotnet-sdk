@@ -8,13 +8,15 @@ C# developers can use this SDK to offload the complexity related to establishing
 ---
 
 
-> \[!WARNING]
-> This SDK is under development and not yet released.
 
-> \[!IMPORTANT]
-> For this .NET code to work, the SDK from Horiba has to be purchased, installed and licensed.
-> The code in this repo and the SDK are under development and not yet released for public use!
+⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️
 
+> [!IMPORTANT]  
+> This SDK is now released. For more information, contact your local HORIBA affiliate office, or visit https://www.horiba.com/int/scientific/products/detail/action/show/Product/ezspec-sdk-6853/. 
+> For this dotNET code to work, the SDK from Horiba has to be purchased, installed and licensed.
+
+
+⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️
 
 ---
 
@@ -22,9 +24,6 @@ C# developers can use this SDK to offload the complexity related to establishing
 
 * ICL.exe installed as part of the Horiba SDK, licensed and activated
 
-## API reference is available at
-
-[https://HORIBAEzSpecSDK.github.io/horiba-dotnet-sdk](https://horibaezspecsdk.github.io/dotnet-sdk/api/index.html)
 
 ## Compatibility
 
@@ -39,14 +38,6 @@ This compatibility is made possible by:
 * Conditional dependencies (e.g. different Serilog/WebSocket packages per target)
 * Avoidance of language/runtime features exclusive to .NET Core
 * Centralized and modular design
-
-## API reference is available at
-
-[https://thatstheend.github.io/horiba-dotnet-sdk/docs/api/Horiba.Sdk.html](https://thatstheend.github.io/horiba-dotnet-sdk/docs/api/Horiba.Sdk.html)
-
-## ICL Commands Status available at
-
-[https://thatstheend.github.io/horiba-dotnet-sdk](https://thatstheend.github.io/horiba-dotnet-sdk)
 
 # Getting started
 
@@ -126,7 +117,7 @@ To adapt the example code for .NET Framework:
 
 ### Send separate commands to supported devices
 
-The [test project](https://github.com/ThatsTheEnd/horiba-dotnet-sdk/tree/main/Horiba.Sdk.Tests) demonstrates how commands can be sent to the devices.
+The [test project(https://github.com/HORIBAEzSpecSDK/dotnet-sdk/tree/main/Horiba.Sdk.Tests)] demonstrates how commands can be sent to the devices.
 You can look around to see more detailed examples.
 
 > NOTE: There are seemingly random delays in the tests. However, they are not random! These are the timeouts that the hardware needs to process the commands. They are set in empirical way so keep in mind that this is not exhausted list of all possible delays.
