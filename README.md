@@ -117,7 +117,7 @@ To adapt the example code for .NET Framework:
 
 ### Send separate commands to supported devices
 
-The [test project(https://github.com/HORIBAEzSpecSDK/dotnet-sdk/tree/main/Horiba.Sdk.Tests)] demonstrates how commands can be sent to the devices.
+The [test project](https://github.com/HORIBAEzSpecSDK/dotnet-sdk/tree/main/Horiba.Sdk.Tests) demonstrates how commands can be sent to the devices.
 You can look around to see more detailed examples.
 
 > NOTE: There are seemingly random delays in the tests. However, they are not random! These are the timeouts that the hardware needs to process the commands. They are set in empirical way so keep in mind that this is not exhausted list of all possible delays.
