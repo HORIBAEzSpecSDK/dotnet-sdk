@@ -65,7 +65,7 @@ public sealed class DeviceManager : IDisposable
     /// </code>
     /// </example>
     public DeviceManager(string? iclExePath = null, IPAddress? ipAddress = null, int? port = null,
-        bool showIclConsoleOutput = true)
+        bool showIclConsoleOutput = true, bool openConsoleWindow = true)
     {
         Communicator = new WebSocketCommunicator(ipAddress ?? IPAddress.Loopback, port ?? 25010);
         IclProcess.StartInfo.FileName = iclExePath ??
@@ -76,6 +76,11 @@ public sealed class DeviceManager : IDisposable
             IclProcess.StartInfo.RedirectStandardOutput = true;
             IclProcess.StartInfo.RedirectStandardError = true;
 
+        }
+
+        if (openConsoleWindow == false)
+        {
+            IclProcess.StartInfo.CreateNoWindow = true; 
         }
 
         // NOTE first unsubscribe then subscribe so that we lower the chance to
